@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="id" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arsip Memori Sejarah Jember</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  </head>
+  <body class="bg-gray-100 dark:bg-gray-950 text-gray-800 dark:text-gray-200 font-sans overflow-hidden transition-colors duration-300">
+    <!-- SVG Patterns for Organic Area Fill -->
+    <svg width="0" height="0" class="absolute pointer-events-none">
+      <defs>
+        <pattern id="hatchPatternRed" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="#DC2626" fill-opacity="0.18"/>
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#DC2626" stroke-width="2.5" opacity="0.95"/>
+        </pattern>
+        <pattern id="hatchPatternBlue" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="#1D4ED8" fill-opacity="0.18"/>
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#1D4ED8" stroke-width="2.5" opacity="0.95"/>
+        </pattern>
+        <pattern id="hatchPatternOrange" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+          <rect width="8" height="8" fill="#F97316" fill-opacity="0.18"/>
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#F97316" stroke-width="2.5" opacity="0.95"/>
+        </pattern>
+      </defs>
+    </svg>
+
+    <!-- Onboarding Toast -->
+    <div id="onboardingToast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[2000] bg-gray-900 dark:bg-gray-800 text-white px-6 py-3 rounded-full shadow-2xl flex items-center space-x-3 transition-all duration-700 opacity-0 translate-y-10">
+      <svg class="w-5 h-5 text-yellow-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <span class="text-sm font-medium whitespace-nowrap">Ketuk marker di peta untuk membuka arsip peristiwa.</span>
+      <button id="closeOnboardingBtn" class="ml-4 text-gray-400 hover:text-white focus:outline-none">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    
+    <!-- Link Copied Toast -->
+    <div id="copyToast" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[2000] bg-emerald-600 text-white px-6 py-2 rounded-full shadow-lg transition-all duration-300 opacity-0 -translate-y-10 pointer-events-none text-sm font-medium">
+      Link berhasil disalin!
+    </div>
+
+    <!-- "Laporkan Lokasi Baru" Floating Form Panel -->
+    <!-- Muncul di kanan saat user klik "+" Laporkan / klik peta saat mode aktif -->
+    <div id="reportPanel" class="fixed right-0 top-0 h-full w-[380px] bg-white dark:bg-gray-900 shadow-2xl z-[3500] transform translate-x-full transition-transform duration-500 flex flex-col border-l border-gray-200 dark:border-gray-800">
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          </div>
+          <div>
+            <h3 class="font-serif font-bold text-gray-800 dark:text-white text-base">Laporkan Lokasi Baru</h3>
+            <p class="text-xs text-gray-400">Tambahkan peristiwa yang belum tercatat</p>
+          </div>
+        </div>
+        <button id="closeReportBtn" class="text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      
+      <!-- Mode Instruction -->
+      <div id="reportInstructions" class="px-6 py-4 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800 shrink-0">
+        <div class="flex items-start space-x-3">
+          <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"></path></svg>
+          <div>
+            <p class="text-sm font-semibold text-amber-800 dark:text-amber-300">Mode Pelaporan Aktif</p>
+            <p class="text-xs text-amber-700 dark:text-amber-400 mt-1">Klik pada titik di peta untuk menentukan lokasi peristiwa yang ingin Anda laporkan.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected Loc Info -->
+      <div id="reportLocInfo" class="px-6 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shrink-0 hidden">
+        <div class="flex items-center space-x-2">
+          <div class="w-3 h-3 bg-amber-500 rounded-full pulse-marker shrink-0"></div>
+          <span class="text-xs text-gray-500 dark:text-gray-400">Lokasi Terpilih: </span>
+          <span id="reportLocText" class="text-xs font-mono font-bold text-gray-700 dark:text-gray-300"></span>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="flex-1 overflow-y-auto no-scrollbar p-6">
+        <form id="reportForm" class="space-y-5">
+          <div>
+            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Nama / Identitas Pelapor</label>
+            <input type="text" id="reporterName" placeholder="Boleh anonim" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Judul / Nama Peristiwa</label>
+            <input type="text" id="reportTitle" placeholder="Contoh: Banjir di Desa Rejoagung" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Kategori</label>
+            <select id="reportCategory" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+              <option value="bencana">Bencana Alam</option>
+              <option value="kasus">Kasus / Sengketa</option>
+              <option value="tragedi">Tragedi Sosial</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Perkiraan Tahun Kejadian</label>
+            <input type="text" id="reportYear" placeholder="Contoh: 1999 atau 1999-2001" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Deskripsi Singkat</label>
+            <textarea id="reportDesc" rows="4" placeholder="Ceritakan apa yang terjadi di lokasi ini..." class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Sumber / Referensi (Opsional)</label>
+            <input type="text" id="reportSource" placeholder="Contoh: Koran Radar Jember 2 Jan 1999" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+          </div>
+        </form>
+      </div>
+      
+      <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-800 shrink-0">
+        <button id="submitReportBtn" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl transition-colors focus:outline-none flex items-center justify-center space-x-2 shadow-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+          <span>Kirim Laporan ke Tim Verifikasi</span>
+        </button>
+        <p class="text-center text-[10px] text-gray-400 mt-2">Laporan akan diverifikasi sebelum dipublikasikan</p>
+      </div>
+    </div>
+
+    <div id="app" class="relative w-full h-screen flex">
+      
+      <!-- Zona Kiri Ekstrem: Sidebar Navigasi Slim -->
+      <aside class="w-16 h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 shadow-sm z-[1050] flex flex-col items-center py-6 justify-between relative shrink-0 transition-colors duration-300">
+        <div class="space-y-1 flex flex-col items-center w-full px-2">
+          <!-- Personal / Menu (History, Bookmark, Library) -->
+          <button id="personalMenuBtn" class="w-full py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" title="Personal & Library">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h8m-8 6h16"></path></svg>
+          </button>
+          
+          <!-- General Feedback -->
+          <button id="feedbackBtn" class="w-full py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors flex justify-center" title="Beri Masukan">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+          </button>
+
+          <!-- Laporkan Lokasi Baru (User-facing) -->
+          <button id="openReportBtn" class="w-full py-3 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-900/20 text-gray-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors flex justify-center" title="Laporkan Lokasi Baru">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          </button>
+        </div>
+        
+        <div class="flex flex-col items-center w-full px-2 space-y-1">
+          <!-- Dark Mode Toggle -->
+          <button id="themeToggleBtn" class="w-full py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" title="Ganti Tema">
+            <svg id="themeIconSun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <svg id="themeIconMoon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          </button>
+
+          <!-- Admin Dashboard (Shield Check — hidden from public) -->
+          <button id="adminBtn" class="w-full py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-white hover:bg-red-600 dark:hover:bg-red-700 transition-colors flex justify-center hidden" title="Admin Verification Dashboard">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Contextual Slide-Out Panel (Personal Menu) -->
+      <div id="personalPanel" class="absolute left-16 top-0 h-full w-80 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-2xl z-[1040] transform -translate-x-full transition-transform duration-500 flex flex-col border-r border-gray-200 dark:border-gray-800">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center">
+          <h2 class="font-serif font-bold text-lg text-gray-800 dark:text-white">Ruang Personal</h2>
+          <button id="closePersonalBtn" class="text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        </div>
+        
+        <!-- Tab Nav -->
+        <div class="flex border-b border-gray-200 dark:border-gray-800 text-sm">
+          <button id="tabHistory" class="flex-1 py-3 text-center border-b-2 border-gray-900 dark:border-white font-medium text-gray-900 dark:text-white transition-colors text-xs">Riwayat</button>
+          <button id="tabBookmarks" class="flex-1 py-3 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 transition-colors text-xs">Disimpan</button>
+          <button id="tabLibrary" class="flex-1 py-3 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 transition-colors text-xs">Katalog</button>
+        </div>
+
+        <!-- Tab Content Area -->
+        <div class="flex-1 overflow-y-auto no-scrollbar p-4 relative">
+          
+          <!-- History List -->
+          <div id="contentHistory" class="space-y-3 block">
+            <p class="text-sm text-gray-400 text-center mt-10">Belum ada riwayat penjelajahan.</p>
+          </div>
+          
+          <!-- Bookmarks List -->
+          <div id="contentBookmarks" class="space-y-3 hidden">
+             <p class="text-sm text-gray-400 text-center mt-10">Belum ada arsip yang disimpan.</p>
+          </div>
+          
+          <!-- Master Library -->
+          <div id="contentLibrary" class="space-y-4 hidden flex flex-col h-full">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Filter Katalog</span>
+              <!-- Map-Lock Toggle -->
+              <label class="flex items-center cursor-pointer" title="Map-Lock: Aktifkan untuk melihat data tanpa menggeser peta">
+                <div class="relative">
+                  <input type="checkbox" id="mapLockToggle" class="sr-only peer">
+                  <div class="block bg-gray-200 dark:bg-gray-700 peer-checked:bg-blue-600 w-8 h-5 rounded-full transition-colors"></div>
+                  <div class="dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform transform peer-checked:translate-x-3"></div>
+                </div>
+                <span class="ml-2 text-xs text-gray-500"><svg class="w-3.5 h-3.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></span>
+              </label>
+            </div>
+            <div class="flex flex-col space-y-2">
+              <input type="text" id="librarySearch" placeholder="Cari dalam katalog..." class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none">
+              <div class="flex space-x-2">
+                <select id="libraryYearFilter" class="flex-1 px-2 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-xs focus:outline-none text-gray-600 dark:text-gray-400">
+                  <option value="">Semua Tahun</option>
+                </select>
+                <select id="libraryCategoryFilter" class="flex-1 px-2 py-2 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-xs focus:outline-none text-gray-600 dark:text-gray-400">
+                  <option value="">Semua Kategori</option>
+                  <option value="bencana">Bencana</option>
+                  <option value="kasus">Kasus</option>
+                  <option value="pergerakan">Pergerakan</option>
+                </select>
+              </div>
+            </div>
+            <div id="libraryList" class="flex-1 overflow-y-auto space-y-3 pb-10">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Main Canvas (The Infinite Map) -->
+      <div id="map" class="flex-1 h-full z-10 bg-gray-100 dark:bg-gray-950"></div>
+
+      <!-- Zona Kiri Melayang (Floating UI) -->
+      <!-- Floating Search Bar with Suggestions -->
+      <div class="absolute top-6 left-24 z-[1000] w-80 max-w-[calc(100vw-7rem)] pointer-events-auto">
+        <div class="relative">
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 flex items-center px-4 py-3">
+            <svg class="w-4 h-4 text-gray-400 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" id="searchInput" placeholder="Cari peristiwa, tahun, kategori..." class="w-full bg-transparent focus:outline-none text-sm font-sans placeholder:text-gray-400 dark:text-gray-200" autocomplete="off">
+            <button id="searchClearBtn" class="ml-2 text-gray-300 hover:text-gray-600 dark:hover:text-gray-200 hidden focus:outline-none">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+          <!-- Suggestions Dropdown -->
+          <div id="searchSuggestions" class="hidden"></div>
+        </div>
+      </div>
+
+      <!-- Legend Marker -->
+      <div class="absolute bottom-6 left-24 z-[1000] bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-xl shadow-md border border-gray-200 dark:border-gray-800 p-4 text-sm w-40 pointer-events-auto">
+        <h4 class="font-serif font-bold text-gray-800 dark:text-gray-200 mb-3 border-b border-gray-200 dark:border-gray-800 pb-2">Kategori</h4>
+        <div class="flex flex-col space-y-3">
+          <label class="flex items-center cursor-pointer group">
+            <input type="checkbox" checked class="hidden peer filter-checkbox" value="bencana">
+            <span class="w-3 h-3 rounded-full bg-[#DC2626] mr-3 ring-2 ring-transparent peer-checked:ring-[#DC2626]/30 transition-all opacity-40 peer-checked:opacity-100"></span> 
+            <span class="text-gray-500 dark:text-gray-400 peer-checked:text-gray-900 dark:peer-checked:text-gray-100 text-xs transition-colors">Bencana</span>
+          </label>
+          <label class="flex items-center cursor-pointer group">
+            <input type="checkbox" checked class="hidden peer filter-checkbox" value="kasus">
+            <span class="w-3 h-3 rounded-full bg-orange-500 mr-3 ring-2 ring-transparent peer-checked:ring-orange-500/30 transition-all opacity-40 peer-checked:opacity-100"></span> 
+            <span class="text-gray-500 dark:text-gray-400 peer-checked:text-gray-900 dark:peer-checked:text-gray-100 text-xs transition-colors">Kasus</span>
+          </label>
+          <label class="flex items-center cursor-pointer group">
+            <input type="checkbox" checked class="hidden peer filter-checkbox" value="pergerakan">
+            <span class="w-3 h-3 rounded-full bg-blue-700 mr-3 ring-2 ring-transparent peer-checked:ring-blue-700/30 transition-all opacity-40 peer-checked:opacity-100"></span> 
+            <span class="text-gray-500 dark:text-gray-400 peer-checked:text-gray-900 dark:peer-checked:text-gray-100 text-xs transition-colors">Pergerakan</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Bottom-Right: Custom Zoom Controls -->
+      <div class="absolute bottom-6 right-6 z-[1000] flex flex-col space-y-2 pointer-events-auto">
+        <button id="zoomInBtn" class="w-10 h-10 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all focus:outline-none">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+        </button>
+        <button id="zoomOutBtn" class="w-10 h-10 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-md flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all focus:outline-none">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12H4"></path></svg>
+        </button>
+      </div>
+
+      <!-- Zona Kanan: Event Information Panel (Multi-Workspace) -->
+      <div id="eventPanel" class="fixed md:right-0 md:top-0 bottom-0 left-0 md:left-auto h-[85vh] md:h-full w-full md:w-[440px] lg:w-[480px] bg-white dark:bg-gray-900 shadow-2xl z-[1000] transform translate-y-full md:translate-y-0 md:translate-x-full transition-transform duration-500 ease-in-out flex flex-col md:border-l border-t md:border-t-0 border-gray-200 dark:border-gray-800 rounded-t-2xl md:rounded-none">
+        
+        <div class="w-full flex justify-center py-3 md:hidden cursor-pointer" id="mobilePanelHandle">
+          <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+        </div>
+
+        <!-- Multi-Workspace Tabs Header -->
+        <div class="flex border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shrink-0 items-end z-10 shadow-sm relative" style="min-height: 48px;">
+           <div class="flex-1 flex overflow-x-auto no-scrollbar items-end h-full" id="tabsContainer"></div>
+           
+           <div class="flex shrink-0 items-center h-full bg-gray-50 dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800">
+             <button id="expandPanelBtn" class="px-3 py-3 h-full flex items-center justify-center text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors outline-none shrink-0" title="Perbesar Panel">
+               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+             </button>
+             <button id="closePanelBtn" class="px-3 py-3 h-full flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors outline-none shrink-0 border-l border-gray-200 dark:border-gray-800" title="Tutup Panel">
+               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+             </button>
+           </div>
+        </div>
+
+        <!-- Scrollable Content Area -->
+        <div class="flex-1 overflow-y-auto no-scrollbar relative pb-10 hidden" id="panelContentArea">
+          <!-- Hero Image with Premium Fallback -->
+          <div class="w-full h-52 bg-gray-100 dark:bg-gray-900/60 relative overflow-hidden group flex items-center justify-center border-b border-gray-100 dark:border-gray-800 shrink-0">
+            <!-- Fallback Icon & Text (Visible if Image Fails or is Empty) -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-900/40 z-0">
+              <svg class="w-12 h-12 mb-1.5 opacity-40 dark:opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              <span class="text-[9px] uppercase font-bold tracking-widest opacity-50 dark:opacity-40">Dokumentasi Arsip</span>
+            </div>
+
+            <!-- Main Hero Image -->
+            <img id="eventHeroImg" src="" alt="Hero Arsip" class="w-full h-full object-cover mix-blend-multiply opacity-0 group-hover:scale-105 transition-all duration-700 z-10" onload="this.classList.remove('opacity-0'); this.classList.add('opacity-80')" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%221%22 height=%221%22 fill=%22none%22></svg>'; this.classList.add('opacity-0')">
+            
+            <div class="absolute inset-0 bg-linear-to-t from-white dark:from-gray-900 via-white/20 dark:via-gray-900/10 to-transparent pointer-events-none z-20"></div>
+            
+            <div class="absolute top-4 left-4 bg-white/95 dark:bg-gray-900/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold tracking-widest shadow-sm flex items-center z-30">
+              <span id="eventCategoryDot" class="w-2 h-2 rounded-full mr-2"></span>
+              <span id="eventCategoryBadge" class="uppercase text-gray-700 dark:text-gray-300">Bencana</span>
+            </div>
+          </div>
+
+          <!-- Panel Header -->
+          <div class="px-6 pb-4 pt-2 relative -mt-6">
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex-1 mr-3">
+                <span id="eventYear" class="text-xs font-bold tracking-widest text-gray-400 dark:text-gray-500 mb-1 block">TAHUN 1998</span>
+                <h2 id="eventTitle" class="text-2xl font-serif font-bold text-gray-900 dark:text-white leading-tight">Judul Peristiwa</h2>
+              </div>
+              <div class="flex space-x-2 mt-1 shrink-0">
+                <!-- Bookmark Button -->
+                <button id="bookmarkEventBtn" class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-gray-400 hover:text-yellow-500 hover:border-yellow-200 transition-all focus:outline-none" title="Simpan Arsip">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path></svg>
+                </button>
+                <!-- Share Button (Deep Linking) -->
+                <button id="shareEventBtn" class="p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full text-gray-400 hover:text-blue-500 hover:border-blue-200 transition-all focus:outline-none" title="Bagikan Link">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                </button>
+              </div>
+            </div>
+
+
+
+            <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700 p-4 shadow-sm mb-5 flex justify-around">
+              <div class="text-center w-1/2">
+                <span id="stat1Label" class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Dampak Warga</span>
+                <span class="block text-2xl font-serif text-[#DC2626] font-bold"><span id="panelKorban">120</span><span id="stat1Unit" class="text-xs font-sans font-normal text-gray-500 ml-1">Jiwa</span></span>
+              </div>
+              <div class="w-px bg-gray-200 dark:bg-gray-700"></div>
+              <div class="text-center w-1/2">
+                <span id="stat2Label" class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Area Lokasi</span>
+                <span class="block text-2xl font-serif text-gray-800 dark:text-gray-200 font-bold"><span id="panelLuasan">4.5</span><span id="stat2Unit" class="text-xs font-sans font-normal text-gray-500 ml-1">Ha</span></span>
+              </div>
+            </div>
+
+            <blockquote class="pl-5 border-l-4 border-gray-300 dark:border-gray-600 my-6 italic text-gray-600 dark:text-gray-400 font-serif leading-relaxed text-[15px]">
+              <span id="eventQuote">"..."</span>
+              <footer id="eventQuoteAuthor" class="mt-3 text-xs text-gray-400 font-sans font-semibold tracking-wide uppercase"></footer>
+            </blockquote>
+
+            <!-- EVENT-DRIVEN TIMELINE SLIDER -->
+            <div id="chapter-timeline" class="mb-6 p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-sm">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Kronologi Peristiwa</h3>
+                <span id="timelineMilestoneLabel" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest px-2 py-0.5 bg-blue-50 dark:bg-blue-900/20 rounded">Puncak Peristiwa</span>
+              </div>
+              <!-- Node Track -->
+              <div id="timelineNodeTrack" class="relative flex items-center mb-3 h-8">
+                <!-- Nodes injected by JS -->
+              </div>
+              <!-- Labels -->
+              <div id="timelineLabels" class="flex justify-between text-xs text-gray-400 mt-2 font-medium">
+                <!-- injected by JS -->
+              </div>
+              <!-- Milestone Narasi -->
+              <p id="timelineMilestoneNarasi" class="mt-3 text-xs text-gray-500 dark:text-gray-400 leading-relaxed border-t border-gray-100 dark:border-gray-700 pt-3"></p>
+            </div>
+
+            <!-- === EXPANDED ARCHIVE TABS === -->
+            <div class="border-b border-gray-200 dark:border-gray-800 mb-6 flex overflow-x-auto no-scrollbar" id="archiveTabsBar">
+              <button data-archive="narasi" class="archive-tab-btn pb-3 px-1 mr-4 text-sm font-bold text-gray-800 dark:text-white border-b-2 border-gray-800 dark:border-white focus:outline-none whitespace-nowrap">Narasi</button>
+              <button data-archive="dokumentasi" class="archive-tab-btn pb-3 px-1 mr-4 text-sm font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors focus:outline-none whitespace-nowrap">Dokumentasi</button>
+              <button data-archive="artikel" class="archive-tab-btn pb-3 px-1 mr-4 text-sm font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors focus:outline-none whitespace-nowrap">Artikel</button>
+              <button data-archive="referensi" class="archive-tab-btn pb-3 px-1 mr-4 text-sm font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors focus:outline-none whitespace-nowrap">Referensi</button>
+              <button data-archive="arsip-lain" class="archive-tab-btn pb-3 px-1 text-sm font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors focus:outline-none whitespace-nowrap">Arsip Lain</button>
+            </div>
+
+            <div id="archive-narasi" class="archive-tab-content space-y-4">
+              <div class="prose prose-sm prose-gray dark:prose-invert max-w-none">
+                <p id="panelRingkasan" class="text-gray-700 dark:text-gray-300 leading-loose"></p>
+                <p id="eventDesc2" class="text-gray-700 dark:text-gray-300 leading-loose mt-4"></p>
+              </div>
+              
+              <!-- Alur Spasial / Spatial Flow -->
+              <div id="spatialFlowArea" class="mt-5 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700 hidden">
+                <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center">
+                  <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                  Interpretasi Peta & Alur Pergerakan
+                </h4>
+                <div id="spatialFlowList" class="relative border-l-2 border-gray-200 dark:border-gray-700 ml-2 pl-4 space-y-4">
+                  <!-- Injected by JS -->
+                </div>
+              </div>
+
+              <!-- Contextual Data Chart -->
+              <div class="mt-5 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Visualisasi Data Peristiwa</h4>
+                <div class="chart-wrapper">
+                  <canvas id="eventChart"></canvas>
+                </div>
+              </div>
+              <!-- Verified Contributions Area -->
+              <div id="approvedContributionsArea" class="mt-2 pt-4 border-t border-dashed border-gray-200 dark:border-gray-700 hidden">
+                <h4 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Kesaksian Warga (Terverifikasi)</h4>
+                <div id="approvedList" class="space-y-4"></div>
+              </div>
+            </div>
+
+            <!-- Dokumentasi -->
+            <div id="archive-dokumentasi" class="archive-tab-content hidden">
+              <!-- Video Highlight -->
+              <div class="mb-4">
+                <div class="w-full aspect-video bg-gray-900 rounded-xl overflow-hidden relative group cursor-pointer border border-gray-200 dark:border-gray-700 shadow-sm">
+                  <img src="https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800&grayscale=true" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-300">
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-12 h-12 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white group-hover:bg-blue-600 transition-colors">
+                      <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+                    </div>
+                  </div>
+                  <div class="absolute bottom-3 left-4 right-4 text-white">
+                    <p class="text-xs font-bold uppercase tracking-widest opacity-80">Video Arsip</p>
+                    <p class="text-sm font-medium leading-tight mt-0.5">Rekaman Udara Kondisi Lokasi</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Photo Grid -->
+              <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="aspect-square bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden cursor-pointer group relative">
+                  <img src="https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?auto=format&fit=crop&q=80&w=400&grayscale=true" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="aspect-square bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden cursor-pointer group relative">
+                  <img src="https://images.unsplash.com/photo-1548349282-358043c945b0?auto=format&fit=crop&q=80&w=400&grayscale=true" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="aspect-square bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden cursor-pointer group relative">
+                  <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=400&grayscale=true" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="aspect-square bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden cursor-pointer group relative flex items-center justify-center border border-gray-200 dark:border-gray-700">
+                  <span class="text-sm font-medium text-gray-500">+12 Foto</span>
+                </div>
+              </div>
+              
+              <!-- Documents -->
+              <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center space-x-4 cursor-pointer hover:border-blue-500 dark:hover:border-blue-500 transition-colors group">
+                <div class="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-lg flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <div class="flex-1">
+                  <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Dokumen Resmi Pemerintah Daerah</p>
+                  <p class="text-xs text-gray-400">PDF · 24 Halaman</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400 group-hover:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              </div>
+              <p class="text-[10px] text-gray-400 text-center pt-3 uppercase tracking-widest">Dokumentasi lengkap hubungi tim arsip.</p>
+            </div>
+
+            <!-- Artikel -->
+            <div id="archive-artikel" class="archive-tab-content hidden">
+              <div class="space-y-4">
+                <a href="#" class="block bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:border-gray-400 transition-colors group">
+                  <div class="flex items-center space-x-2 mb-2">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded">Radar Jember</span>
+                    <span class="text-xs text-gray-400">14 Feb 1998</span>
+                  </div>
+                  <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-blue-600 transition-colors leading-snug">Ratusan Warga Kencong Mengungsi Akibat Bencana yang Datang Tiba-Tiba</h4>
+                  <p class="text-xs text-gray-400 mt-1 line-clamp-2">Laporan pertama dari lapangan menggambarkan situasi darurat di wilayah terdampak…</p>
+                </a>
+                <a href="#" class="block bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:border-gray-400 transition-colors group">
+                  <div class="flex items-center space-x-2 mb-2">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400 bg-gray-200 dark:bg-gray-700 px-2 py-0.5 rounded">Kompas Arsip</span>
+                    <span class="text-xs text-gray-400">1 Mar 1998</span>
+                  </div>
+                  <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-blue-600 transition-colors leading-snug">Pemulihan Lambat, Warga Kencong Masih Tinggal di Pengungsian</h4>
+                  <p class="text-xs text-gray-400 mt-1 line-clamp-2">Satu bulan setelah bencana, kondisi psikologis dan material warga terdampak belum pulih…</p>
+                </a>
+              </div>
+            </div>
+
+            <!-- Referensi -->
+            <div id="archive-referensi" class="archive-tab-content hidden">
+              <div class="space-y-3">
+                <div class="bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-4">
+                  <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Buku</p>
+                  <p class="text-sm text-gray-800 dark:text-gray-200 font-medium">Sejarah Bencana Alam Jawa Timur 1900–2000</p>
+                  <p class="text-xs text-gray-400 mt-1">Penulis: Dr. Ahmad Fauzi · Penerbit UJ Press, 2003</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-4">
+                  <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Laporan BNPB</p>
+                  <p class="text-sm text-gray-800 dark:text-gray-200 font-medium">Data Kejadian Bencana Kabupaten Jember 1998</p>
+                  <p class="text-xs text-gray-400 mt-1">Badan Nasional Penanggulangan Bencana · Arsip Internal</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-4">
+                  <p class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1">Jurnal Ilmiah</p>
+                  <p class="text-sm text-gray-800 dark:text-gray-200 font-medium">Analisis Kerentanan Wilayah Pesisir Selatan Jember</p>
+                  <p class="text-xs text-gray-400 mt-1">Jurnal Geografi Indonesia · Vol. 12, No. 2 · 2001</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Arsip Lain -->
+            <div id="archive-arsip-lain" class="archive-tab-content hidden">
+              <div class="space-y-3">
+                <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
+                  <p class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest mb-2">Kesaksian Lisan (Oral History)</p>
+                  <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed italic">"Waktu itu saya masih kecil, saya ingat bapak saya membawa kami naik ke atas rumah karena air terus naik…"</p>
+                  <p class="text-xs text-gray-400 mt-2">— Narasumber anonim, diwawancarai 2018</p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-4">
+                  <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Data Spasial (GIS)</p>
+                  <p class="text-sm text-gray-700 dark:text-gray-300">Peta genangan berdasarkan data DEMNAS dan analisis DEM historis.</p>
+                  <button class="mt-2 text-xs text-blue-500 hover:underline">Lihat Peta Overlay →</button>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl p-4">
+                  <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Rekaman Video</p>
+                  <p class="text-sm text-gray-400">Belum tersedia untuk peristiwa ini. Bantu kami melengkapinya.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bantu Lengkapi (Kontribusi Warga) — bawah semua konten -->
+            <div class="pt-8 pb-6 mt-4 border-t border-gray-100 dark:border-gray-800">
+              <p class="text-xs text-gray-400 dark:text-gray-500 text-center mb-3">Punya informasi, foto, atau cerita tentang peristiwa ini?</p>
+              <button id="contributeBtn" class="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold rounded-xl hover:bg-gray-800 transition-all flex items-center justify-center shadow-sm focus:outline-none text-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
+                Tambah Kesaksian / Bukti
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div id="panelEmptyState" class="flex-1 flex flex-col items-center justify-center p-8 text-center text-gray-400">
+          <svg class="w-14 h-14 mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+          <p class="font-medium text-sm">Pilih peristiwa di peta</p>
+          <p class="text-xs mt-1 opacity-70">untuk melihat arsipnya.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODALS OVERLAYS -->
+
+    <!-- General Feedback Modal -->
+    <div id="feedbackModal" class="fixed inset-0 z-[3000] flex items-center justify-center bg-gray-900/60 dark:bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+      <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md transform scale-95 transition-transform duration-300 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center">
+          <h3 class="font-serif font-bold text-gray-800 dark:text-white text-lg">Masukan Sistem</h3>
+          <button id="closeFeedbackBtn" class="text-gray-400 hover:text-gray-700 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        </div>
+        <div class="p-6">
+          <p class="text-sm text-gray-500 mb-4">Berikan kritik atau saran teknis terkait website ini secara umum. (Bukan untuk menambahkan data sejarah).</p>
+          <textarea rows="4" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none mb-4" placeholder="Ketik saran Anda di sini..."></textarea>
+          <button id="submitFeedbackBtn" class="w-full py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-medium">Kirim Masukan</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Contextual Contribution Modal (Tambah Kesaksian/Bukti pada Peristiwa yang Ada) -->
+    <div id="contributeModal" class="fixed inset-0 z-[3000] flex items-center justify-center bg-gray-900/60 dark:bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+      <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-lg transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col max-h-[90vh]">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
+          <h3 class="font-serif font-bold text-gray-800 dark:text-white text-lg">Tambah Kesaksian / Bukti</h3>
+          <button id="closeContributeBtn" class="text-gray-400 hover:text-gray-700 dark:hover:text-white"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        </div>
+        
+        <!-- Form State -->
+        <div id="contributeFormState" class="flex-1 flex flex-col">
+          <div class="p-6 overflow-y-auto no-scrollbar flex-1">
+            <div class="bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 px-4 py-3 rounded-lg text-sm mb-6 flex items-start border border-blue-100 dark:border-blue-800">
+              <svg class="w-5 h-5 mr-2 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <div>
+                <span class="font-semibold block mb-0.5">Konteks Bukti:</span>
+                <span id="contributeContextTitle">Mengajukan bukti untuk Peristiwa...</span>
+              </div>
+            </div>
+            <form class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">NAMA PENGIRIM</label>
+                <input type="text" id="contribName" class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none" placeholder="Boleh Anonim">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">JENIS KONTRIBUSI</label>
+                <select id="contribType" class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none">
+                  <option value="kesaksian">Kesaksian / Cerita Pribadi</option>
+                  <option value="foto">Foto Arsip / Dokumentasi</option>
+                  <option value="dokumen">Dokumen / Surat Resmi</option>
+                  <option value="referensi">Referensi / Tautan Artikel</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">ISI KONTRIBUSI</label>
+                <textarea id="contribStory" rows="5" class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none resize-none" placeholder="Ceritakan kesaksian Anda, atau tempelkan tautan referensi..."></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="px-6 pb-6 shrink-0 border-t border-gray-100 dark:border-gray-800 pt-4">
+            <button id="submitContributeBtn" class="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-medium hover:bg-gray-800 transition-colors">Kirim ke Tim Verifikasi</button>
+          </div>
+        </div>
+
+        <!-- Success State -->
+        <div id="contributeSuccessState" class="hidden flex-col items-center justify-center p-8 text-center">
+          <div class="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mb-4 mx-auto">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          </div>
+          <h4 class="font-serif font-bold text-xl text-gray-800 dark:text-white mb-2">Terima kasih!</h4>
+          <p class="text-sm text-gray-500 mb-6">Kontribusi Anda sedang masuk antrean verifikasi Admin.</p>
+          <div class="bg-gray-100 dark:bg-gray-800 px-4 py-3 rounded-lg inline-block border border-gray-200 dark:border-gray-700">
+            <span class="text-xs text-gray-400 block mb-1">ID TIKET PELACAKAN</span>
+            <span id="ticketIdDisplay" class="font-mono font-bold text-gray-800 dark:text-white tracking-widest">TK-9281X</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Control Dashboard (Overlay) -->
+    <div id="adminDashboard" class="fixed inset-0 z-[4000] bg-white dark:bg-gray-950 flex flex-col transform translate-y-full transition-transform duration-500 overflow-hidden">
+      <!-- Header Admin -->
+      <div class="h-16 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-6 bg-white dark:bg-gray-900 shrink-0">
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-red-600 rounded flex items-center justify-center text-white font-bold font-serif mr-3 shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+          </div>
+          <h2 class="font-serif font-bold text-lg text-gray-800 dark:text-white">Admin Verification Dashboard</h2>
+          <span id="adminQueueBadge" class="ml-4 px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs font-bold rounded">0 Antrean</span>
+        </div>
+        <button id="closeAdminBtn" class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white flex items-center">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Keluar
+        </button>
+      </div>
+      
+      <!-- Split Screen Area -->
+      <div class="flex-1 flex overflow-hidden">
+        <!-- Kiri: Peta Spasial -->
+        <div class="w-2/5 h-full border-r border-gray-200 dark:border-gray-800 relative bg-gray-100 dark:bg-gray-950">
+          <div id="adminMap" class="w-full h-full z-10"></div>
+          <div class="absolute top-4 left-4 z-[1000] bg-white/90 dark:bg-gray-900/90 backdrop-blur px-3 py-2 rounded shadow-md border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-300">
+            Titik merah: Lokasi Bukti yang Diajukan
+          </div>
+        </div>
+        
+        <!-- Kanan: Konteks & Media -->
+        <div class="w-3/5 h-full bg-gray-50 dark:bg-gray-900 overflow-y-auto p-8 relative flex flex-col">
+          <div class="max-w-2xl mx-auto w-full flex-1 flex flex-col">
+            
+            <!-- Admin Content Wrapper -->
+            <div id="adminContentWrapper">
+              <!-- Data Pengajuan -->
+              <div class="mb-6 flex justify-between items-start">
+                <div>
+                  <span class="text-[10px] font-bold tracking-widest text-gray-400 uppercase">Target Peristiwa</span>
+                  <h3 id="adminTargetEvent" class="text-xl font-serif font-bold text-gray-900 dark:text-white mt-1">—</h3>
+                </div>
+                <div class="text-right">
+                  <span class="text-[10px] font-bold tracking-widest text-gray-400 uppercase">ID Tiket</span>
+                  <p id="adminTicketId" class="font-mono font-bold text-gray-700 dark:text-gray-300">—</p>
+                </div>
+              </div>
+
+              <!-- Identitas -->
+              <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 mb-4">
+                <span class="text-xs text-gray-500 block mb-1">Nama Pengirim</span>
+                <p id="adminSenderName" class="font-medium text-sm text-gray-800 dark:text-gray-200">—</p>
+              </div>
+
+              <!-- Cerita -->
+              <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 mb-4">
+                <span class="text-xs text-gray-500 block mb-2">Kesaksian / Isi Kontribusi</span>
+                <p id="adminSenderStory" class="text-sm leading-relaxed text-gray-700 dark:text-gray-300 italic">—</p>
+              </div>
+
+              <!-- Media Viewer — pakai placeholder rapi, bukan broken img -->
+              <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 mb-8">
+                <span class="text-xs text-gray-500 block mb-3">Media Terlampir</span>
+                <div class="w-full h-40 bg-gray-100 dark:bg-gray-700 rounded-lg flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-gray-600">
+                  <svg class="w-8 h-8 text-gray-300 dark:text-gray-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  <p class="text-xs text-gray-400">Tidak ada lampiran media</p>
+                </div>
+              </div>
+
+              <!-- Keputusan -->
+              <div class="flex space-x-4 border-t border-gray-200 dark:border-gray-800 pt-6">
+                <button id="adminRejectBtn" class="flex-1 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 hover:text-red-600 transition-colors">Tolak</button>
+                <button id="adminApproveBtn" class="flex-1 py-3 bg-emerald-600 text-white rounded-xl font-medium shadow-lg hover:bg-emerald-700 transition-colors">Verifikasi & Terbitkan</button>
+              </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="adminDoneMessage" class="hidden flex-col items-center justify-center text-center flex-1">
+              <svg class="w-16 h-16 text-gray-200 dark:text-gray-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+              <h3 class="text-lg font-serif font-bold text-gray-300 dark:text-gray-600">Kotak Masuk Kosong</h3>
+              <p class="text-sm text-gray-400 dark:text-gray-600 mt-2">Semua kontribusi warga telah diproses.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script imports -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
