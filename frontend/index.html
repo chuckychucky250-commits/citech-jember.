@@ -30,10 +30,10 @@
     </svg>
 
     <!-- Onboarding Toast -->
-    <div id="onboardingToast" class="fixed bottom-24 md:bottom-6 left-1/2 transform -translate-x-1/2 z-[2000] bg-gray-900 dark:bg-gray-800 text-white px-5 py-3 rounded-full shadow-2xl flex items-center space-x-3 transition-all duration-700 opacity-0 translate-y-10 max-w-[90vw]">
-      <svg class="w-5 h-5 text-yellow-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-      <span class="text-sm font-medium">Ketuk marker di peta untuk membuka arsip peristiwa.</span>
-      <button id="closeOnboardingBtn" class="ml-3 text-gray-400 hover:text-white focus:outline-none shrink-0">
+    <div id="onboardingToast" class="fixed bottom-24 md:bottom-6 left-1/2 transform -translate-x-1/2 z-[2000] bg-gray-900 dark:bg-gray-800 text-white px-4 py-3 rounded-xl shadow-2xl flex items-start sm:items-center gap-3 transition-all duration-700 opacity-0 pointer-events-none translate-y-10 w-[85vw] sm:w-auto max-w-sm">
+      <svg class="w-5 h-5 text-yellow-400 shrink-0 mt-0.5 sm:mt-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <span class="text-sm font-medium flex-1 leading-snug">Ketuk marker di peta untuk melihat arsip peristiwa.</span>
+      <button id="closeOnboardingBtn" class="text-gray-400 hover:text-white focus:outline-none shrink-0 mt-0.5 sm:mt-0 p-1 -mr-1">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
     </div>
@@ -65,14 +65,18 @@
       </div>
       
       <!-- Mode Instruction -->
-      <div id="reportInstructions" class="px-6 py-4 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800 shrink-0">
-        <div class="flex items-start space-x-3">
+      <div id="reportInstructions" class="px-6 py-4 bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800 shrink-0 flex items-center justify-between">
+        <div class="flex items-start space-x-3 flex-1 pr-2">
           <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"></path></svg>
           <div>
-            <p class="text-sm font-semibold text-amber-800 dark:text-amber-300">Mode Pelaporan Aktif</p>
-            <p class="text-xs text-amber-700 dark:text-amber-400 mt-1">Ketuk titik di peta untuk menentukan lokasi peristiwa yang ingin Anda laporkan.</p>
+            <p class="text-sm font-semibold text-amber-800 dark:text-amber-300">Mode Pelaporan</p>
+            <p class="text-[11px] text-amber-700 dark:text-amber-400 mt-0.5 leading-snug">Gunakan tombol di samping untuk memilih lokasi langsung dari peta.</p>
           </div>
         </div>
+        <button type="button" id="pickMapBtn" class="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold whitespace-nowrap shadow-sm transition-colors flex items-center">
+          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          Pilih Peta
+        </button>
       </div>
 
       <!-- Selected Loc Info -->
@@ -162,7 +166,16 @@
       </div>
       <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center shrink-0">
         <h2 class="font-serif font-bold text-lg text-gray-800 dark:text-white">Ruang Personal</h2>
-        <button id="closePersonalBtn" class="text-gray-400 hover:text-gray-700 dark:hover:text-white focus:outline-none p-1"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <div class="flex items-center space-x-4">
+          <!-- Mobile Theme Toggle -->
+          <button id="themeToggleBtnMobile" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors focus:outline-none md:hidden" title="Ganti Tema">
+            <svg id="themeIconSunMobile" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            <svg id="themeIconMoonMobile" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+          </button>
+          <button id="closePersonalBtn" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors focus:outline-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
       </div>
       
       <!-- Tab Nav -->
@@ -175,8 +188,14 @@
       <!-- Tab Content Area -->
       <div class="flex-1 overflow-y-auto no-scrollbar p-4 relative pb-safe">
         <!-- History List -->
-        <div id="contentHistory" class="space-y-3 block">
-          <p class="text-sm text-gray-400 text-center mt-10">Belum ada riwayat penjelajahan.</p>
+        <div id="contentHistory" class="block">
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Baru Dilihat</span>
+            <button id="clearHistoryBtn" class="text-xs text-red-500 hover:text-red-600 font-medium transition-colors">Hapus Semua</button>
+          </div>
+          <div id="historyList" class="space-y-3">
+            <p class="text-sm text-gray-400 text-center mt-10">Belum ada riwayat penjelajahan.</p>
+          </div>
         </div>
         
         <!-- Bookmarks List -->
@@ -270,7 +289,7 @@
         </div>
 
         <!-- Floating Search Bar (top left, responsive) -->
-        <div class="absolute top-4 left-4 md:left-6 z-[1000] w-[calc(100%-4.5rem)] md:w-80 max-w-sm pointer-events-auto">
+        <div class="absolute top-4 left-4 md:left-6 z-[1000] w-[calc(100%-5rem)] md:w-80 max-w-sm pointer-events-auto">
           <div class="relative">
             <div class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.15)] border border-white/60 dark:border-slate-700/60 flex items-center px-4 py-3 transition-colors">
               <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -285,8 +304,8 @@
         </div>
 
         <!-- Mobile top-right: Theme toggle button -->
-        <div class="absolute top-4 right-4 z-[1000] flex items-center space-x-2 md:hidden">
-          <button id="mobileThemeBtn" class="w-11 h-11 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.15)] border border-white/60 dark:border-slate-700/60 flex items-center justify-center text-gray-600 dark:text-gray-300 transition-all">
+        <div class="absolute top-4 right-4 z-[1050] flex items-center space-x-2 md:hidden">
+          <button id="mobileThemeBtn" class="w-11 h-11 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.15)] border border-white/60 dark:border-slate-700/60 flex items-center justify-center text-gray-600 dark:text-gray-300 transition-all active:scale-95 pointer-events-auto">
             <svg id="mobileThemeIconSun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             <svg id="mobileThemeIconMoon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
           </button>
@@ -350,7 +369,7 @@
           <div class="flex border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shrink-0 items-end z-10 shadow-sm relative" style="min-height: 48px;">
              <div class="flex-1 flex overflow-x-auto no-scrollbar items-end h-full" id="tabsContainer"></div>
              <div class="flex shrink-0 items-center h-full bg-gray-50 dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800">
-               <button id="expandPanelBtn" class="px-3 py-3 h-full hidden md:flex items-center justify-center text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors outline-none shrink-0" title="Perbesar Panel">
+               <button id="expandPanelBtn" class="px-3 py-3 h-full flex items-center justify-center text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors outline-none shrink-0" title="Perbesar Panel">
                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                </button>
                <button id="closePanelBtn" class="px-3 py-3 h-full flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors outline-none shrink-0 border-l border-gray-200 dark:border-gray-800" title="Tutup Panel">
@@ -360,7 +379,7 @@
           </div>
 
           <!-- Scrollable Content Area -->
-          <div class="flex-1 overflow-y-auto no-scrollbar relative pb-10 hidden" id="panelContentArea">
+          <div class="flex-1 overflow-y-auto no-scrollbar relative pb-32 md:pb-24 hidden" id="panelContentArea">
             <!-- Hero Image -->
             <div class="w-full h-48 md:h-52 bg-gray-100 dark:bg-gray-900/60 relative overflow-hidden group flex items-center justify-center shrink-0">
               <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-900/40 z-0">
@@ -432,7 +451,7 @@
               </div>
 
               <!-- Archive Tabs -->
-              <div class="border-b border-gray-200 dark:border-gray-800 mb-6 flex overflow-x-auto no-scrollbar" id="archiveTabsBar">
+              <div class="border-b border-gray-200 dark:border-gray-800 mb-6 flex overflow-x-auto no-scrollbar cursor-grab" id="archiveTabsBar">
                 <button data-archive="narasi" class="archive-tab-btn pb-3 px-1 mr-4 text-sm font-bold text-gray-800 dark:text-white border-b-2 border-gray-800 dark:border-white focus:outline-none whitespace-nowrap">Narasi</button>
                 <button data-archive="dokumentasi" class="archive-tab-btn pb-3 px-1 mr-4 text-sm font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors focus:outline-none whitespace-nowrap">Dokumentasi</button>
                 <button data-archive="artikel" class="archive-tab-btn pb-3 px-1 mr-4 text-sm font-medium text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors focus:outline-none whitespace-nowrap">Artikel</button>
@@ -553,14 +572,6 @@
                 </div>
               </div>
 
-              <!-- Contribute -->
-              <div class="pt-8 pb-6 mt-4 border-t border-gray-100 dark:border-gray-800">
-                <p class="text-xs text-gray-400 dark:text-gray-500 text-center mb-3">Punya informasi, foto, atau cerita tentang peristiwa ini?</p>
-                <button id="contributeBtn" class="w-full py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold rounded-xl hover:bg-gray-800 active:bg-gray-700 transition-all flex items-center justify-center shadow-sm focus:outline-none text-sm">
-                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
-                  Tambah Kesaksian / Bukti
-                </button>
-              </div>
             </div>
           </div>
           
@@ -570,6 +581,14 @@
             <p class="font-medium text-sm">Pilih peristiwa di peta</p>
             <p class="text-xs mt-1 opacity-70">untuk melihat arsipnya.</p>
           </div>
+          
+          <!-- Floating Action Button -->
+          <div id="panelStickyFooter" class="hidden absolute bottom-6 left-0 right-0 px-5 flex justify-center pointer-events-none" style="z-index: 50;">
+            <button id="contributeBtn" class="pointer-events-auto px-8 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-full hover:bg-gray-800 dark:hover:bg-gray-200 hover:scale-105 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.3)] dark:shadow-[0_8px_30px_rgba(255,255,255,0.2)] transition-all flex items-center justify-center text-sm border border-transparent dark:border-white/20">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+              Tambah Kesaksian / Bukti
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -577,29 +596,29 @@
     <!-- Mobile Bottom Navigation Bar -->
     <nav class="mobile-bottom-nav fixed bottom-0 inset-x-0 z-[1100] md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 flex items-center justify-around px-2 shadow-2xl" style="padding-bottom: env(safe-area-inset-bottom, 0px);">
       <!-- Menu/Library -->
-      <button id="mobilePersonalBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px]">
+      <button id="mobilePersonalBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
         <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h8m-8 6h16"></path></svg>
         <span class="text-[9px] font-medium uppercase tracking-wider">Menu</span>
       </button>
       <!-- Search (triggers search bar focus) -->
-      <button id="mobileSearchBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px]">
+      <button id="mobileSearchBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
         <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         <span class="text-[9px] font-medium uppercase tracking-wider">Cari</span>
       </button>
       <!-- Report -->
-      <button id="mobileReportBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-amber-500 hover:text-amber-600 transition-colors min-w-[60px]">
+      <button id="mobileReportBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-amber-500 hover:text-amber-600 transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
         <div class="w-12 h-12 -mt-6 bg-amber-500 hover:bg-amber-600 rounded-full flex items-center justify-center shadow-xl border-4 border-white dark:border-gray-900 transition-colors mb-1">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
         </div>
         <span class="text-[9px] font-medium uppercase tracking-wider text-amber-500">Lapor</span>
       </button>
       <!-- Filter/Legend -->
-      <button id="mobileLegendBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px]">
+      <button id="mobileLegendBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
         <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"></path></svg>
         <span class="text-[9px] font-medium uppercase tracking-wider">Filter</span>
       </button>
       <!-- Feedback -->
-      <button id="mobileFeedbackBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px]">
+      <button id="mobileFeedbackBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
         <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
         <span class="text-[9px] font-medium uppercase tracking-wider">Saran</span>
       </button>

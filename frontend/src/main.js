@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let activePolygon = null;
   // --- 1. DARK MODE LOGIC ---
   const themeToggleBtn = document.getElementById('themeToggleBtn');
+  const themeToggleBtnMobile = document.getElementById('themeToggleBtnMobile');
   const themeIconSun = document.getElementById('themeIconSun');
   const themeIconMoon = document.getElementById('themeIconMoon');
   
@@ -28,6 +29,21 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggleBtn.addEventListener('click', () => {
       const isDark = document.documentElement.classList.toggle('dark');
       applyTheme(isDark);
+    });
+  }
+
+  if(themeToggleBtnMobile) {
+    themeToggleBtnMobile.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      applyTheme(isDark);
+    });
+  }
+
+  const closeOnboardingBtn = document.getElementById('closeOnboardingBtn');
+  if (closeOnboardingBtn) {
+    closeOnboardingBtn.addEventListener('click', () => {
+      const toast = document.getElementById('onboardingToast');
+      if (toast) toast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
     });
   }
 
@@ -91,9 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if(document.documentElement.classList.contains('dark')) setMapTheme('dark');
 
   // Load GeoJSON Boundaries
+  let jemberGeoJSONData = null;
   fetch('./data/jember-batas.geojson')
     .then(response => response.json())
     .then(data => {
+      jemberGeoJSONData = data;
       const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
       geojsonLayer = L.geoJSON(data, {
         style: getGeoJSONStyle(currentTheme)
@@ -173,6 +191,11 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', () => map.invalidateSize());
 
   // --- 3. DATASET ---
+  // Shared backdrop overlay (declared early so all functions can use it)
+  const overlay = document.createElement('div');
+  overlay.className = 'sheet-overlay';
+  document.body.appendChild(overlay);
+
   fetch('./data/events.json')
     .then(response => response.json())
     .then(eventsData => {
@@ -276,18 +299,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- 4. MULTI-WORKSPACE TABS ---
   const eventPanel = document.getElementById('eventPanel');
-  const panelContentArea = document.getElementById('panelContentArea');
+  const panelContent = document.getElementById('panelContent');
   const panelEmptyState = document.getElementById('panelEmptyState');
-  const tabsContainer = document.getElementById('tabsContainer');
   const approvedContributionsArea = document.getElementById('approvedContributionsArea');
   const approvedList = document.getElementById('approvedList');
   
   let openedTabs = [];
   let activeTabId = null;
+  let isMobilePanelExpanded = false;
 
   function openPanel(data) {
+    if (panelContent) panelContent.classList.remove('hidden');
+    const footer = document.getElementById('panelStickyFooter');
+    if (footer) footer.classList.remove('hidden');
+    if (panelEmptyState) panelEmptyState.classList.add('hidden');
+
     const onboardingToast = document.getElementById('onboardingToast');
-    if(onboardingToast) onboardingToast.classList.add('opacity-0', 'translate-y-10');
+    if(onboardingToast) onboardingToast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
 
     // Dynamic data injection
     const elTitle = document.getElementById('eventTitle');
@@ -314,17 +342,31 @@ document.addEventListener('DOMContentLoaded', () => {
     // Animation logic
     if (window.innerWidth >= 768) {
       eventPanel.classList.remove('md:translate-x-full');
-      const mapContainer = document.getElementById('map');
-      if (mapContainer) {
-        mapContainer.style.width = 'calc(100% - 440px)';
-      }
+      eventPanel.style.height = ''; 
     } else {
+      isMobilePanelExpanded = false;
+      eventPanel.style.height = '50vh';
       eventPanel.classList.remove('translate-y-full');
+      
+      const expandBtn = document.getElementById('expandPanelBtn');
+      if(expandBtn) {
+        expandBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>';
+        expandBtn.title = "Perbesar Panel";
+      }
     }
     eventPanel.classList.remove('translate-x-full'); // fallback for grading
 
+    // Calculate offset for map center
+    const targetPoint = map.project(data.loc, 15);
+    if (window.innerWidth >= 768) {
+      targetPoint.x += 220; // Shift right by half the panel width (440px / 2) to center in visible area
+    } else {
+      targetPoint.y += (window.innerHeight * 0.25); // Shift down by 25vh to center in upper 50vh of screen
+    }
+    const targetLatLng = map.unproject(targetPoint, 15);
+
     // Deep Zoom on Click (Technical Map Zoom)
-    map.flyTo(data.loc, 15, {
+    map.flyTo(targetLatLng, 15, {
       duration: 1.5,
       easeLinearity: 0.25
     });
@@ -339,10 +381,6 @@ document.addEventListener('DOMContentLoaded', () => {
     saveToHistory(data.id);
     
     switchTab(data.id);
-
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 300);
   }
 
   // Map overlay circle tracking
@@ -666,43 +704,29 @@ document.addEventListener('DOMContentLoaded', () => {
   
   if (expandPanelBtn) {
     expandPanelBtn.addEventListener('click', () => {
-      if (eventPanel.classList.contains('md:w-[440px]')) {
-        eventPanel.classList.replace('md:w-[440px]', 'md:w-[80vw]');
-        eventPanel.classList.replace('lg:w-[480px]', 'lg:w-[85vw]');
-        expandPanelBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5M4 10V6m0 0h4m-4 0l5 5m11-5v4m0-4h-4m4 0l-5 5"></path></svg>';
-        expandPanelBtn.title = "Perkecil Panel";
+      if (window.innerWidth >= 768) {
+        if (eventPanel.classList.contains('md:w-[440px]')) {
+          eventPanel.classList.replace('md:w-[440px]', 'md:w-[80vw]');
+          eventPanel.classList.replace('lg:w-[480px]', 'lg:w-[85vw]');
+          expandPanelBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5M4 10V6m0 0h4m-4 0l5 5m11-5v4m0-4h-4m4 0l-5 5"></path></svg>';
+          expandPanelBtn.title = "Perkecil Panel";
+        } else {
+          eventPanel.classList.replace('md:w-[80vw]', 'md:w-[440px]');
+          eventPanel.classList.replace('lg:w-[85vw]', 'lg:w-[480px]');
+          expandPanelBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>';
+          expandPanelBtn.title = "Perbesar Panel";
+        }
       } else {
-        eventPanel.classList.replace('md:w-[80vw]', 'md:w-[440px]');
-        eventPanel.classList.replace('lg:w-[85vw]', 'lg:w-[480px]');
-        expandPanelBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>';
-        expandPanelBtn.title = "Perbesar Panel";
+        isMobilePanelExpanded = !isMobilePanelExpanded;
+        eventPanel.style.height = isMobilePanelExpanded ? '88vh' : '50vh';
+        updateExpandIcon();
       }
     });
   }
 
   if (closePanelBtn) {
     closePanelBtn.addEventListener('click', () => {
-      if (activePolygon) {
-        map.removeLayer(activePolygon);
-        activePolygon = null;
-      }
-      
-      // Animation logic (Strict Rule: kept untouched)
-      eventPanel.classList.add('translate-x-full');
-      const mapContainer = document.getElementById('map');
-      if (mapContainer) {
-        mapContainer.style.width = '100%';
-      }
-      
-      if (window.innerWidth >= 768) {
-        eventPanel.classList.add('md:translate-x-full');
-      } else {
-        eventPanel.classList.add('translate-y-full');
-      }
-      
-      setTimeout(() => {
-        map.invalidateSize();
-      }, 300);
+      closePanel();
     });
   }
 
@@ -715,6 +739,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (activeData) {
       if(panelEmptyState) panelEmptyState.classList.add('hidden');
       if(panelContentArea) panelContentArea.classList.remove('hidden');
+      const footer = document.getElementById('panelStickyFooter');
+      if(footer) footer.classList.remove('hidden');
 
       const elTitle = document.getElementById('eventTitle');
       if(elTitle) elTitle.textContent = activeData.title;
@@ -861,10 +887,16 @@ document.addEventListener('DOMContentLoaded', () => {
       renderTabs();
       panelEmptyState.classList.remove('hidden');
       panelContentArea.classList.add('hidden');
+      const footer = document.getElementById('panelStickyFooter');
+      if(footer) footer.classList.add('hidden');
     } else if (activeTabId === id) {
       switchTab(openedTabs[openedTabs.length - 1].id);
     } else {
       renderTabs();
+      panelEmptyState.classList.add('hidden');
+      if(panelContentArea) panelContentArea.classList.remove('hidden');
+      const footer = document.getElementById('panelStickyFooter');
+      if(footer) footer.classList.remove('hidden');
     }
   }
 
@@ -975,13 +1007,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Show onboarding toast
   setTimeout(() => {
+    // Reveal Onboarding Toast
     const onboardingToast = document.getElementById('onboardingToast');
-    if(onboardingToast) {
-      onboardingToast.classList.remove('opacity-0', 'translate-y-10');
-      const closeBtn = document.getElementById('closeOnboardingBtn');
-      if(closeBtn) closeBtn.addEventListener('click', () => {
-        onboardingToast.classList.add('opacity-0', 'translate-y-10');
-      });
+    if (onboardingToast) {
+      onboardingToast.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+      // Auto-hide after 6 seconds
+      setTimeout(() => {
+        onboardingToast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+      }, 6000);
     }
   }, 1200);
 
@@ -994,8 +1027,8 @@ document.addEventListener('DOMContentLoaded', () => {
         b.classList.remove('font-bold', 'text-gray-800', 'dark:text-white', 'border-gray-800', 'dark:border-white');
         b.classList.add('font-medium', 'text-gray-400', 'border-transparent');
       });
-      btn.classList.add('font-bold', 'text-gray-800', 'border-gray-800');
       btn.classList.remove('font-medium', 'text-gray-400', 'border-transparent');
+      btn.classList.add('font-bold', 'text-gray-800', 'dark:text-white', 'border-gray-800', 'dark:border-white');
       // Show the right content
       document.querySelectorAll('.archive-tab-content').forEach(c => c.classList.add('hidden'));
       const targetEl = document.getElementById(`archive-${target}`);
@@ -1003,41 +1036,133 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Drag-to-scroll for Archive Tabs
+  const archiveTabsBar = document.getElementById('archiveTabsBar');
+  if (archiveTabsBar) {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    archiveTabsBar.addEventListener('mousedown', (e) => {
+      isDown = true;
+      archiveTabsBar.style.cursor = 'grabbing';
+      startX = e.pageX - archiveTabsBar.offsetLeft;
+      scrollLeft = archiveTabsBar.scrollLeft;
+    });
+    archiveTabsBar.addEventListener('mouseleave', () => {
+      isDown = false;
+      archiveTabsBar.style.cursor = 'grab';
+    });
+    archiveTabsBar.addEventListener('mouseup', () => {
+      isDown = false;
+      archiveTabsBar.style.cursor = 'grab';
+    });
+    archiveTabsBar.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - archiveTabsBar.offsetLeft;
+      const walk = (x - startX) * 2;
+      archiveTabsBar.scrollLeft = scrollLeft - walk;
+    });
+  }
+
   // --- 6c. LAPORKAN LOKASI BARU ---
-  const openReportBtn = document.getElementById('openReportBtn');
   const reportPanel = document.getElementById('reportPanel');
-  const closeReportBtn = document.getElementById('closeReportBtn');
   const reportLocInfo = document.getElementById('reportLocInfo');
   const reportLocText = document.getElementById('reportLocText');
-  const submitReportBtn = document.getElementById('submitReportBtn');
+
+  // Jember bounding box for validation (fallback if turf not ready)
+  const jemberBoundsCheck = L.latLngBounds([-8.6, 113.1], [-7.8, 114.2]);
+
+  function pointInPolygon(point, vs) {
+    let x = point[0], y = point[1];
+    let inside = false;
+    for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        let xi = vs[i][0], yi = vs[i][1];
+        let xj = vs[j][0], yj = vs[j][1];
+        let intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+    return inside;
+  }
+
+  function isPointInJember(latlng) {
+    if (jemberGeoJSONData && jemberGeoJSONData.features) {
+      const pt = [latlng.lng, latlng.lat];
+      for (let f of jemberGeoJSONData.features) {
+        if (f.geometry && f.geometry.type === 'Polygon') {
+          if (pointInPolygon(pt, f.geometry.coordinates[0])) return true;
+        } else if (f.geometry && f.geometry.type === 'MultiPolygon') {
+          for (let poly of f.geometry.coordinates) {
+            if (pointInPolygon(pt, poly[0])) return true;
+          }
+        }
+      }
+      return false; // If GeoJSON loaded and it didn't match, strictly reject
+    }
+    return jemberBoundsCheck.contains(latlng);
+  }
 
   let reportMode = false;
   let reportMarker = null;
   let selectedReportLoc = null;
 
-  if(openReportBtn && reportPanel) {
-    openReportBtn.addEventListener('click', () => {
-      // Close event panel if open on mobile
-      reportPanel.classList.remove('translate-x-full');
-      reportMode = true;
-      document.body.style.cursor = 'crosshair';
-      // Show cursor hint
-      map.getContainer().style.cursor = 'crosshair';
-    });
-
-    closeReportBtn.addEventListener('click', () => {
-      reportPanel.classList.add('translate-x-full');
-      reportMode = false;
-      document.body.style.cursor = '';
-      map.getContainer().style.cursor = '';
-      if(reportMarker) {
-        map.removeLayer(reportMarker);
-        reportMarker = null;
-      }
-      selectedReportLoc = null;
-      reportLocInfo.classList.add('hidden');
-    });
+  function showOutsideJemberWarning() {
+    let warn = document.getElementById('outsideJemberToast');
+    if (!warn) {
+      warn = document.createElement('div');
+      warn.id = 'outsideJemberToast';
+      warn.className = 'fixed top-24 md:top-8 left-0 right-0 mx-auto z-[3000] bg-orange-500 text-white px-5 py-3 rounded-2xl shadow-xl text-sm font-medium flex items-center gap-3 transition-all duration-300 w-max max-w-[90vw] sm:max-w-sm pointer-events-none opacity-0';
+      warn.innerHTML = `<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg><span class="leading-snug whitespace-normal text-left">Lokasi berada di luar Jember. Harap pilih titik dalam wilayah Kabupaten Jember.</span>`;
+      document.body.appendChild(warn);
+    }
+    // Need a tiny delay for CSS transition if just created
+    setTimeout(() => {
+      warn.style.opacity = '1';
+      warn.style.transform = 'translateY(0)';
+    }, 10);
+    clearTimeout(warn._timeout);
+    warn._timeout = setTimeout(() => {
+      warn.style.opacity = '0';
+      warn.style.transform = 'translateY(-20px)';
+    }, 4000);
   }
+
+  function openReportPanelFn() {
+    if (!reportPanel) return;
+    if (window.innerWidth >= 768) {
+      reportPanel.classList.remove('md:translate-x-full');
+    } else {
+      reportPanel.classList.remove('translate-y-full');
+      if (overlay) { overlay.classList.add('active'); overlay.onclick = () => { overlay.classList.remove('active'); closeReportPanelFn(); }; }
+    }
+    reportMode = true;
+    map.getContainer().style.cursor = 'crosshair';
+  }
+
+  function closeReportPanelFn() {
+    if (!reportPanel) return;
+    if (window.innerWidth >= 768) {
+      reportPanel.classList.add('md:translate-x-full');
+    } else {
+      reportPanel.classList.add('translate-y-full');
+    }
+    if (overlay) overlay.classList.remove('active');
+    reportMode = false;
+    document.body.style.cursor = '';
+    map.getContainer().style.cursor = '';
+    if(reportMarker) { map.removeLayer(reportMarker); reportMarker = null; }
+    selectedReportLoc = null;
+    if (reportLocInfo) reportLocInfo.classList.add('hidden');
+  }
+
+  // Bind all report open buttons (desktop sidebar + mobile nav)
+  ['openReportBtn', 'mobileReportBtn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', openReportPanelFn);
+  });
+
+  const closeReportBtnEl = document.getElementById('closeReportBtn');
+  if (closeReportBtnEl) closeReportBtnEl.addEventListener('click', closeReportPanelFn);
 
   const applyCoordBtn = document.getElementById('applyCoordBtn');
   const reportCoordinates = document.getElementById('reportCoordinates');
@@ -1073,6 +1198,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (lat !== null && lng !== null) {
         
         selectedReportLoc = L.latLng(lat, lng);
+
+        if (!isPointInJember(selectedReportLoc)) {
+          showOutsideJemberWarning();
+          coordFeedback.textContent = "✗ Lokasi di luar Kabupaten Jember.";
+          coordFeedback.className = "text-[10px] mt-2 block text-red-600 dark:text-red-400 transition-all duration-300";
+          return;
+        }
         
         if(reportMarker) map.removeLayer(reportMarker);
         
@@ -1104,6 +1236,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Map click to place report marker
   map.on('click', (e) => {
     if(!reportMode) return;
+    // Check if click is inside Jember bounds
+    if (!isPointInJember(e.latlng)) {
+      showOutsideJemberWarning();
+      return;
+    }
     if(reportMarker) map.removeLayer(reportMarker);
     selectedReportLoc = e.latlng;
     
@@ -1114,23 +1251,48 @@ document.addEventListener('DOMContentLoaded', () => {
     reportMarker = L.marker(e.latlng, { icon }).addTo(map);
     reportMarker.bindPopup('<span class="text-sm font-medium">Lokasi Laporan Anda</span>').openPopup();
 
-    reportLocText.textContent = `${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`;
-    reportLocInfo.classList.remove('hidden');
+    if (reportLocText) reportLocText.textContent = `${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`;
+    if (reportLocInfo) reportLocInfo.classList.remove('hidden');
+
+    // Re-open panel automatically after picking location
+    if (reportPanel) {
+      if (window.innerWidth >= 768) {
+        reportPanel.classList.remove('md:translate-x-full');
+      } else {
+        reportPanel.classList.remove('translate-y-full');
+        if (overlay) { overlay.classList.add('active'); overlay.onclick = () => { overlay.classList.remove('active'); closeReportPanelFn(); }; }
+      }
+    }
   });
 
+  const pickMapBtn = document.getElementById('pickMapBtn');
+  if (pickMapBtn) {
+    pickMapBtn.addEventListener('click', () => {
+      if (!reportPanel) return;
+      if (window.innerWidth >= 768) {
+        reportPanel.classList.add('md:translate-x-full');
+      } else {
+        reportPanel.classList.add('translate-y-full');
+        if (overlay) overlay.classList.remove('active');
+      }
+      showToast('Mode Pilih Peta: Silakan ketuk titik di peta.', 'success');
+    });
+  }
+
+
+  const submitReportBtn = document.getElementById('submitReportBtn');
   if(submitReportBtn) {
     submitReportBtn.addEventListener('click', () => {
       const title = document.getElementById('reportTitle')?.value || '';
       if(!selectedReportLoc) {
-        alert('Klik pada peta terlebih dahulu untuk menentukan lokasi peristiwa.');
+        showToast('Ketuk titik di peta terlebih dahulu untuk menentukan lokasi peristiwa.', 'warning');
         return;
       }
       if(!title.trim()) {
-        alert('Harap isi Judul / Nama Peristiwa.');
+        showToast('Harap isi Judul / Nama Peristiwa.', 'warning');
         return;
       }
       
-      // Build submission
       const submission = {
         title: title,
         name: document.getElementById('reporterName')?.value || 'Anonim',
@@ -1144,59 +1306,77 @@ document.addEventListener('DOMContentLoaded', () => {
       if(!window.reportQueue) window.reportQueue = [];
       window.reportQueue.push(submission);
 
-      // Show success and reset
-      reportPanel.classList.add('translate-x-full');
-      reportMode = false;
-      map.getContainer().style.cursor = '';
-      if(reportMarker) { map.removeLayer(reportMarker); reportMarker = null; }
-      selectedReportLoc = null;
-      reportLocInfo.classList.remove('hidden');
-      document.getElementById('reportTitle').value = '';
-      document.getElementById('reporterName').value = '';
-      document.getElementById('reportDesc').value = '';
-      document.getElementById('reportYear').value = '';
-      document.getElementById('reportSource').value = '';
+      closeReportPanelFn();
+      ['reportTitle','reporterName','reportDesc','reportYear','reportSource'].forEach(id => {
+        const el = document.getElementById(id); if(el) el.value = '';
+      });
       
-      // Show success toast
-      const copyToastEl = document.getElementById('copyToast');
-      if(copyToastEl) {
-        copyToastEl.textContent = 'Laporan berhasil dikirim! Menunggu verifikasi.';
-        copyToastEl.classList.remove('opacity-0', '-translate-y-10');
-        copyToastEl.classList.add('bg-amber-500');
-        setTimeout(() => { 
-          copyToastEl.classList.add('opacity-0', '-translate-y-10'); 
-          copyToastEl.classList.remove('bg-amber-500');
-          copyToastEl.textContent = 'Link berhasil disalin!';
-        }, 4000);
-      }
+      showToast('Laporan berhasil dikirim! Menunggu verifikasi.', 'success');
     });
   }
 
-  // --- 7. INVISIBLE TOOLS: PERSONAL MENU (SLIDE-OUT) ---
-  const personalMenuBtn = document.getElementById('personalMenuBtn');
-  const personalPanel = document.getElementById('personalPanel');
-  const closePersonalBtn = document.getElementById('closePersonalBtn');
+  // Shared toast helper
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('copyToast');
+    if (!toast) return;
+    toast.textContent = message;
+    
+    // Position differently on mobile (bottom or mid) to avoid top nav overlap, and fix width
+    toast.className = `fixed top-24 md:top-6 left-0 right-0 mx-auto z-[4000] px-5 py-3 rounded-xl shadow-2xl transition-all duration-300 text-sm font-medium text-white w-max max-w-[90vw] sm:max-w-sm text-center leading-snug pointer-events-none`;
+    
+    if (type === 'success') toast.classList.add('bg-emerald-600');
+    else if (type === 'warning') toast.classList.add('bg-orange-500');
+    else toast.classList.add('bg-gray-800');
+    
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+    clearTimeout(toast._tid);
+    toast._tid = setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-20px)';
+    }, 3500);
+  }
 
-  // Tabs inside Personal Menu
+  // --- 7. PERSONAL MENU (SLIDE-OUT / BOTTOM SHEET) ---
+  const personalPanel = document.getElementById('personalPanel');
   const tabHistory = document.getElementById('tabHistory');
   const tabBookmarks = document.getElementById('tabBookmarks');
   const tabLibrary = document.getElementById('tabLibrary');
-  
   const contentHistory = document.getElementById('contentHistory');
   const contentBookmarks = document.getElementById('contentBookmarks');
   const contentLibrary = document.getElementById('contentLibrary');
 
-  if(personalMenuBtn && personalPanel) {
-    personalMenuBtn.addEventListener('click', () => {
-      personalPanel.classList.remove('-translate-x-full');
-      renderHistory();
-      renderBookmarks();
-      renderLibrary();
-    });
-    closePersonalBtn.addEventListener('click', () => {
-      personalPanel.classList.add('-translate-x-full');
-    });
+  function openPersonalPanelFn() {
+    if (!personalPanel) return;
+    if (window.innerWidth >= 768) {
+      personalPanel.classList.remove('md:-translate-x-full');
+    } else {
+      personalPanel.classList.remove('translate-y-full');
+      if (overlay) { overlay.classList.add('active'); overlay.onclick = () => { overlay.classList.remove('active'); closePersonalPanelFn(); }; }
+    }
+    renderHistory();
+    renderBookmarks();
+    renderLibrary();
   }
+
+  function closePersonalPanelFn() {
+    if (!personalPanel) return;
+    if (window.innerWidth >= 768) {
+      personalPanel.classList.add('md:-translate-x-full');
+    } else {
+      personalPanel.classList.add('translate-y-full');
+    }
+    if (overlay) overlay.classList.remove('active');
+  }
+
+  // Bind all personal panel open buttons (desktop sidebar + mobile nav)
+  ['personalMenuBtn', 'mobilePersonalBtn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', openPersonalPanelFn);
+  });
+
+  const closePersonalBtnEl = document.getElementById('closePersonalBtn');
+  if (closePersonalBtnEl) closePersonalBtnEl.addEventListener('click', closePersonalPanelFn);
 
   function switchPersonalTab(activeBtn, activeContent) {
     [tabHistory, tabBookmarks, tabLibrary].forEach(btn => {
@@ -1226,19 +1406,34 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     div.addEventListener('click', () => {
       openPanel(evt);
+      if (window.innerWidth < 768) {
+        closePersonalPanelFn();
+      }
     });
     return div;
   }
 
   function renderHistory() {
-    contentHistory.innerHTML = '';
+    const historyList = document.getElementById('historyList');
+    if (!historyList) return;
+    historyList.innerHTML = '';
     if(historyCache.length === 0) {
-      contentHistory.innerHTML = '<p class="text-sm text-gray-400 text-center mt-10">Belum ada riwayat.</p>';
+      historyList.innerHTML = '<p class="text-sm text-gray-400 text-center mt-10">Belum ada riwayat.</p>';
       return;
     }
     historyCache.forEach(id => {
       const evt = eventsData.find(e => e.id === id);
-      if(evt) contentHistory.appendChild(createListItem(evt));
+      if(evt) historyList.appendChild(createListItem(evt));
+    });
+  }
+  
+  const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+  if (clearHistoryBtn) {
+    clearHistoryBtn.addEventListener('click', () => {
+      historyCache = [];
+      localStorage.removeItem('eventHistory');
+      renderHistory();
+      showToast('Riwayat berhasil dihapus', 'success');
     });
   }
 
@@ -1397,32 +1592,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- 9. MODALS (Feedback & Contribution) ---
-  
-  // Feedback
-  const feedbackBtn = document.getElementById('feedbackBtn');
+
+  // Feedback — bind both desktop and mobile buttons
   const feedbackModal = document.getElementById('feedbackModal');
   const closeFeedbackBtn = document.getElementById('closeFeedbackBtn');
   const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
 
-  if(feedbackBtn) {
-    feedbackBtn.addEventListener('click', () => {
-      feedbackModal.classList.remove('opacity-0', 'pointer-events-none');
-      feedbackModal.querySelector('.bg-white, .bg-gray-900').classList.remove('scale-95');
-    });
+  function openFeedbackModalFn() {
+    if (!feedbackModal) return;
+    feedbackModal.classList.remove('opacity-0', 'pointer-events-none');
+    const inner = feedbackModal.querySelector('div');
+    if (inner) inner.classList.remove('scale-95');
   }
-  
-  if(closeFeedbackBtn) {
-    closeFeedbackBtn.addEventListener('click', () => {
-      feedbackModal.classList.add('opacity-0', 'pointer-events-none');
-      feedbackModal.querySelector('.bg-white, .bg-gray-900').classList.add('scale-95');
-    });
+  function closeFeedbackModalFn() {
+    if (!feedbackModal) return;
+    feedbackModal.classList.add('opacity-0', 'pointer-events-none');
+    const inner = feedbackModal.querySelector('div');
+    if (inner) inner.classList.add('scale-95');
   }
 
-  if(submitFeedbackBtn) {
-    submitFeedbackBtn.addEventListener('click', () => {
-      closeFeedbackBtn.click();
-    });
-  }
+  ['feedbackBtn', 'mobileFeedbackBtn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', openFeedbackModalFn);
+  });
+  if (closeFeedbackBtn) closeFeedbackBtn.addEventListener('click', closeFeedbackModalFn);
+  if (submitFeedbackBtn) submitFeedbackBtn.addEventListener('click', closeFeedbackModalFn);
 
   // Contextual Contribution
   const contributeBtn = document.getElementById('contributeBtn');
@@ -1579,86 +1773,27 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-}).catch(err => console.error('Failed to load events data:', err));
-
   // ===================================
-  // MOBILE BOTTOM NAV & SHEET CONTROLS
+  // MOBILE BOTTOM NAV & SHEET CONTROLS (inside fetch chain)
   // ===================================
 
-  // Create shared backdrop overlay
-  const overlay = document.createElement('div');
-  overlay.className = 'sheet-overlay';
-  document.body.appendChild(overlay);
+  // Mobile counter HUD
+  const mobileCounterEl = document.getElementById('mobileEventsCounter');
+  if (mobileCounterEl) mobileCounterEl.textContent = eventsData.length;
 
-  function showOverlay(onClickClose) {
-    overlay.classList.add('active');
-    overlay.onclick = () => { hideOverlay(); if(onClickClose) onClickClose(); };
-  }
-  function hideOverlay() {
-    overlay.classList.remove('active');
-    overlay.onclick = null;
-  }
-
-  // -- Personal Panel --
-  const mobilePersonalBtn = document.getElementById('mobilePersonalBtn');
-  const personalPanelEl = document.getElementById('personalPanel');
-  const closePersonalBtnEl = document.getElementById('closePersonalBtn');
-  const personalMenuBtnEl = document.getElementById('personalMenuBtn');
-
-  function openPersonalPanel() {
-    if (!personalPanelEl) return;
-    personalPanelEl.classList.remove('translate-y-full', '-translate-x-full');
-    if (window.innerWidth < 768) showOverlay(closePersonalPanel);
-  }
-  function closePersonalPanel() {
-    if (!personalPanelEl) return;
-    if (window.innerWidth < 768) {
-      personalPanelEl.classList.add('translate-y-full');
-    } else {
-      personalPanelEl.classList.add('-translate-x-full');
-    }
-    hideOverlay();
-  }
-
-  if (mobilePersonalBtn) mobilePersonalBtn.addEventListener('click', openPersonalPanel);
-  if (personalMenuBtnEl) personalMenuBtnEl.addEventListener('click', openPersonalPanel);
-  if (closePersonalBtnEl) closePersonalBtnEl.addEventListener('click', closePersonalPanel);
-
-  // -- Mobile Search Button --
+  // Mobile Search Button — focus search bar
   const mobileSearchBtnEl = document.getElementById('mobileSearchBtn');
   if (mobileSearchBtnEl) {
     mobileSearchBtnEl.addEventListener('click', () => {
       const si = document.getElementById('searchInput');
-      if (si) { si.focus(); }
+      if (si) {
+        si.focus();
+        si.scrollIntoView({ behavior: 'smooth' });
+      }
     });
   }
 
-  // -- Report Panel --
-  const mobileReportBtn = document.getElementById('mobileReportBtn');
-  const reportPanelEl = document.getElementById('reportPanel');
-  const openReportBtnEl = document.getElementById('openReportBtn');
-  const closeReportBtnEl = document.getElementById('closeReportBtn');
-
-  function openReportPanel() {
-    if (!reportPanelEl) return;
-    reportPanelEl.classList.remove('translate-y-full', 'translate-x-full');
-    if (window.innerWidth < 768) showOverlay(closeReportPanel);
-  }
-  function closeReportPanel() {
-    if (!reportPanelEl) return;
-    if (window.innerWidth < 768) {
-      reportPanelEl.classList.add('translate-y-full');
-    } else {
-      reportPanelEl.classList.add('translate-x-full');
-    }
-    hideOverlay();
-  }
-
-  if (mobileReportBtn) mobileReportBtn.addEventListener('click', openReportPanel);
-  if (openReportBtnEl) openReportBtnEl.addEventListener('click', openReportPanel);
-  if (closeReportBtnEl) closeReportBtnEl.addEventListener('click', closeReportPanel);
-
-  // -- Mobile Legend Sheet --
+  // Mobile Legend Sheet
   const mobileLegendBtnEl = document.getElementById('mobileLegendBtn');
   const mobileLegendSheetEl = document.getElementById('mobileLegendSheet');
   const closeLegendSheetBtnEl = document.getElementById('closeLegendSheetBtn');
@@ -1666,106 +1801,165 @@ document.addEventListener('DOMContentLoaded', () => {
   function openLegendSheet() {
     if (!mobileLegendSheetEl) return;
     mobileLegendSheetEl.classList.remove('translate-y-full');
-    showOverlay(closeLegendSheet);
+    overlay.classList.add('active');
+    overlay.onclick = () => { closeLegendSheet(); };
   }
   function closeLegendSheet() {
     if (!mobileLegendSheetEl) return;
     mobileLegendSheetEl.classList.add('translate-y-full');
-    hideOverlay();
+    overlay.classList.remove('active');
   }
 
   if (mobileLegendBtnEl) mobileLegendBtnEl.addEventListener('click', openLegendSheet);
   if (closeLegendSheetBtnEl) closeLegendSheetBtnEl.addEventListener('click', closeLegendSheet);
 
-  // -- Mobile Feedback Button --
-  const mobileFeedbackBtnEl = document.getElementById('mobileFeedbackBtn');
-  const feedbackBtnEl = document.getElementById('feedbackBtn');
-  const feedbackModalEl = document.getElementById('feedbackModal');
-  const closeFeedbackBtnEl = document.getElementById('closeFeedbackBtn');
-
-  function openFeedbackModal() {
-    if (!feedbackModalEl) return;
-    feedbackModalEl.classList.remove('opacity-0', 'pointer-events-none');
-    const inner = feedbackModalEl.querySelector('div');
-    if (inner) inner.classList.remove('scale-95');
-  }
-  function closeFeedbackModal() {
-    if (!feedbackModalEl) return;
-    feedbackModalEl.classList.add('opacity-0', 'pointer-events-none');
-    const inner = feedbackModalEl.querySelector('div');
-    if (inner) inner.classList.add('scale-95');
-  }
-
-  if (mobileFeedbackBtnEl) mobileFeedbackBtnEl.addEventListener('click', openFeedbackModal);
-  if (feedbackBtnEl) feedbackBtnEl.addEventListener('click', openFeedbackModal);
-  if (closeFeedbackBtnEl) closeFeedbackBtnEl.addEventListener('click', closeFeedbackModal);
-
-  // -- Mobile Theme button sync --
+  // Mobile Theme Toggle
   const mobileThemeBtnEl = document.getElementById('mobileThemeBtn');
   if (mobileThemeBtnEl) {
     mobileThemeBtnEl.addEventListener('click', () => {
       const isDark = document.documentElement.classList.toggle('dark');
-      if (isDark) {
-        localStorage.setItem('theme', 'dark');
-      } else {
-        localStorage.setItem('theme', 'light');
-      }
+      applyTheme(isDark);
     });
   }
 
-  // -- Swipe to dismiss Event Panel (mobile) --
-  const eventPanelElSwipe = document.getElementById('eventPanel');
+  // Swipe-to-expand / dismiss for Event Panel
+  const eventPanelSwipe = document.getElementById('eventPanel');
   const mobilePanelHandleEl = document.getElementById('mobilePanelHandle');
-  let touchStartY = 0;
-  let touchCurrentY = 0;
-  let isDragging = false;
+  let swipeTouchStartY = 0;
+  let swipeTouchCurrentY = 0;
+  let isSwipeDragging = false;
+  let initialPanelHeight = 0;
 
-  if (eventPanelElSwipe && mobilePanelHandleEl) {
+  if (eventPanelSwipe && mobilePanelHandleEl) {
     mobilePanelHandleEl.addEventListener('touchstart', (e) => {
-      touchStartY = e.touches[0].clientY;
-      isDragging = true;
-      eventPanelElSwipe.style.transition = 'none';
+      swipeTouchStartY = e.touches[0].clientY;
+      isSwipeDragging = true;
+      initialPanelHeight = eventPanelSwipe.getBoundingClientRect().height;
+      eventPanelSwipe.style.transition = 'none'; // Disable transition during drag
     }, { passive: true });
-
+    
     document.addEventListener('touchmove', (e) => {
-      if (!isDragging) return;
-      touchCurrentY = e.touches[0].clientY;
-      const delta = touchCurrentY - touchStartY;
-      if (delta > 0) {
-        eventPanelElSwipe.style.transform = `translateY(${delta}px)`;
+      if (!isSwipeDragging) return;
+      swipeTouchCurrentY = e.touches[0].clientY;
+      const deltaY = swipeTouchCurrentY - swipeTouchStartY;
+      const newHeight = initialPanelHeight - deltaY;
+      // Clamp between some reasonable min/max during drag
+      const maxH = window.innerHeight * 0.9;
+      const minH = window.innerHeight * 0.2;
+      if (newHeight >= minH && newHeight <= maxH) {
+        eventPanelSwipe.style.height = `${newHeight}px`;
       }
     }, { passive: true });
-
+    
     document.addEventListener('touchend', () => {
-      if (!isDragging) return;
-      isDragging = false;
-      eventPanelElSwipe.style.transition = '';
-      const delta = touchCurrentY - touchStartY;
-      if (delta > 120) {
-        const closePanelBtnEl = document.getElementById('closePanelBtn');
-        if (closePanelBtnEl) closePanelBtnEl.click();
+      if (!isSwipeDragging) return;
+      isSwipeDragging = false;
+      eventPanelSwipe.style.transition = 'height 0.3s ease, transform 0.6s ease';
+      
+      const delta = swipeTouchCurrentY - swipeTouchStartY;
+      const vh50 = window.innerHeight * 0.5;
+      
+      if (delta > 60) {
+        // Swiped down
+        if (isMobilePanelExpanded) {
+          isMobilePanelExpanded = false;
+          eventPanelSwipe.style.height = '50vh';
+          updateExpandIcon();
+        } else {
+          // Already collapsed, close it entirely
+          const closePanelBtnEl = document.getElementById('closePanelBtn');
+          if (closePanelBtnEl) closePanelBtnEl.click();
+        }
+      } else if (delta < -60) {
+        // Swiped up
+        if (!isMobilePanelExpanded) {
+          isMobilePanelExpanded = true;
+          eventPanelSwipe.style.height = '88vh';
+          updateExpandIcon();
+        } else {
+          eventPanelSwipe.style.height = '88vh';
+        }
       } else {
-        eventPanelElSwipe.style.transform = '';
+        // Snap back to current state
+        eventPanelSwipe.style.height = isMobilePanelExpanded ? '88vh' : '50vh';
       }
-      touchStartY = 0;
-      touchCurrentY = 0;
+      
+      swipeTouchStartY = 0; swipeTouchCurrentY = 0;
     });
+    
+    // Also let clicking the handle toggle state
+    mobilePanelHandleEl.addEventListener('click', () => {
+       const expandBtn = document.getElementById('expandPanelBtn');
+       if(expandBtn) expandBtn.click();
+    });
+  }
+  
+  function updateExpandIcon() {
+    const expandBtn = document.getElementById('expandPanelBtn');
+    if(!expandBtn) return;
+    if (isMobilePanelExpanded) {
+      expandBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5M4 10V6m0 0h4m-4 0l5 5m11-5v4m0-4h-4m4 0l-5 5"></path></svg>';
+      expandBtn.title = "Perkecil Panel";
+    } else {
+      expandBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>';
+      expandBtn.title = "Perbesar Panel";
+    }
   }
 
-  // -- Submit Report feedback --
-  const submitReportBtnEl = document.getElementById('submitReportBtn');
-  if (submitReportBtnEl) {
-    submitReportBtnEl.addEventListener('click', () => {
-      submitReportBtnEl.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Laporan Terkirim!';
-      submitReportBtnEl.classList.add('bg-emerald-500');
-      submitReportBtnEl.classList.remove('bg-amber-500');
-      setTimeout(() => {
-        closeReportPanel();
-        submitReportBtnEl.innerHTML = '<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg> Kirim Laporan';
-        submitReportBtnEl.classList.remove('bg-emerald-500');
-        submitReportBtnEl.classList.add('bg-amber-500');
-      }, 2000);
-    });
+  // --- 10. GLOBAL RESIZE HANDLER ---
+  window.addEventListener('resize', () => {
+    const ep = document.getElementById('eventPanel');
+    if (!ep) return;
+    if (window.innerWidth >= 768) {
+      ep.style.height = ''; // Clear JS-enforced height to let CSS classes rule
+      if (ep.classList.contains('translate-y-full')) {
+        ep.classList.add('translate-x-full');
+        ep.classList.remove('translate-y-full');
+      }
+    } else {
+      if (ep.classList.contains('translate-x-full')) {
+        ep.classList.add('translate-y-full');
+        ep.classList.remove('translate-x-full');
+      }
+    }
+  });
+
+  function closePanel() {
+    const ep = document.getElementById('eventPanel');
+    if (ep) {
+      ep.classList.add('translate-x-full'); // base
+      if (window.innerWidth >= 768) {
+        ep.classList.add('md:translate-x-full');
+      } else {
+        ep.classList.add('translate-y-full');
+      }
+    }
+    
+    // Hide panel content/footer explicitly when closed
+    const pContent = document.getElementById('panelContent');
+    const pEmptyState = document.getElementById('panelEmptyState');
+    const pStickyFooter = document.getElementById('panelStickyFooter');
+    
+    if (pContent) pContent.classList.add('hidden');
+    if (pStickyFooter) pStickyFooter.classList.add('hidden');
+    if (pEmptyState) pEmptyState.classList.remove('hidden');
+    
+    if (activePolygon) {
+      map.removeLayer(activePolygon);
+      activePolygon = null;
+    }
   }
+
+  // Close event panel — also reset mobile sheet state
+  const closePanelBtnFixed = document.getElementById('closePanelBtn');
+  if (closePanelBtnFixed) {
+    closePanelBtnFixed.addEventListener('click', () => {
+      closePanel();
+      setTimeout(() => map.invalidateSize(), 300);
+    }, { once: false });
+  }
+
+}).catch(err => console.error('Failed to load events data:', err));
 
 });
+
