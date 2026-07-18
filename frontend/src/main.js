@@ -1452,6 +1452,68 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const applyCoordBtn = document.getElementById('applyCoordBtn');
+  const reportCoordinates = document.getElementById('reportCoordinates');
+  const coordFeedback = document.getElementById('coordFeedback');
+
+  if(applyCoordBtn && reportCoordinates) {
+    applyCoordBtn.addEventListener('click', () => {
+      const val = reportCoordinates.value.trim();
+      if(!val) return;
+      
+      let lat = null, lng = null;
+      
+      // Coba format DMS: 8°15'0.0"S 113°50'60.0"E
+      const dmsRegex = /(\d+)[°\s]+(\d+)['\s]+([\d\.]+)[”"']?\s*([NS])\s*(\d+)[°\s]+(\d+)['\s]+([\d\.]+)[”"']?\s*([EW])/i;
+      const dmsMatch = val.match(dmsRegex);
+      
+      if (dmsMatch) {
+        lat = parseInt(dmsMatch[1]) + parseInt(dmsMatch[2])/60 + parseFloat(dmsMatch[3])/3600;
+        if (dmsMatch[4].toUpperCase() === 'S') lat = -lat;
+        
+        lng = parseInt(dmsMatch[5]) + parseInt(dmsMatch[6])/60 + parseFloat(dmsMatch[7])/3600;
+        if (dmsMatch[8].toUpperCase() === 'W') lng = -lng;
+      } else {
+        // Coba format desimal: -8.172, 113.702
+        const decRegex = /(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)/;
+        const decMatch = val.match(decRegex);
+        if (decMatch) {
+          lat = parseFloat(decMatch[1]);
+          lng = parseFloat(decMatch[2]);
+        }
+      }
+      
+      if (lat !== null && lng !== null) {
+        
+        selectedReportLoc = L.latLng(lat, lng);
+        
+        if(reportMarker) map.removeLayer(reportMarker);
+        
+        const icon = L.divIcon({ 
+          html: '<div class="w-5 h-5 bg-amber-500 rounded-full border-2 border-white shadow-lg pulse-marker"></div>', 
+          className: 'custom-div-icon', iconSize: [20, 20], iconAnchor: [10, 10] 
+        });
+        reportMarker = L.marker(selectedReportLoc, { icon }).addTo(map);
+        reportMarker.bindPopup('<span class="text-sm font-medium">Lokasi Laporan Anda</span>').openPopup();
+
+        reportLocText.textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        reportLocInfo.classList.remove('hidden');
+        
+        map.flyTo(selectedReportLoc, 15, { duration: 1.5 });
+        
+        coordFeedback.textContent = "✓ Titik berhasil diatur pada peta.";
+        coordFeedback.className = "text-[10px] mt-2 block text-emerald-600 dark:text-emerald-400 transition-all duration-300";
+        
+        setTimeout(() => {
+          coordFeedback.classList.replace('block', 'hidden');
+        }, 4000);
+      } else {
+        coordFeedback.textContent = "✗ Format tidak valid. Gunakan format: -8.123, 113.123";
+        coordFeedback.className = "text-[10px] mt-2 block text-red-600 dark:text-red-400 transition-all duration-300";
+      }
+    });
+  }
+
   // Map click to place report marker
   map.on('click', (e) => {
     if(!reportMode) return;

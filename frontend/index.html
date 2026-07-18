@@ -80,35 +80,62 @@
 
       <!-- Form -->
       <div class="flex-1 overflow-y-auto no-scrollbar p-6">
-        <form id="reportForm" class="space-y-5">
-          <div>
-            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Nama / Identitas Pelapor</label>
-            <input type="text" id="reporterName" placeholder="Boleh anonim" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+        <form id="reportForm" class="space-y-6">
+          
+          <!-- Coordinate Input Box -->
+          <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700/60 bg-gray-50/30 dark:bg-gray-800/10 relative group transition-colors">
+            <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1 flex items-center transition-colors group-focus-within:text-amber-500">
+              <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+              Titik Koordinat (Opsional)
+            </label>
+            <p class="text-[10px] text-gray-400 dark:text-gray-500 mb-2.5 leading-relaxed">Punya link Google Maps atau titik spesifik? Tempel di sini lalu tekan panah.</p>
+            <div class="flex space-x-2">
+              <input type="text" id="reportCoordinates" placeholder="Contoh: 8°15'0.0&quot;S 113°50'60.0&quot;E" class="flex-1 px-3 py-2 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm text-gray-800 dark:text-gray-200 focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all duration-300 font-mono placeholder:text-gray-400">
+              <button type="button" id="applyCoordBtn" class="px-3 py-2 bg-gray-200 hover:bg-amber-500 dark:bg-gray-700 dark:hover:bg-amber-600 text-gray-600 hover:text-white dark:text-gray-300 dark:hover:text-white rounded-lg text-sm font-medium transition-colors shadow-sm focus:outline-none focus:ring-4 focus:ring-amber-500/20 flex items-center justify-center shrink-0 group/btn">
+                <svg class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </button>
+            </div>
+            <p id="coordFeedback" class="text-[10px] mt-2 hidden transition-all duration-300"></p>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Judul / Nama Peristiwa</label>
-            <input type="text" id="reportTitle" placeholder="Contoh: Banjir di Desa Rejoagung" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+
+          <div class="relative group">
+            <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5 transition-colors group-focus-within:text-amber-500">Nama / Identitas Pelapor</label>
+            <input type="text" id="reporterName" placeholder="Boleh anonim" class="w-full px-4 py-2.5 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all duration-300">
           </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Kategori</label>
-            <select id="reportCategory" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50">
-              <option value="bencana">Bencana Alam</option>
-              <option value="kasus">Kasus / Sengketa</option>
-              <option value="tragedi">Tragedi Sosial</option>
-              <option value="lainnya">Lainnya</option>
-            </select>
+          
+          <div class="relative group">
+            <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5 transition-colors group-focus-within:text-amber-500">Judul / Nama Peristiwa</label>
+            <input type="text" id="reportTitle" placeholder="Contoh: Banjir di Desa Rejoagung" class="w-full px-4 py-2.5 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all duration-300">
           </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Perkiraan Tahun Kejadian</label>
-            <input type="text" id="reportYear" placeholder="Contoh: 1999 atau 1999-2001" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+          
+          <div class="relative group">
+            <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5 transition-colors group-focus-within:text-amber-500">Kategori</label>
+            <div class="relative">
+              <select id="reportCategory" class="w-full px-4 py-2.5 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all duration-300 appearance-none cursor-pointer">
+                <option value="bencana">Bencana Alam</option>
+                <option value="kasus">Kasus / Sengketa</option>
+                <option value="tragedi">Tragedi Sosial</option>
+                <option value="lainnya">Lainnya</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </div>
+            </div>
           </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Deskripsi Singkat</label>
-            <textarea id="reportDesc" rows="4" placeholder="Ceritakan apa yang terjadi di lokasi ini..." class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 resize-none"></textarea>
+          
+          <div class="relative group">
+            <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5 transition-colors group-focus-within:text-amber-500">Perkiraan Tahun Kejadian</label>
+            <input type="text" id="reportYear" placeholder="Contoh: 1999 atau 1999-2001" class="w-full px-4 py-2.5 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all duration-300">
           </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-2">Sumber / Referensi (Opsional)</label>
-            <input type="text" id="reportSource" placeholder="Contoh: Koran Radar Jember 2 Jan 1999" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+          
+          <div class="relative group">
+            <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5 transition-colors group-focus-within:text-amber-500">Deskripsi Singkat</label>
+            <textarea id="reportDesc" rows="4" placeholder="Ceritakan apa yang terjadi di lokasi ini..." class="w-full px-4 py-2.5 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all duration-300 resize-none"></textarea>
+          </div>
+          
+          <div class="relative group">
+            <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5 transition-colors group-focus-within:text-amber-500">Sumber / Referensi (Opsional)</label>
+            <input type="text" id="reportSource" placeholder="Contoh: Koran Radar Jember 2 Jan 1999" class="w-full px-4 py-2.5 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all duration-300">
           </div>
         </form>
       </div>
