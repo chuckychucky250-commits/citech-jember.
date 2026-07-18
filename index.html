@@ -8,8 +8,8 @@
     <meta name="theme-color" content="#111827" />
     <title>Arsip Memori Sejarah Jember</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-    <script type="module" crossorigin src="/citech-jember./assets/index-UakSWQx8.js"></script>
-    <link rel="stylesheet" crossorigin href="/citech-jember./assets/index-CO9lApIA.css">
+    <script type="module" crossorigin src="/citech-jember./assets/index-CuTyRsIF.js"></script>
+    <link rel="stylesheet" crossorigin href="/citech-jember./assets/index-Dkyn1uLt.css">
   </head>
   <body class="bg-gray-100 dark:bg-gray-950 text-gray-800 dark:text-gray-200 font-sans overflow-hidden transition-colors duration-300">
 
@@ -381,7 +381,7 @@
           </div>
 
           <!-- Scrollable Content Area -->
-          <div class="flex-1 overflow-y-auto no-scrollbar relative pb-32 md:pb-24 hidden" id="panelContentArea">
+          <div class="flex-1 overflow-y-auto no-scrollbar relative pb-10 hidden" id="panelContentArea">
             <!-- Hero Image -->
             <div class="w-full h-48 md:h-52 bg-gray-100 dark:bg-gray-900/60 relative overflow-hidden group flex items-center justify-center shrink-0">
               <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-900/40 z-0">
@@ -584,12 +584,13 @@
             <p class="text-xs mt-1 opacity-70">untuk melihat arsipnya.</p>
           </div>
           
-          <!-- Floating Action Button -->
-          <div id="panelStickyFooter" class="hidden absolute bottom-6 left-0 right-0 px-5 flex justify-center pointer-events-none" style="z-index: 50;">
-            <button id="contributeBtn" class="pointer-events-auto px-8 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-full hover:bg-gray-800 dark:hover:bg-gray-200 hover:scale-105 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.3)] dark:shadow-[0_8px_30px_rgba(255,255,255,0.2)] transition-all flex items-center justify-center text-sm border border-transparent dark:border-white/20">
+          <!-- Sticky Action Footer -->
+          <div id="panelStickyFooter" class="hidden shrink-0 border-t border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-md px-5 pt-4 pb-6 w-full z-20">
+            <button id="contributeBtn" class="w-full py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98] transition-all flex items-center justify-center shadow-md focus:outline-none text-sm">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
               Tambah Kesaksian / Bukti
             </button>
+            <p class="text-[10.5px] text-center text-gray-500 dark:text-gray-400 mt-2.5">Bagikan informasi tambahan atau bukti jika Anda memilikinya</p>
           </div>
         </div>
       </div>
