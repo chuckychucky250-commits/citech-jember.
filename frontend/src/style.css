@@ -262,3 +262,97 @@ svg.leaflet-zoom-animated:focus {
   50% { opacity: 0.3; stroke-width: 1; }
   100% { opacity: 0.8; stroke-width: 3; }
 }
+
+/* ===========================
+   MOBILE BOTTOM NAV
+   =========================== */
+.mobile-bottom-nav {
+  height: calc(64px + env(safe-area-inset-bottom, 0px));
+  min-height: 64px;
+}
+
+.mobile-nav-btn {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.1s ease, opacity 0.15s ease;
+}
+.mobile-nav-btn:active {
+  transform: scale(0.92);
+  opacity: 0.7;
+}
+
+/* ===========================
+   SAFE AREA UTILITIES
+   =========================== */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+}
+
+/* ===========================
+   MAP ADJUSTMENTS FOR MOBILE
+   =========================== */
+@media (max-width: 767px) {
+  .leaflet-bottom.leaflet-right {
+    bottom: 70px !important;
+  }
+
+  #searchInput,
+  input[type="text"],
+  input[type="email"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* ===========================
+   DARK MODE FORM ELEMENTS
+   =========================== */
+.dark select,
+.dark input,
+.dark textarea {
+  color-scheme: dark;
+}
+
+/* ===========================
+   MOBILE PANEL TOUCH SCROLL
+   =========================== */
+@media (max-width: 767px) {
+  #panelContentArea,
+  .no-scrollbar {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ===========================
+   BACKDROP OVERLAY
+   =========================== */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1080;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.sheet-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ===========================
+   MOBILE LEGEND SHEET
+   =========================== */
+#mobileLegendSheet {
+  max-height: 55vh;
+}
+
+/* ===========================
+   MOBILE COUNTER HUD
+   =========================== */
+#mobileCounterHUD {
+  transition: opacity 1s ease, transform 0.3s ease;
+}
