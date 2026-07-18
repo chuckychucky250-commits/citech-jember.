@@ -26,16 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- 2. MAP INITIALIZATION ---
   const jemberCenter = [-8.1724, 113.7000];
+  const jemberBounds = L.latLngBounds([-8.6, 113.1], [-7.8, 114.2]); // Restrict strictly to Jember area
+
   const map = L.map('map', { 
     zoomControl: false,
-    zoomAnimation: true
-  }).setView(jemberCenter, 11);
+    zoomAnimation: true,
+    maxBounds: jemberBounds,
+    maxBoundsViscosity: 1.0, // Strictly bounce back
+    minZoom: 10
+  }).setView([-4.0, 113.7000], 5);
 
   let tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; OpenStreetMap & CARTO',
     subdomains: 'abcd',
     maxZoom: 20
   }).addTo(map);
+
+  let geojsonLayer = null;
 
   function setMapTheme(theme) {
     map.removeLayer(tileLayer);
@@ -48,28 +55,112 @@ document.addEventListener('DOMContentLoaded', () => {
       subdomains: 'abcd',
       maxZoom: 20
     }).addTo(map);
+
+    // Update GeoJSON style dynamically based on theme
+    if (geojsonLayer) {
+      geojsonLayer.setStyle(getGeoJSONStyle(theme));
+    }
+  }
+
+  function getGeoJSONStyle(theme) {
+    return {
+      color: theme === 'dark' ? '#ffffff' : '#475569', // White for dark, slate-600 for light
+      weight: 1.5,
+      opacity: 0.5,
+      dashArray: '5, 5',
+      fillOpacity: 0 // completely transparent inside
+    };
   }
 
   if(document.documentElement.classList.contains('dark')) setMapTheme('dark');
 
-  const jemberBounds = L.latLngBounds([-8.5, 113.3], [-7.9, 114.1]);
-  map.setMaxBounds(jemberBounds);
-  map.on('drag', function() { map.panInsideBounds(jemberBounds, { animate: false }); });
+  // Load GeoJSON Boundaries
+  fetch('/data/jember-batas.geojson')
+    .then(response => response.json())
+    .then(data => {
+      const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      geojsonLayer = L.geoJSON(data, {
+        style: getGeoJSONStyle(currentTheme)
+      }).addTo(map);
+      
+      // We could use map.fitBounds(geojsonLayer.getBounds()) but we rely on Cinematic flyTo later
+    })
+    .catch(err => console.log('Batas Jember GeoJSON not found, skipping.', err));
 
-  // Custom Zoom
-  const zoomInBtn = document.getElementById('zoomInBtn');
-  const zoomOutBtn = document.getElementById('zoomOutBtn');
-  if(zoomInBtn) zoomInBtn.addEventListener('click', () => map.zoomIn());
-  if(zoomOutBtn) zoomOutBtn.addEventListener('click', () => map.zoomOut());
 
-  // Invalidate map size after layout settles (fix half-map render)
+  // --- REALTIME DMS COORDINATES (Bottom Right) ---
+  function toDMS(coordinate, isLat) {
+    const absolute = Math.abs(coordinate);
+    const degrees = Math.floor(absolute);
+    const minutesNotTruncated = (absolute - degrees) * 60;
+    const minutes = Math.floor(minutesNotTruncated);
+    const seconds = Math.floor((minutesNotTruncated - minutes) * 60);
+    const direction = coordinate >= 0 ? (isLat ? "N" : "E") : (isLat ? "S" : "W");
+    return `${degrees}°${minutes}'${seconds}"${direction}`;
+  }
+
+  const CoordinatesControl = L.Control.extend({
+    options: { position: 'bottomright' },
+    onAdd: function () {
+      this._container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+      this._container.className += ' bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-md text-xs font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 mb-6 mr-4 pointer-events-none shadow-sm';
+      this._container.innerHTML = 'Hover on map...';
+      return this._container;
+    },
+    update: function (lat, lng) {
+      this._container.innerHTML = `${toDMS(lat, true)} &middot; ${toDMS(lng, false)}`;
+    }
+  });
+  const coordsControl = new CoordinatesControl();
+  map.addControl(coordsControl);
+
+  // Default coordinate (center Jember)
+  coordsControl.update(jemberCenter[0], jemberCenter[1]);
+
+  // --- CUSTOM ZOOM CONTROLS (Bottom Right, above coordinates) ---
+  const CustomZoomControl = L.Control.extend({
+    options: { position: 'bottomright' },
+    onAdd: function () {
+      const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+      container.style.background = 'transparent';
+      container.style.border = 'none';
+      container.style.boxShadow = 'none';
+      container.innerHTML = `
+        <div class="flex flex-col space-y-2 mr-2 mb-2">
+          <button id="mapZoomInBtn" class="w-10 h-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-white/50 dark:border-slate-700/50 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all focus:outline-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+          </button>
+          <button id="mapZoomOutBtn" class="w-10 h-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-white/50 dark:border-slate-700/50 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all focus:outline-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12H4"></path></svg>
+          </button>
+        </div>
+      `;
+      L.DomEvent.disableClickPropagation(container);
+      return container;
+    }
+  });
+  map.addControl(new CustomZoomControl());
+
+  // Bind zoom events via delegation since they are injected
+  document.addEventListener('click', (e) => {
+    const inBtn = e.target.closest('#mapZoomInBtn');
+    const outBtn = e.target.closest('#mapZoomOutBtn');
+    if (inBtn) map.zoomIn();
+    if (outBtn) map.zoomOut();
+  });
+
+  map.on('mousemove', function (e) {
+    coordsControl.update(e.latlng.lat, e.latlng.lng);
+  });
+
+  // Invalidate map size after layout settles
   setTimeout(() => map.invalidateSize(), 300);
   window.addEventListener('resize', () => map.invalidateSize());
 
   // --- 3. DATASET ---
   const markers = [
     { 
-      id: 'evt_001', loc: [-8.17, 113.70], title: 'Tragedi Kencong', category: 'bencana', color: '#DC2626', year: '1998', renderType: 'area', patternId: 'url(#hatchPatternRed)',
+      id: 'evt_001', loc: [-8.17, 113.70], title: 'Tragedi Kencong', category: 'tragedi', color: '#DC2626', year: '1998', renderType: 'area', patternId: 'url(#hatchPatternRed)',
       heroImage: 'https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800&grayscale=true',
       quote: '"Kejadiannya sangat cepat, air tiba-tiba datang dari arah utara membawa lumpur dan ranting pohon."', quoteAuthor: '— Kesaksian Warga',
       desc1: 'Kejadian ini dimulai dari titik awal di pusat kota dan menyebar secara organik ke beberapa wilayah sekunder.',
@@ -78,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
       luasan: '450 Ha',
       gambar: '/images/kencong.jpg',
       ringkasan: 'Tragedi bencana banjir besar yang melanda wilayah Kencong pada tahun 1998, menyebabkan kerugian materiil serta memicu pengungsian warga.',
-      area_polygon: [[-8.28, 113.35], [-8.26, 113.35], [-8.26, 113.37], [-8.28, 113.37]],
       milestones: [
         { 
           label: 'Eskalasi', tag: 'Tanda Awal', narasi: 'Ketegangan mulai terasa akibat isu provokatif di media lokal. Massa dalam jumlah kecil mulai berkerumun.', stat1V: '120', stat2V: '2', 
@@ -121,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
       luasan: '4.0 Ha',
       gambar: '/images/petani.jpg',
       ringkasan: 'Aksi unjuk rasa solidaritas damai oleh ribuan petani di Jember Selatan demi mempertahankan lahan pertanian mereka.',
-      area_polygon: [[-8.22, 113.64], [-8.20, 113.64], [-8.20, 113.66], [-8.22, 113.66]],
       milestones: [
         { 
           label: 'Konsolidasi', tag: 'Persiapan', narasi: 'Proses konsolidasi dan mobilisasi massa. Petani dari 12 kecamatan mulai berkumpul di titik-titik kumpul.', stat1V: '800', stat2V: '1', 
@@ -166,7 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
       luasan: '150 Ha',
       gambar: '/images/tataruang.jpg',
       ringkasan: 'Investigasi alih fungsi lahan hutan kota resapan air Patrang untuk kepentingan komersial yang merugikan publik.',
-      area_polygon: [[-8.16, 113.74], [-8.14, 113.74], [-8.14, 113.76], [-8.16, 113.76]],
       milestones: [
         { 
           label: 'Audit', tag: 'Investigasi Awal', narasi: 'Tim audit independen menemukan 45 dokumen perizinan bermasalah di Kantor BPN Jember.', stat1V: '0.8', stat2V: '45', 
@@ -203,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
       chartColor: '#F97316',
     },
     { 
-      id: 'evt_004', loc: [-8.08, 113.71], title: 'Banjir Bandang Panti', category: 'bencana', color: '#DC2626', year: '2006', renderType: 'route',
+      id: 'evt_004', loc: [-8.08, 113.71], title: 'Banjir Bandang Panti', category: 'bencana', color: '#9333EA', year: '2006', renderType: 'route',
       heroImage: 'https://images.unsplash.com/photo-1548349282-358043c945b0?auto=format&fit=crop&q=80&w=800&grayscale=true',
       quote: '"Suara gemuruh dari arah Gunung Argopuro di malam hari menjadi pertanda buruk."', quoteAuthor: '— Relawan Evakuasi',
       desc1: 'Curah hujan ekstrem memicu longsoran material dari lereng pegunungan Argopuro.',
@@ -212,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
       luasan: '5.0 Ha',
       gambar: '/images/panti.jpg',
       ringkasan: 'Bencana banjir bandang hebat yang melanda wilayah Panti akibat longsoran dari lereng Gunung Argopuro.',
-      area_polygon: [[-8.09, 113.70], [-8.07, 113.70], [-8.07, 113.72], [-8.09, 113.72]],
       milestones: [
         { 
           label: 'Curah Hujan', tag: 'Tanda Awal', narasi: 'Curah hujan 200mm/hari selama 3 hari berturut-turut. Status siaga dikeluarkan BMKG.', stat1V: '0', stat2V: '0', 
@@ -258,7 +345,6 @@ document.addEventListener('DOMContentLoaded', () => {
       luasan: '12.0 Ha',
       gambar: '/images/puger.jpg',
       ringkasan: 'Ketegangan nelayan tradisional dengan kapal industri berskala besar terkait batas zonasi penangkapan di Puger.',
-      area_polygon: [[-8.19, 113.61], [-8.17, 113.61], [-8.17, 113.63], [-8.19, 113.63]],
       milestones: [
         { 
           label: 'Aturan Baru', tag: 'Pemicu Konflik', narasi: 'Peraturan baru zonasi penangkapan diumumkan. 210 kapal nelayan kecil terancam kehilangan wilayah tangkap tradisional.', stat1V: '210', stat2V: '12', 
@@ -301,7 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
       luasan: '120 Ha',
       gambar: '/images/sengketa_silo.jpg',
       ringkasan: 'Sengketa berkepanjangan terkait kepemilikan dan hak guna usaha lahan perkebunan di Silo antara warga setempat dan perusahaan daerah.',
-      area_polygon: [[-8.26, 113.84], [-8.24, 113.84], [-8.24, 113.86], [-8.26, 113.86]],
       milestones: [
         { 
           label: 'Klaim Pihak Ketiga', tag: 'Persiapan', narasi: 'Klaim sepihak atas lahan warga oleh perkebunan. Pemasangan tapal batas memicu protes pertama.', stat1V: '12', stat2V: '12', 
@@ -335,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
       chartColor: '#F97316',
     },
     { 
-      id: 'evt_007', loc: [-8.05, 113.78], title: 'Tanah Longsor Jelbuk', category: 'bencana', color: '#DC2626', year: '2010', renderType: 'route',
+      id: 'evt_007', loc: [-8.05, 113.78], title: 'Tanah Longsor Jelbuk', category: 'bencana', color: '#9333EA', year: '2010', renderType: 'route',
       heroImage: 'https://images.unsplash.com/photo-1548349282-358043c945b0?auto=format&fit=crop&q=80&w=800&grayscale=true',
       quote: '"Tiba-tiba terdengar suara gemuruh keras, tebing di pinggir jalan raya langsung ambruk."', quoteAuthor: '— Pengendara Melintas',
       desc1: 'Longsoran tebing setinggi 15 meter menutup jalan nasional penghubung Jember-Bondowoso akibat hujan lebat berkepanjangan.',
@@ -344,7 +429,6 @@ document.addEventListener('DOMContentLoaded', () => {
       luasan: '3.2 Ha',
       gambar: '/images/longsor_jelbuk.jpg',
       ringkasan: 'Bencana longsor tebing di wilayah perbukitan Jelbuk yang melumpuhkan transportasi utama penghubung antar kabupaten.',
-      area_polygon: [[-8.06, 113.77], [-8.04, 113.77], [-8.04, 113.79], [-8.06, 113.79]],
       milestones: [
         { 
           label: 'Hujan Deras', tag: 'Tanda Awal', narasi: 'Hujan deras mengguyur perbukitan Jelbuk sejak sore hari, melemahkan struktur tanah tebing.', stat1V: '0', stat2V: '0', 
@@ -387,7 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
       luasan: '8.5 Ha',
       gambar: '/images/reformasi_unej.jpg',
       ringkasan: 'Pergerakan mahasiswa Jember pada tahun 1998 yang menjadi bagian dari arus reformasi nasional, berpusat di kawasan kampus Tegalboto.',
-      area_polygon: [[-8.175, 113.705], [-8.155, 113.705], [-8.155, 113.725], [-8.175, 113.725]],
       milestones: [
         { 
           label: 'Mimbar Bebas', tag: 'Persiapan', narasi: 'Mimbar bebas digelar di lapangan upacara kampus, membacakan tuntutan reformasi politik dan ekonomi.', stat1V: '1500', stat2V: '2', 
@@ -422,7 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
       chartColor: '#1D4ED8',
     },
     { 
-      id: 'evt_009', loc: [-8.17, 113.69], title: 'Banjir Luapan Kali Jompo', category: 'bencana', color: '#DC2626', year: '2020', renderType: 'area', patternId: 'url(#hatchPatternRed)',
+      id: 'evt_009', loc: [-8.17, 113.69], title: 'Banjir Luapan Kali Jompo', category: 'bencana', color: '#9333EA', year: '2020', renderType: 'area', patternId: 'url(#hatchPatternRed)',
       heroImage: 'https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800&grayscale=true',
       quote: '"Air sungai meluap sangat cepat sampai ke jalan raya, ruko-ruko di pinggir kali langsung retak dan longsor."', quoteAuthor: '— Pemilik Toko',
       desc1: 'Debit air tinggi di hulu memicu luapan Kali Jompo yang menggenangi pertokoan Jalan Sultan Agung Jember.',
@@ -431,7 +514,6 @@ document.addEventListener('DOMContentLoaded', () => {
       luasan: '15.0 Ha',
       gambar: '/images/banjir_jompo.jpg',
       ringkasan: 'Bencana luapan air sungai Kali Jompo di pusat kota Jember yang merusak infrastruktur ruko jalan utama.',
-      area_polygon: [[-8.18, 113.68], [-8.16, 113.68], [-8.16, 113.70], [-8.18, 113.70]],
       milestones: [
         { 
           label: 'Sungai Meluap', tag: 'Tanda Awal', narasi: 'Hujan deras di lereng Argopuro menaikkan permukaan air Kali Jompo melewati batas aman.', stat1V: '50', stat2V: '2', 
@@ -474,7 +556,6 @@ document.addEventListener('DOMContentLoaded', () => {
       luasan: '45.0 Ha',
       gambar: '/images/tolak_tambang.jpg',
       ringkasan: 'Gerakan penolakan eksploitasi tambang emas di perbukitan Silo oleh masyarakat adat, petani, dan aktivis lingkungan Jember.',
-      area_polygon: [[-8.29, 113.87], [-8.27, 113.87], [-8.27, 113.89], [-8.29, 113.89]],
       milestones: [
         { 
           label: 'Sosialisasi Izin', tag: 'Tanda Awal', narasi: 'Kabar masuknya Silo dalam peta wilayah izin tambang memicu kegelisahan di tingkat desa.', stat1V: '200', stat2V: '1', 
@@ -535,8 +616,66 @@ document.addEventListener('DOMContentLoaded', () => {
     markerLayers[data.category].addLayer(marker);
     markerRefs[data.id] = marker;
     
+    // Start markers hidden for staggered fade in
+    const markerEl = marker.getElement();
+    if (markerEl) {
+      markerEl.style.opacity = '0';
+      markerEl.style.transition = 'opacity 1s ease-in-out';
+    }
+    
     marker.on('click', () => openPanel(data));
   });
+
+  // --- Cinematic Entry Transition & Counter HUD Animation ---
+  setTimeout(() => {
+    // Reveal Cinematic Watermark
+    const watermark = document.getElementById('cinematicWatermark');
+    if (watermark) watermark.style.opacity = '1';
+
+    // Cinematic flyTo Jember
+    map.flyTo(jemberCenter, 11, {
+      duration: 3.5,
+      easeLinearity: 0.1
+    });
+
+    // Staggered marker fade in after map movement starts
+    setTimeout(() => {
+      let delayMs = 0;
+      eventsData.forEach(data => {
+        const marker = markerRefs[data.id];
+        if (marker) {
+          setTimeout(() => {
+            const el = marker.getElement();
+            if (el) el.style.opacity = '1';
+          }, delayMs);
+          delayMs += 100;
+        }
+      });
+    }, 2000);
+
+    // Counter HUD Animation
+    const counterHUD = document.getElementById('counterHUD');
+    if (counterHUD) counterHUD.style.opacity = '1';
+    
+    const counterEl = document.getElementById('totalEventsCounter');
+    if (counterEl) {
+      let startTimestamp = null;
+      const duration = 2000;
+      const targetVal = eventsData.length;
+      
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        counterEl.textContent = Math.floor(progress * targetVal);
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        } else {
+          counterEl.textContent = targetVal;
+        }
+      };
+      window.requestAnimationFrame(step);
+    }
+  }, 500);
 
   // Filter Legend
   const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
@@ -597,6 +736,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     eventPanel.classList.remove('translate-x-full'); // fallback for grading
 
+    // Deep Zoom on Click (Technical Map Zoom)
+    map.flyTo(data.loc, 15, {
+      duration: 1.5,
+      easeLinearity: 0.25
+    });
+
     const exists = openedTabs.find(tab => tab.id === data.id);
     if (!exists) {
       if(openedTabs.length >= 8) openedTabs.shift();
@@ -629,15 +774,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const layers = [];
     
     if (data.renderType === 'area' || !data.renderType) {
-      layers.push(L.circle(data.loc, {
-        radius: radius,
-        color: data.color,
-        fillColor: data.patternId || data.color,
-        fillOpacity: data.patternId ? 1 : 0.25,
-        weight: 3,
-        opacity: 0.95,
-        className: 'event-polygon'
-      }));
+      // Draw actual polygon overlay instead of simple circle
+      if (data.area_polygon) {
+        layers.push(L.polygon(data.area_polygon, {
+          color: data.color,
+          fillColor: data.color,
+          fillOpacity: 0.25,
+          weight: 2,
+          opacity: 0.8,
+          className: 'event-polygon'
+        }));
+      } else {
+        const isFlood = data.title.toLowerCase().includes('banjir');
+        if (isFlood) {
+            // Flexible, combined multi-circle animation for flood simulation
+            const circles = [radius, radius * 0.6, radius * 0.3];
+            circles.forEach((r, idx) => {
+                layers.push(L.circle(data.loc, {
+                  radius: r,
+                  color: data.color,
+                  fillColor: data.patternId || data.color,
+                  fillOpacity: data.patternId ? 1 : (0.15 + (idx * 0.1)),
+                  weight: 2,
+                  opacity: 0.8,
+                  className: 'flood-wave event-polygon'
+                }));
+            });
+        } else {
+            layers.push(L.circle(data.loc, {
+              radius: radius,
+              color: data.color,
+              fillColor: data.patternId || data.color,
+              fillOpacity: data.patternId ? 1 : 0.25,
+              weight: 3,
+              opacity: 0.95,
+              className: 'event-polygon'
+            }));
+        }
+      }
     } else if (data.renderType === 'network') {
       if (m.networkCoords) {
         // Draw center dot
@@ -735,13 +909,13 @@ document.addEventListener('DOMContentLoaded', () => {
           label: data.chartLabel,
           data: data.chartData,
           backgroundColor: isArea
-            ? `${data.chartColor}33`
-            : data.chartType === 'line' ? 'transparent' : `${data.chartColor}cc`,
-          borderColor: data.chartColor,
+            ? `${data.color}33`
+            : data.chartType === 'line' ? 'transparent' : `${data.color}cc`,
+          borderColor: data.color,
           borderWidth: 2,
           fill: isArea,
           tension: 0.4,
-          pointBackgroundColor: data.chartColor,
+          pointBackgroundColor: data.color,
           pointRadius: type === 'line' ? 4 : 0,
           pointHoverRadius: type === 'line' ? 6 : 0,
           borderRadius: type === 'bar' ? 6 : 0,
@@ -1001,6 +1175,51 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const desc2 = document.getElementById('eventDesc2');
       if(desc2) desc2.textContent = activeData.desc2 || '';
+      
+      // Update coordinates
+      const elCoords = document.getElementById('eventCoordinates');
+      if(elCoords) {
+        const lat = activeData.loc[0];
+        const lng = activeData.loc[1];
+        // Format to DMS
+        const formatDMS = (val, isLat) => {
+          const absolute = Math.abs(val);
+          const degrees = Math.floor(absolute);
+          const minutesNotTruncated = (absolute - degrees) * 60;
+          const minutes = Math.floor(minutesNotTruncated);
+          const seconds = ((minutesNotTruncated - minutes) * 60).toFixed(1);
+          let dir = '';
+          if(isLat) dir = val >= 0 ? 'N' : 'S';
+          else dir = val >= 0 ? 'E' : 'W';
+          return `${degrees}°${minutes}'${seconds}"${dir}`;
+        };
+        elCoords.textContent = `${formatDMS(lat, true)} ${formatDMS(lng, false)}`;
+      }
+
+      // Copy Coordinates Button
+      const copyCoordsBtn = document.getElementById('copyCoordsBtn');
+      if(copyCoordsBtn) {
+        // Remove old listeners by cloning
+        const newCopyBtn = copyCoordsBtn.cloneNode(true);
+        copyCoordsBtn.parentNode.replaceChild(newCopyBtn, copyCoordsBtn);
+        
+        newCopyBtn.addEventListener('click', () => {
+          if (elCoords && elCoords.textContent) {
+            navigator.clipboard.writeText(elCoords.textContent).then(() => {
+              const tooltip = newCopyBtn.querySelector('#copyCoordsTooltip');
+              if (tooltip) {
+                tooltip.textContent = "Koordinat berhasil disalin!";
+                setTimeout(() => {
+                  tooltip.textContent = "Copy";
+                }, 2000);
+              }
+            });
+          }
+        });
+      }
+
+      // Render chart
+      renderEventChart(activeData);
 
       // Timeline & Milestone logic (this will automatically populate spatialFlowArea)
       if(activeData.milestones) {

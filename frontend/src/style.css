@@ -252,3 +252,13 @@ path.leaflet-interactive:focus,
 svg.leaflet-zoom-animated:focus {
   outline: none !important;
 }
+.flood-wave {
+  animation: flood-ripple 3s infinite ease-out;
+  transform-origin: center;
+}
+
+@keyframes flood-ripple {
+  0% { opacity: 0.8; stroke-width: 3; }
+  50% { opacity: 0.3; stroke-width: 1; }
+  100% { opacity: 0.8; stroke-width: 3; }
+}
