@@ -31,7 +31,7 @@
 
 /* Marker glow colors by category */
 .marker-bencana  { color: rgba(220, 38, 38, 0.5); }
-.marker-tragedi  { color: rgba(29, 78, 216, 0.5); }
+.marker-tragedi  { color: rgba(220, 38, 38, 0.5); }
 .marker-pergerakan { color: rgba(29, 78, 216, 0.5); }
 .marker-kasus    { color: rgba(249, 115, 22, 0.5); }
 .marker-laporan  { color: rgba(245, 158, 11, 0.4); }

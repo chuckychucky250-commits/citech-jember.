@@ -8,7 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeIconSun = document.getElementById('themeIconSun');
   const themeIconMoon = document.getElementById('themeIconMoon');
   
-  if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  const storedTheme = localStorage.getItem('theme');
+  if (storedTheme === 'light') {
+    document.documentElement.classList.remove('dark');
+  } else if (storedTheme === 'dark' || (!storedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('dark');
   }
 
@@ -136,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     options: { position: 'bottomright' },
     onAdd: function () {
       this._container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-      this._container.className += ' bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-md text-xs font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 mb-6 mr-4 pointer-events-none shadow-sm';
+      this._container.className += ' px-3 py-1 text-xs font-mono font-bold text-slate-700 dark:text-slate-200 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)] dark:drop-shadow-md mb-6 mr-4 pointer-events-none';
       this._container.innerHTML = 'Hover on map...';
       return this._container;
     },
@@ -160,10 +163,10 @@ document.addEventListener('DOMContentLoaded', () => {
       container.style.boxShadow = 'none';
       container.innerHTML = `
         <div class="flex flex-col space-y-2 mr-2 mb-2">
-          <button id="mapZoomInBtn" class="w-10 h-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-white/50 dark:border-slate-700/50 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all focus:outline-none">
+          <button id="mapZoomInBtn" class="w-10 h-10 bg-white/80 dark:bg-transparent backdrop-blur-md border border-slate-300 dark:border-white/30 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white/90 dark:hover:bg-slate-800/50 transition-all focus:outline-none">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
           </button>
-          <button id="mapZoomOutBtn" class="w-10 h-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-white/50 dark:border-slate-700/50 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 transition-all focus:outline-none">
+          <button id="mapZoomOutBtn" class="w-10 h-10 bg-white/80 dark:bg-transparent backdrop-blur-md border border-slate-300 dark:border-white/30 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white/90 dark:hover:bg-slate-800/50 transition-all focus:outline-none">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12H4"></path></svg>
           </button>
         </div>
@@ -1814,13 +1817,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (closeLegendSheetBtnEl) closeLegendSheetBtnEl.addEventListener('click', closeLegendSheet);
 
   // Mobile Theme Toggle
-  const mobileThemeBtnEl = document.getElementById('mobileThemeBtn');
-  if (mobileThemeBtnEl) {
-    mobileThemeBtnEl.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.toggle('dark');
-      applyTheme(isDark);
-    });
-  }
+
 
   // Swipe-to-expand / dismiss for Event Panel
   const eventPanelSwipe = document.getElementById('eventPanel');
