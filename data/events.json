@@ -18,7 +18,7 @@
     "desc2": "Proses pemulihan memakan waktu berbulan-bulan, meninggalkan jejak kolektif dalam ingatan masyarakat Jember.",
     "korban": 120,
     "luasan": "450 Ha",
-    "gambar": "/images/kencong.jpg",
+    "gambar": "./images/kencong.jpg",
     "ringkasan": "Tragedi bencana banjir besar yang melanda wilayah Kencong pada tahun 1998, menyebabkan kerugian materiil serta memicu pengungsian warga.",
     "milestones": [
       {
@@ -115,7 +115,7 @@
     "desc2": "Kesepakatan bersejarah dicapai yang menjadi model penyelesaian konflik agraria di Jawa Timur.",
     "korban": 3500,
     "luasan": "4.0 Ha",
-    "gambar": "/images/petani.jpg",
+    "gambar": "./images/petani.jpg",
     "ringkasan": "Aksi unjuk rasa solidaritas damai oleh ribuan petani di Jember Selatan demi mempertahankan lahan pertanian mereka.",
     "milestones": [
       {
@@ -258,7 +258,7 @@
     "desc2": "Kasus ini mendorong lahirnya platform pantauan publik untuk setiap proyek infrastruktur besar.",
     "korban": 0,
     "luasan": "150 Ha",
-    "gambar": "/images/tataruang.jpg",
+    "gambar": "./images/tataruang.jpg",
     "ringkasan": "Investigasi alih fungsi lahan hutan kota resapan air Patrang untuk kepentingan komersial yang merugikan publik.",
     "milestones": [
       {
@@ -406,7 +406,7 @@
     "desc2": "Tragedi ini mengubah kebijakan pengelolaan hutan lindung di Jember utara secara permanen.",
     "korban": 98,
     "luasan": "5.0 Ha",
-    "gambar": "/images/panti.jpg",
+    "gambar": "./images/panti.jpg",
     "ringkasan": "Bencana banjir bandang hebat yang melanda wilayah Panti akibat longsoran dari lereng Gunung Argopuro.",
     "milestones": [
       {
@@ -559,7 +559,7 @@
     "desc2": "Resolusi dicapai berupa perlindungan radius tangkap khusus untuk nelayan perahu kecil.",
     "korban": 210,
     "luasan": "12.0 Ha",
-    "gambar": "/images/puger.jpg",
+    "gambar": "./images/puger.jpg",
     "ringkasan": "Ketegangan nelayan tradisional dengan kapal industri berskala besar terkait batas zonasi penangkapan di Puger.",
     "milestones": [
       {
@@ -658,7 +658,7 @@
     "desc2": "Melalui mediasi panjang, disepakati skema bagi hasil dan pembagian area kelola yang adil.",
     "korban": 45,
     "luasan": "120 Ha",
-    "gambar": "/images/sengketa_silo.jpg",
+    "gambar": "./images/sengketa_silo.jpg",
     "ringkasan": "Sengketa berkepanjangan terkait kepemilikan dan hak guna usaha lahan perkebunan di Silo antara warga setempat dan perusahaan daerah.",
     "milestones": [
       {
@@ -755,7 +755,7 @@
     "desc2": "Aparat dan relawan membersihkan material lumpur selama 24 jam penuh untuk memulihkan arus transportasi.",
     "korban": 12,
     "luasan": "3.2 Ha",
-    "gambar": "/images/longsor_jelbuk.jpg",
+    "gambar": "./images/longsor_jelbuk.jpg",
     "ringkasan": "Bencana longsor tebing di wilayah perbukitan Jelbuk yang melumpuhkan transportasi utama penghubung antar kabupaten.",
     "milestones": [
       {
@@ -883,7 +883,7 @@
     "desc2": "Aksi damai meluas hingga pendudukan simbolis kantor legislatif daerah tanpa kerusuhan berarti.",
     "korban": 5000,
     "luasan": "8.5 Ha",
-    "gambar": "/images/reformasi_unej.jpg",
+    "gambar": "./images/reformasi_unej.jpg",
     "ringkasan": "Pergerakan mahasiswa Jember pada tahun 1998 yang menjadi bagian dari arus reformasi nasional, berpusat di kawasan kampus Tegalboto.",
     "milestones": [
       {
@@ -1007,7 +1007,7 @@
     "desc2": "Sebagian fondasi pertokoan ruko ambruk ke sungai, memaksa relokasi pedagang ke tempat yang lebih aman.",
     "korban": 350,
     "luasan": "15.0 Ha",
-    "gambar": "/images/banjir_jompo.jpg",
+    "gambar": "./images/banjir_jompo.jpg",
     "ringkasan": "Bencana luapan air sungai Kali Jompo di pusat kota Jember yang merusak infrastruktur ruko jalan utama.",
     "milestones": [
       {
@@ -1104,7 +1104,7 @@
     "desc2": "Tekanan keras dari gerakan ini memaksa pemerintah daerah mencabut rekomendasi izin pertambangan.",
     "korban": 2500,
     "luasan": "45.0 Ha",
-    "gambar": "/images/tolak_tambang.jpg",
+    "gambar": "./images/tolak_tambang.jpg",
     "ringkasan": "Gerakan penolakan eksploitasi tambang emas di perbukitan Silo oleh masyarakat adat, petani, dan aktivis lingkungan Jember.",
     "milestones": [
       {
