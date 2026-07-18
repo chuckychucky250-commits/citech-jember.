@@ -1,0 +1,1212 @@
+[
+  {
+    "id": "evt_001",
+    "loc": [
+      -8.17,
+      113.7
+    ],
+    "title": "Tragedi Kencong",
+    "category": "tragedi",
+    "color": "#DC2626",
+    "year": "1998",
+    "renderType": "area",
+    "patternId": "url(#hatchPatternRed)",
+    "heroImage": "https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Kejadiannya sangat cepat, air tiba-tiba datang dari arah utara membawa lumpur dan ranting pohon.\"",
+    "quoteAuthor": "— Kesaksian Warga",
+    "desc1": "Kejadian ini dimulai dari titik awal di pusat kota dan menyebar secara organik ke beberapa wilayah sekunder.",
+    "desc2": "Proses pemulihan memakan waktu berbulan-bulan, meninggalkan jejak kolektif dalam ingatan masyarakat Jember.",
+    "korban": 120,
+    "luasan": "450 Ha",
+    "gambar": "/images/kencong.jpg",
+    "ringkasan": "Tragedi bencana banjir besar yang melanda wilayah Kencong pada tahun 1998, menyebabkan kerugian materiil serta memicu pengungsian warga.",
+    "milestones": [
+      {
+        "label": "Eskalasi",
+        "tag": "Tanda Awal",
+        "narasi": "Ketegangan mulai terasa akibat isu provokatif di media lokal. Massa dalam jumlah kecil mulai berkerumun.",
+        "stat1V": "120",
+        "stat2V": "2",
+        "polygonRadius": 200,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.27,
+              113.36
+            ],
+            "title": "Pasar Tradisional Kencong (Titik Pusat Eskalasi)",
+            "desc": "Letupan awal ketegangan bermula di area Pasar Tradisional Kencong. Radius 200 meter dari pusat pasar menjadi titik rawan pertama karena merupakan pusat interaksi ekonomi warga. Gesekan kecil akibat kesalahpahaman yang diperparah oleh sentimen kelompok dan provokasi di media lokal memicu konsentrasi massa di sekitar los pasar dan jalan utama."
+          }
+        ]
+      },
+      {
+        "label": "Konflik Terbuka",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Bentrokan fisik tidak terhindarkan di pusat kecamatan. Fasilitas umum mengalami kerusakan.",
+        "stat1V": "450",
+        "stat2V": "5",
+        "polygonRadius": 400,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.27,
+              113.36
+            ],
+            "title": "Perluasan Konflik (Kencong hingga Gumukmas)",
+            "desc": "Bentrokan fisik pecah dan menyebar dengan cepat keluar dari area pasar. Konflik meluas secara sporadis hingga radius 400 meter, menyusuri jalan-jalan desa dan mulai merambah perbatasan Kecamatan Gumukmas. Beberapa fasilitas umum dan pertokoan di sepanjang jalan utama penghubung antar-kecamatan mengalami kerusakan akibat lemparan batu dan perusakan oleh massa yang tidak terkendali."
+          }
+        ]
+      },
+      {
+        "label": "Intervensi",
+        "tag": "Resolusi",
+        "narasi": "Aparat keamanan dibantu tokoh masyarakat setempat berhasil meredam massa dan menginisiasi dialog damai.",
+        "stat1V": "50",
+        "stat2V": "1",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.27,
+              113.36
+            ],
+            "title": "Pusat Keamanan Terpadu (Fokus Pengamanan)",
+            "desc": "Pasukan Brimob dan TNI diturunkan untuk memecah konsentrasi massa. Area konflik berhasil dilokalisir dan ditekan kembali menjadi radius 150 meter yang difokuskan pada pengamanan titik-titik vital seperti balai desa, tempat ibadah, dan pasar. Posko keamanan terpadu didirikan di tengah area ini untuk memastikan tidak ada serangan balasan, sementara tokoh agama dan masyarakat diundang ke posko untuk mediasi."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Dampak Warga",
+    "stat1Unit": "Jiwa",
+    "stat2Label": "Area Terdampak",
+    "stat2Unit": "Ha",
+    "chartType": "bar",
+    "chartLabels": [
+      "Minggu 1",
+      "Minggu 2",
+      "Minggu 3",
+      "Minggu 4"
+    ],
+    "chartData": [
+      30,
+      120,
+      85,
+      45
+    ],
+    "chartLabel": "Jiwa Terdampak",
+    "chartColor": "#DC2626"
+  },
+  {
+    "id": "evt_002",
+    "loc": [
+      -8.21,
+      113.65
+    ],
+    "title": "Aksi Solidaritas Petani",
+    "category": "pergerakan",
+    "color": "#1D4ED8",
+    "year": "2001",
+    "renderType": "network",
+    "heroImage": "https://images.unsplash.com/photo-1590483736622-398541ce01bf?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Tanah adalah nyawa kami. Kami berkumpul bukan untuk melawan, tapi untuk mempertahankan ruang hidup.\"",
+    "quoteAuthor": "— Pemimpin Aksi",
+    "desc1": "Ribuan petani dari berbagai pelosok Jember bagian selatan berkumpul untuk menyuarakan hak atas tanah garapan mereka.",
+    "desc2": "Kesepakatan bersejarah dicapai yang menjadi model penyelesaian konflik agraria di Jawa Timur.",
+    "korban": 3500,
+    "luasan": "4.0 Ha",
+    "gambar": "/images/petani.jpg",
+    "ringkasan": "Aksi unjuk rasa solidaritas damai oleh ribuan petani di Jember Selatan demi mempertahankan lahan pertanian mereka.",
+    "milestones": [
+      {
+        "label": "Konsolidasi",
+        "tag": "Persiapan",
+        "narasi": "Proses konsolidasi dan mobilisasi massa. Petani dari 12 kecamatan mulai berkumpul di titik-titik kumpul.",
+        "stat1V": "800",
+        "stat2V": "1",
+        "networkCoords": [
+          [
+            -8.23,
+            113.62
+          ],
+          [
+            -8.2,
+            113.61
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.23,
+              113.62
+            ],
+            "title": "Desa Ambulu & Wuluhan (Titik Asal Mobilisasi)",
+            "desc": "Dua kecamatan di wilayah selatan Jember ini merupakan basis utama kelompok tani yang lahan garapannya terancam. Sejak pagi buta, para petani mulai berkumpul, menyiapkan spanduk, dan menyusun barisan kendaraan di perbatasan desa."
+          },
+          {
+            "loc": [
+              -8.2,
+              113.61
+            ],
+            "title": "Balai Desa (Simpul Konsolidasi)",
+            "desc": "Sebelum bergerak ke pusat kota, massa melakukan konsolidasi di balai desa masing-masing. Di titik (biru) ini, koordinator lapangan memastikan jumlah massa, membagikan logistik, dan memberikan instruksi agar aksi berjalan damai."
+          }
+        ]
+      },
+      {
+        "label": "Aksi Damai",
+        "tag": "Puncak Peristiwa",
+        "narasi": "3.500 petani berbaris damai menuju kantor pemerintahan. Aksi berlangsung tertib namun penuh determinasi.",
+        "stat1V": "3.500",
+        "stat2V": "4",
+        "networkCoords": [
+          [
+            -8.23,
+            113.62
+          ],
+          [
+            -8.2,
+            113.61
+          ],
+          [
+            -8.18,
+            113.67
+          ],
+          [
+            -8.22,
+            113.69
+          ],
+          [
+            -8.19,
+            113.63
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.22,
+              113.69
+            ],
+            "title": "Arus Pergerakan dari 5 Kecamatan Jember Selatan",
+            "desc": "Massa yang awalnya terpecah kini bergerak serentak dari 5 titik kecamatan (Jenggawah, Ambulu, Wuluhan, Balung, dan Puger) menggunakan truk and sepeda motor. Jalur pergerakan menyusuri jalan arteri selatan menuju arah utara."
+          },
+          {
+            "loc": [
+              -8.18,
+              113.62
+            ],
+            "title": "Alun-Alun Jember (Titik Konvergensi)",
+            "desc": "Ribuan petani dari berbagai penjuru tiba dan memusatkan diri di Alun-Alun Jember, tepat di depan Kantor Pemerintah Kabupaten. Pertemuan berbagai simpul ini menciptakan lautan massa yang memblokir jalan utama kota secara damai."
+          }
+        ]
+      },
+      {
+        "label": "Mediasi",
+        "tag": "Resolusi",
+        "narasi": "Dialog konstruktif dengan pemerintah menghasilkan kesepakatan perlindungan hak garap. Aksi dibubarkan secara damai.",
+        "stat1V": "1.200",
+        "stat2V": "2",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.18,
+              113.62
+            ],
+            "title": "Gedung DPRD Jember (Titik Resolusi)",
+            "desc": "Setelah orasi berjam-jam di jalanan, perwakilan aksi diundang masuk ke dalam Gedung DPRD. Seluruh aktivitas pergerakan dihentikan, jaringan terputus, massa menunggu di luar gedung sementara fokus penyelesaian masalah berada di satu titik ruang rapat tertutup."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Partisipan",
+    "stat1Unit": "Orang",
+    "stat2Label": "Durasi",
+    "stat2Unit": "Hari",
+    "chartType": "line",
+    "chartLabels": [
+      "Hari 1",
+      "Hari 2",
+      "Hari 3",
+      "Hari 4"
+    ],
+    "chartData": [
+      800,
+      3500,
+      2100,
+      1200
+    ],
+    "chartLabel": "Jumlah Peserta",
+    "chartColor": "#1D4ED8"
+  },
+  {
+    "id": "evt_003",
+    "loc": [
+      -8.162,
+      113.702
+    ],
+    "title": "Skandal Tata Ruang",
+    "category": "kasus",
+    "color": "#F97316",
+    "year": "2009",
+    "renderType": "network",
+    "heroImage": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Terjadi perubahan drastis pada cetak biru pembangunan yang merugikan ruang terbuka hijau.\"",
+    "quoteAuthor": "— Aktivis Tata Kota",
+    "desc1": "Sebuah kasus yang melibatkan perizinan bangunan komersial di area resapan air kota Jember.",
+    "desc2": "Kasus ini mendorong lahirnya platform pantauan publik untuk setiap proyek infrastruktur besar.",
+    "korban": 0,
+    "luasan": "150 Ha",
+    "gambar": "/images/tataruang.jpg",
+    "ringkasan": "Investigasi alih fungsi lahan hutan kota resapan air Patrang untuk kepentingan komersial yang merugikan publik.",
+    "milestones": [
+      {
+        "label": "Audit",
+        "tag": "Investigasi Awal",
+        "narasi": "Tim audit independen menemukan 45 dokumen perizinan bermasalah di Kantor BPN Jember.",
+        "stat1V": "0.8",
+        "stat2V": "45",
+        "networkCoords": [
+          [
+            -8.162,
+            113.702
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.162,
+              113.702
+            ],
+            "title": "Kantor BPN Jember (Pusat Investigasi Awal)",
+            "desc": "Proses investigasi dimulai dari penelusuran dokumen perizinan di Kantor BPN Jember. Di titik ini ditemukan 45 berkas perizinan bermasalah yang terindikasi melanggar Rencana Tata Ruang Wilayah."
+          }
+        ]
+      },
+      {
+        "label": "Investigasi",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Investigasi mendalam mengungkap alih fungsi lahan resapan seluas 150 Ha di Patrang menjadi area komersial.",
+        "stat1V": "2.3",
+        "stat2V": "450",
+        "networkCoords": [
+          [
+            -8.162,
+            113.702
+          ],
+          [
+            -8.145,
+            113.738
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.162,
+              113.702
+            ],
+            "title": "Kantor BPN Jember",
+            "desc": "Pusat administrasi berkas perkara penyitaan dokumen perizinan bermasalah."
+          },
+          {
+            "loc": [
+              -8.145,
+              113.738
+            ],
+            "title": "Kawasan Resapan Patrang (Lokasi Temuan Lapangan)",
+            "desc": "Pengecekan fisik di lapangan menemukan alih fungsi hutan resapan air menjadi komplek pertokoan komersial."
+          }
+        ]
+      },
+      {
+        "label": "Revisi",
+        "tag": "Tindak Lanjut",
+        "narasi": "DPRD dan Pemkab mengeluarkan perda revisi tata ruang untuk menyelamatkan hutan kota.",
+        "stat1V": "1.1",
+        "stat2V": "120",
+        "networkCoords": [
+          [
+            -8.162,
+            113.702
+          ],
+          [
+            -8.145,
+            113.738
+          ],
+          [
+            -8.18,
+            113.621
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.162,
+              113.702
+            ],
+            "title": "Kantor BPN Jember",
+            "desc": "Administrasi peninjauan sertifikat tanah di BPN."
+          },
+          {
+            "loc": [
+              -8.145,
+              113.738
+            ],
+            "title": "Kawasan Resapan Patrang",
+            "desc": "Pemulihan dan penanaman kembali vegetasi di area resapan."
+          },
+          {
+            "loc": [
+              -8.18,
+              113.621
+            ],
+            "title": "Gedung Pemkab Jember (Pusat Kebijakan Baru)",
+            "desc": "Pemerintah daerah bersama DPRD meresmikan revisi Perda RTRW untuk memperketat izin pembangunan komersial."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Kerugian",
+    "stat1Unit": "Miliar",
+    "stat2Label": "Berkas Disita",
+    "stat2Unit": "Berkas",
+    "chartType": "bar",
+    "chartLabels": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "chartData": [
+      0.3,
+      2.3,
+      1.8,
+      1.1
+    ],
+    "chartLabel": "Estimasi Kerugian (Miliar)",
+    "chartColor": "#F97316"
+  },
+  {
+    "id": "evt_004",
+    "loc": [
+      -8.08,
+      113.71
+    ],
+    "title": "Banjir Bandang Panti",
+    "category": "bencana",
+    "color": "#9333EA",
+    "year": "2006",
+    "renderType": "route",
+    "heroImage": "https://images.unsplash.com/photo-1548349282-358043c945b0?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Suara gemuruh dari arah Gunung Argopuro di malam hari menjadi pertanda buruk.\"",
+    "quoteAuthor": "— Relawan Evakuasi",
+    "desc1": "Curah hujan ekstrem memicu longsoran material dari lereng pegunungan Argopuro.",
+    "desc2": "Tragedi ini mengubah kebijakan pengelolaan hutan lindung di Jember utara secara permanen.",
+    "korban": 98,
+    "luasan": "5.0 Ha",
+    "gambar": "/images/panti.jpg",
+    "ringkasan": "Bencana banjir bandang hebat yang melanda wilayah Panti akibat longsoran dari lereng Gunung Argopuro.",
+    "milestones": [
+      {
+        "label": "Curah Hujan",
+        "tag": "Tanda Awal",
+        "narasi": "Curah hujan 200mm/hari selama 3 hari berturut-turut. Status siaga dikeluarkan BMKG.",
+        "stat1V": "0",
+        "stat2V": "0",
+        "polygonRadius": 300,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.08,
+              113.71
+            ],
+            "title": "Lereng Gunung Argopuro (Hulu Bencana)",
+            "desc": "Area resapan air di kawasan pegunungan Argopuro yang sebagian gundul mengalami hujan ekstrem (200mm/hari) selama 3 hari berturut-turut. Tanah yang kehilangan vegetasi pengikat air menjadi sangat jenuh dan labil, menjadi bom waktu longsor."
+          }
+        ]
+      },
+      {
+        "label": "Longsor & Banjir",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Longsoran besar menerjang 5 desa di malam hari. 98 warga meninggal dunia. Jalan utama terputus.",
+        "stat1V": "98",
+        "stat2V": "5",
+        "routeCoords": [
+          [
+            -8.03,
+            113.72
+          ],
+          [
+            -8.05,
+            113.715
+          ],
+          [
+            -8.08,
+            113.71
+          ],
+          [
+            -8.12,
+            113.69
+          ],
+          [
+            -8.15,
+            113.68
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.03,
+              113.72
+            ],
+            "title": "Hulu Sungai Kaliputih (Titik Runtuh)",
+            "desc": "Tebing gunung di sisi utara akhirnya tidak mampu menahan debit air dan longsor, membawa jutaan kubik material tanah, batu-batu raksasa, dan gelondongan kayu hutan."
+          },
+          {
+            "loc": [
+              -8.08,
+              113.71
+            ],
+            "title": "Desa Kemiri & Suci (Jalur Terjangan Utama)",
+            "desc": "Material longsor berubah menjadi lahar dingin yang menyapu deras mengikuti aliran Sungai Kaliputih. Desa Kemiri dan Suci hancur diterjang lumpur, jembatan terputus, dan pemukiman rata dengan tanah."
+          },
+          {
+            "loc": [
+              -8.15,
+              113.68
+            ],
+            "title": "Desa Rambipuji (Ujung Hilir Endapan)",
+            "desc": "Material banjir terus mengalir ke dataran yang lebih rendah di Kecamatan Rambipuji. Meskipun arus melemah, wilayah hilir ini terendam endapan lumpur tebal yang merusak sawah dan rumah warga."
+          }
+        ]
+      },
+      {
+        "label": "Relokasi",
+        "tag": "Pemulihan",
+        "narasi": "Proses relokasi warga ke kawasan aman. Pembangunan sistem peringatan dini dimulai.",
+        "stat1V": "20",
+        "stat2V": "2",
+        "routeCoords": [
+          [
+            -8.08,
+            113.71
+          ],
+          [
+            -8.08,
+            113.75
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.08,
+              113.71
+            ],
+            "title": "Desa Kemiri (Zona Merah Bencana)",
+            "desc": "Pasca bencana, area bekas sapuan banjir di Desa Kemiri ditetapkan sebagai zona merah yang sangat berbahaya dan tidak layak huni karena potensi longsor susulan."
+          },
+          {
+            "loc": [
+              -8.08,
+              113.75
+            ],
+            "title": "Kawasan Relokasi Perhutani (Tujuan Evakuasi)",
+            "desc": "Pemerintah membuka lahan baru ke arah timur yang posisinya jauh lebih tinggi. Rute relokasi menggambarkan perpindahan massal warga menuju Hunian Tetap (Huntap) di kawasan baru tersebut."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Korban Jiwa",
+    "stat1Unit": "Jiwa",
+    "stat2Label": "Desa Terisolir",
+    "stat2Unit": "Desa",
+    "chartType": "area",
+    "chartLabels": [
+      "H-1",
+      "Hari Kejadian",
+      "H+1",
+      "H+7",
+      "H+30"
+    ],
+    "chartData": [
+      0,
+      98,
+      98,
+      80,
+      20
+    ],
+    "chartLabel": "Akumulasi Korban",
+    "chartColor": "#DC2626"
+  },
+  {
+    "id": "evt_005",
+    "loc": [
+      -8.18,
+      113.62
+    ],
+    "title": "Sengketa Pesisir Puger",
+    "category": "kasus",
+    "color": "#F97316",
+    "year": "2013",
+    "renderType": "point",
+    "heroImage": "https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Laut adalah rumah kami. Aturan baru zonasi penangkapan membuat nelayan kecil kesulitan.\"",
+    "quoteAuthor": "— Tokoh Nelayan",
+    "desc1": "Penerapan zonasi eksploitasi pesisir memicu ketegangan antara nelayan tradisional dan armada penangkap ikan berskala industri.",
+    "desc2": "Resolusi dicapai berupa perlindungan radius tangkap khusus untuk nelayan perahu kecil.",
+    "korban": 210,
+    "luasan": "12.0 Ha",
+    "gambar": "/images/puger.jpg",
+    "ringkasan": "Ketegangan nelayan tradisional dengan kapal industri berskala besar terkait batas zonasi penangkapan di Puger.",
+    "milestones": [
+      {
+        "label": "Aturan Baru",
+        "tag": "Pemicu Konflik",
+        "narasi": "Peraturan baru zonasi penangkapan diumumkan. 210 kapal nelayan kecil terancam kehilangan wilayah tangkap tradisional.",
+        "stat1V": "210",
+        "stat2V": "12",
+        "polygonRadius": 400,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.18,
+              113.62
+            ],
+            "title": "Zona Pesisir Pantai Puger (Radius 400m)",
+            "desc": "Konflik ini dipicu oleh kebijakan yang mengizinkan kapal industri besar masuk ke wilayah laut dangkal. Area dalam radius 400 meter dari garis pantai Puger ini merupakan kawasan tangkap utama dan satu-satunya bagi ratusan nelayan perahu kecil tradisional. Kebijakan ini langsung memicu kemarahan karena mengancam mata pencaharian warga."
+          }
+        ]
+      },
+      {
+        "label": "Blokade",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Nelayan memblokade dermaga selama 5 hari. Aktivitas bongkar muat terhenti total. Mediasi diminta.",
+        "stat1V": "210",
+        "stat2V": "12",
+        "polygonRadius": 700,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.18,
+              113.62
+            ],
+            "title": "Dermaga & Pusat Pelelangan Ikan (Radius 700m)",
+            "desc": "Sebagai bentuk protes keras, nelayan tradisional melakukan aksi mogok dan memperluas area pendudukan hingga radius 700 meter. Mereka menyandarkan perahu-perahu kecil mereka sedemikian rupa untuk memblokade seluruh akses masuk dan keluar Pelabuhan Puger. Aktivitas pelelangan ikan terhenti total."
+          }
+        ]
+      },
+      {
+        "label": "Kesepakatan",
+        "tag": "Resolusi",
+        "narasi": "Zona perlindungan nelayan tradisional 4 mil dari pantai ditetapkan. Blokade dicabut.",
+        "stat1V": "180",
+        "stat2V": "8",
+        "polygonRadius": 250,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.18,
+              113.62
+            ],
+            "title": "Zona Perlindungan Tradisional (Radius 4 Mil)",
+            "desc": "Melalui mediasi yang alot bersama otoritas keamanan, dicapai kesepakatan batas wilayah yang adil. Area laut sejauh 4 mil laut (divisualisasikan mengecil) ditetapkan secara hukum sebagai Zona Perlindungan khusus nelayan tradisional yang haram dimasuki oleh kapal skala industri."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Kapal Nelayan",
+    "stat1Unit": "Unit",
+    "stat2Label": "Panjang Garis",
+    "stat2Unit": "Km",
+    "chartType": "bar",
+    "chartLabels": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "Mei"
+    ],
+    "chartData": [
+      210,
+      210,
+      180,
+      150,
+      100
+    ],
+    "chartLabel": "Kapal Terdampak",
+    "chartColor": "#F97316"
+  },
+  {
+    "id": "evt_006",
+    "loc": [
+      -8.25,
+      113.85
+    ],
+    "title": "Sengketa Lahan Silo",
+    "category": "kasus",
+    "color": "#F97316",
+    "year": "2002",
+    "renderType": "point",
+    "heroImage": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Tanah ini adalah warisan leluhur kami. Kami akan terus menuntut hak garapan kami.\"",
+    "quoteAuthor": "— Perwakilan Petani Silo",
+    "desc1": "Sengketa lahan garapan seluas 120 Ha antara warga Silo dengan perusahaan perkebunan daerah terkait batas hak kelola.",
+    "desc2": "Melalui mediasi panjang, disepakati skema bagi hasil dan pembagian area kelola yang adil.",
+    "korban": 45,
+    "luasan": "120 Ha",
+    "gambar": "/images/sengketa_silo.jpg",
+    "ringkasan": "Sengketa berkepanjangan terkait kepemilikan dan hak guna usaha lahan perkebunan di Silo antara warga setempat dan perusahaan daerah.",
+    "milestones": [
+      {
+        "label": "Klaim Pihak Ketiga",
+        "tag": "Persiapan",
+        "narasi": "Klaim sepihak atas lahan warga oleh perkebunan. Pemasangan tapal batas memicu protes pertama.",
+        "stat1V": "12",
+        "stat2V": "12",
+        "polygonRadius": 200,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.25,
+              113.85
+            ],
+            "title": "Balai Desa Silo (Pertemuan Warga)",
+            "desc": "Warga berkumpul di Balai Desa untuk menyatukan visi menolak patok batas perkebunan baru yang dinilai menyerobot tanah adat."
+          }
+        ]
+      },
+      {
+        "label": "Blokade Jalan",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Warga melakukan mogok kerja dan memblokade jalan akses angkutan hasil kebun perkebunan selama seminggu.",
+        "stat1V": "45",
+        "stat2V": "80",
+        "polygonRadius": 350,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.25,
+              113.85
+            ],
+            "title": "Gerbang Perkebunan Silo (Pusat Aksi)",
+            "desc": "Lebih dari 45 kepala keluarga memblokir pintu utama perkebunan, menghentikan truk-truk pengangkut hasil bumi secara damai."
+          }
+        ]
+      },
+      {
+        "label": "Kesepakatan",
+        "tag": "Resolusi",
+        "narasi": "Penandatanganan Memorandum of Understanding (MoU) kemitraan lahan di hadapan Bupati Jember.",
+        "stat1V": "2",
+        "stat2V": "120",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.25,
+              113.85
+            ],
+            "title": "Kantor Kecamatan Silo (Mediasi Akhir)",
+            "desc": "Dialog terbuka menghasilkan keputusan pembagian porsi kelola lahan yang diresmikan oleh pihak otoritas wilayah."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "KK Terdampak",
+    "stat1Unit": "KK",
+    "stat2Label": "Luas Mediasi",
+    "stat2Unit": "Ha",
+    "chartType": "bar",
+    "chartLabels": [
+      "2002",
+      "2003",
+      "2004",
+      "2005"
+    ],
+    "chartData": [
+      15,
+      45,
+      30,
+      5
+    ],
+    "chartLabel": "Jumlah Kasus Dilaporkan",
+    "chartColor": "#F97316"
+  },
+  {
+    "id": "evt_007",
+    "loc": [
+      -8.05,
+      113.78
+    ],
+    "title": "Tanah Longsor Jelbuk",
+    "category": "bencana",
+    "color": "#9333EA",
+    "year": "2010",
+    "renderType": "route",
+    "heroImage": "https://images.unsplash.com/photo-1548349282-358043c945b0?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Tiba-tiba terdengar suara gemuruh keras, tebing di pinggir jalan raya langsung ambruk.\"",
+    "quoteAuthor": "— Pengendara Melintas",
+    "desc1": "Longsoran tebing setinggi 15 meter menutup jalan nasional penghubung Jember-Bondowoso akibat hujan lebat berkepanjangan.",
+    "desc2": "Aparat dan relawan membersihkan material lumpur selama 24 jam penuh untuk memulihkan arus transportasi.",
+    "korban": 12,
+    "luasan": "3.2 Ha",
+    "gambar": "/images/longsor_jelbuk.jpg",
+    "ringkasan": "Bencana longsor tebing di wilayah perbukitan Jelbuk yang melumpuhkan transportasi utama penghubung antar kabupaten.",
+    "milestones": [
+      {
+        "label": "Hujan Deras",
+        "tag": "Tanda Awal",
+        "narasi": "Hujan deras mengguyur perbukitan Jelbuk sejak sore hari, melemahkan struktur tanah tebing.",
+        "stat1V": "0",
+        "stat2V": "0",
+        "routeCoords": [
+          [
+            -8.03,
+            113.78
+          ],
+          [
+            -8.05,
+            113.78
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.03,
+              113.78
+            ],
+            "title": "Titik Pengamatan Jelbuk",
+            "desc": "BMKG mendeteksi curah hujan tinggi yang berpotensi melonggarkan ikatan tanah tebing di sepanjang jalan raya."
+          }
+        ]
+      },
+      {
+        "label": "Tebing Ambruk",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Tebing sisi barat runtuh membawa pohon dan batu besar menutupi jalan raya sepanjang 50 meter.",
+        "stat1V": "12",
+        "stat2V": "3.2",
+        "routeCoords": [
+          [
+            -8.03,
+            113.78
+          ],
+          [
+            -8.05,
+            113.78
+          ],
+          [
+            -8.07,
+            113.77
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.05,
+              113.78
+            ],
+            "title": "Jalan Raya Jember-Bondowoso (Lokasi Longsor)",
+            "desc": "Titik longsor utama menutup total jalan nasional. Ruko dan kendaraan yang parkir di sekitar lokasi tertimbun lumpur tebal."
+          }
+        ]
+      },
+      {
+        "label": "Pembersihan",
+        "tag": "Pemulihan",
+        "narasi": "Alat berat diturunkan untuk menyingkirkan material batu dan pohon. Jalur kembali dibuka secara bergantian.",
+        "stat1V": "1",
+        "stat2V": "1.5",
+        "routeCoords": [
+          [
+            -8.05,
+            113.78
+          ],
+          [
+            -8.07,
+            113.77
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.07,
+              113.77
+            ],
+            "title": "Posko Darurat Jelbuk",
+            "desc": "Posko evakuasi didirikan untuk koordinasi pembersihan jalan raya dan penyediaan bantuan logistik darurat."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Korban Cedera",
+    "stat1Unit": "Orang",
+    "stat2Label": "Panjang Jalan",
+    "stat2Unit": "Km",
+    "chartType": "area",
+    "chartLabels": [
+      "H-1",
+      "Hari Kejadian",
+      "H+1",
+      "H+2"
+    ],
+    "chartData": [
+      0,
+      12,
+      4,
+      0
+    ],
+    "chartLabel": "Jumlah Korban Jiwa / Cedera",
+    "chartColor": "#DC2626"
+  },
+  {
+    "id": "evt_008",
+    "loc": [
+      -8.165,
+      113.715
+    ],
+    "title": "Aksi Mahasiswa Reformasi",
+    "category": "pergerakan",
+    "color": "#1D4ED8",
+    "year": "1998",
+    "renderType": "network",
+    "heroImage": "https://images.unsplash.com/photo-1590483736622-398541ce01bf?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Reformasi total! Suara mahasiswa adalah representasi murni dari tuntutan kesejahteraan rakyat.\"",
+    "quoteAuthor": "— Presma UNEJ 1998",
+    "desc1": "Ribuan mahasiswa dari Universitas Jember (UNEJ) dan kampus-kampus lain melakukan unjuk rasa besar-besaran menuntut reformasi.",
+    "desc2": "Aksi damai meluas hingga pendudukan simbolis kantor legislatif daerah tanpa kerusuhan berarti.",
+    "korban": 5000,
+    "luasan": "8.5 Ha",
+    "gambar": "/images/reformasi_unej.jpg",
+    "ringkasan": "Pergerakan mahasiswa Jember pada tahun 1998 yang menjadi bagian dari arus reformasi nasional, berpusat di kawasan kampus Tegalboto.",
+    "milestones": [
+      {
+        "label": "Mimbar Bebas",
+        "tag": "Persiapan",
+        "narasi": "Mimbar bebas digelar di lapangan upacara kampus, membacakan tuntutan reformasi politik dan ekonomi.",
+        "stat1V": "1500",
+        "stat2V": "2",
+        "networkCoords": [
+          [
+            -8.16,
+            113.72
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.16,
+              113.72
+            ],
+            "title": "Double Way UNEJ (Pusat Orasi Awal)",
+            "desc": "Gerbang masuk universitas dijadikan panggung mimbar bebas, mengundang perwakilan mahasiswa dari berbagai fakultas."
+          }
+        ]
+      },
+      {
+        "label": "Long March",
+        "tag": "Puncak Peristiwa",
+        "narasi": "5.000 mahasiswa berbaris tertib melakukan long march menuju Kantor DPRD Jember secara damai.",
+        "stat1V": "5000",
+        "stat2V": "8.5",
+        "networkCoords": [
+          [
+            -8.16,
+            113.72
+          ],
+          [
+            -8.17,
+            113.71
+          ],
+          [
+            -8.18,
+            113.62
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.17,
+              113.71
+            ],
+            "title": "Jalan Kalimantan (Jalur Long March)",
+            "desc": "Jalan protokol di sekitar kampus dipenuhi barisan jaket almamater, dengan pengawalan ketat kepolisian."
+          },
+          {
+            "loc": [
+              -8.18,
+              113.62
+            ],
+            "title": "Gedung DPRD Jember (Sasaran Aksi)",
+            "desc": "Massa memadati halaman DPRD, menuntut pernyataan sikap dukungan reformasi dari seluruh fraksi anggota dewan."
+          }
+        ]
+      },
+      {
+        "label": "Deklarasi Damai",
+        "tag": "Resolusi",
+        "narasi": "Pimpinan DPRD menandatangani pakta integritas dukungan reformasi. Massa membubarkan diri secara tertib.",
+        "stat1V": "500",
+        "stat2V": "1",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.18,
+              113.62
+            ],
+            "title": "Ruang Sidang DPRD Jember",
+            "desc": "Perwakilan mahasiswa dan pimpinan dewan menyepakati poin-poin pakta tuntutan yang dikirim ke pemerintah pusat."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Jumlah Demonstran",
+    "stat1Unit": "Orang",
+    "stat2Label": "Radius Aksi",
+    "stat2Unit": "Km",
+    "chartType": "line",
+    "chartLabels": [
+      "Hari 1",
+      "Hari 2",
+      "Hari 3",
+      "Hari 4"
+    ],
+    "chartData": [
+      1200,
+      3000,
+      5000,
+      800
+    ],
+    "chartLabel": "Estimasi Massa Aksi",
+    "chartColor": "#1D4ED8"
+  },
+  {
+    "id": "evt_009",
+    "loc": [
+      -8.17,
+      113.69
+    ],
+    "title": "Banjir Luapan Kali Jompo",
+    "category": "bencana",
+    "color": "#9333EA",
+    "year": "2020",
+    "renderType": "area",
+    "patternId": "url(#hatchPatternRed)",
+    "heroImage": "https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Air sungai meluap sangat cepat sampai ke jalan raya, ruko-ruko di pinggir kali langsung retak dan longsor.\"",
+    "quoteAuthor": "— Pemilik Toko",
+    "desc1": "Debit air tinggi di hulu memicu luapan Kali Jompo yang menggenangi pertokoan Jalan Sultan Agung Jember.",
+    "desc2": "Sebagian fondasi pertokoan ruko ambruk ke sungai, memaksa relokasi pedagang ke tempat yang lebih aman.",
+    "korban": 350,
+    "luasan": "15.0 Ha",
+    "gambar": "/images/banjir_jompo.jpg",
+    "ringkasan": "Bencana luapan air sungai Kali Jompo di pusat kota Jember yang merusak infrastruktur ruko jalan utama.",
+    "milestones": [
+      {
+        "label": "Sungai Meluap",
+        "tag": "Tanda Awal",
+        "narasi": "Hujan deras di lereng Argopuro menaikkan permukaan air Kali Jompo melewati batas aman.",
+        "stat1V": "50",
+        "stat2V": "2",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.17,
+              113.69
+            ],
+            "title": "Jembatan Kali Jompo (Fokus Awal)",
+            "desc": "Warga melihat air mulai meluap ke permukiman bantaran sungai di sekitar jembatan Sultan Agung."
+          }
+        ]
+      },
+      {
+        "label": "Ruko Ambruk",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Arus deras mengikis fondasi tanah hingga 10 unit ruko ambles and roboh ke dalam aliran sungai.",
+        "stat1V": "350",
+        "stat2V": "15",
+        "polygonRadius": 400,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.17,
+              113.69
+            ],
+            "title": "Jalan Sultan Agung (Pertokoan Ruko)",
+            "desc": "Detik-detik robohnya ruko pertokoan yang sempat terekam kamera warga. Jalan raya ditutup total untuk menghindari longsor susulan."
+          }
+        ]
+      },
+      {
+        "label": "Pembongkaran",
+        "tag": "Resolusi",
+        "narasi": "Pemerintah merobohkan sisa ruko gantung yang rawan ambruk dan menata ulang bantaran sungai Kali Jompo.",
+        "stat1V": "120",
+        "stat2V": "5",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.17,
+              113.69
+            ],
+            "title": "Area Revitalisasi Kali Jompo",
+            "desc": "Alat berat diturunkan untuk membersihkan puing-puing bangunan demi melebarkan kembali aliran sungai."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Warga Mengungsi",
+    "stat1Unit": "Jiwa",
+    "stat2Label": "Ruko Rusak",
+    "stat2Unit": "Ruko",
+    "chartType": "bar",
+    "chartLabels": [
+      "Hari 1",
+      "Hari 2",
+      "Hari 3",
+      "Hari 4"
+    ],
+    "chartData": [
+      40,
+      350,
+      200,
+      80
+    ],
+    "chartLabel": "Pengungsi Kali Jompo",
+    "chartColor": "#DC2626"
+  },
+  {
+    "id": "evt_010",
+    "loc": [
+      -8.28,
+      113.88
+    ],
+    "title": "Penolakan Tambang Emas Silo",
+    "category": "pergerakan",
+    "color": "#1D4ED8",
+    "year": "2018",
+    "renderType": "network",
+    "heroImage": "https://images.unsplash.com/photo-1590483736622-398541ce01bf?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Silo adalah lumbung pangan dan air. Tambang emas hanya akan merusak lingkungan hidup anak cucu kami.\"",
+    "quoteAuthor": "— Koordinator Forum Silo Raya",
+    "desc1": "Aksi masif seluruh elemen masyarakat kecamatan Silo menentang penetapan wilayah pertambangan emas oleh kementerian.",
+    "desc2": "Tekanan keras dari gerakan ini memaksa pemerintah daerah mencabut rekomendasi izin pertambangan.",
+    "korban": 2500,
+    "luasan": "45.0 Ha",
+    "gambar": "/images/tolak_tambang.jpg",
+    "ringkasan": "Gerakan penolakan eksploitasi tambang emas di perbukitan Silo oleh masyarakat adat, petani, dan aktivis lingkungan Jember.",
+    "milestones": [
+      {
+        "label": "Sosialisasi Izin",
+        "tag": "Tanda Awal",
+        "narasi": "Kabar masuknya Silo dalam peta wilayah izin tambang memicu kegelisahan di tingkat desa.",
+        "stat1V": "200",
+        "stat2V": "1",
+        "networkCoords": [
+          [
+            -8.28,
+            113.85
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.28,
+              113.85
+            ],
+            "title": "Desa Pace (Titik Awal Penolakan)",
+            "desc": "Pertemuan tokoh agama dan pemuda desa melahirkan deklarasi pertama penolakan eksploitasi lingkungan."
+          }
+        ]
+      },
+      {
+        "label": "Istigasah Akbar",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Ribuan warga berkumpul melakukan doa bersama dan aksi blokade simbolis jalan raya lintas Banyuwangi-Jember.",
+        "stat1V": "2500",
+        "stat2V": "45",
+        "networkCoords": [
+          [
+            -8.28,
+            113.85
+          ],
+          [
+            -8.29,
+            113.88
+          ],
+          [
+            -8.27,
+            113.9
+          ]
+        ],
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.29,
+              113.88
+            ],
+            "title": "Jalan Lintas Kumitir (Lokasi Aksi)",
+            "desc": "Doa bersama ribuan warga di sepanjang jalan pegunungan Kumitir, membentangkan spanduk penolakan tambang."
+          },
+          {
+            "loc": [
+              -8.27,
+              113.9
+            ],
+            "title": "Desa Garahan (Simpul Dukungan)",
+            "desc": "Warga Garahan turut mengirimkan logistik pangan untuk mendukung demonstran yang memblokir jalan."
+          }
+        ]
+      },
+      {
+        "label": "Pencabutan Izin",
+        "tag": "Resolusi",
+        "narasi": "Bupati Jember mengirimkan surat resmi desakan pencabutan blok tambang Silo kepada Kementerian ESDM.",
+        "stat1V": "1",
+        "stat2V": "5",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.29,
+              113.88
+            ],
+            "title": "Kantor Kabupaten Jember (Pernyataan Resmi)",
+            "desc": "Pemerintah daerah menyatakan komitmen mendukung kelestarian alam Silo dan membatalkan semua agenda studi pertambangan."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Warga Terlibat",
+    "stat1Unit": "Orang",
+    "stat2Label": "Wilayah Dilindungi",
+    "stat2Unit": "Desa",
+    "chartType": "line",
+    "chartLabels": [
+      "Sep",
+      "Okt",
+      "Nov",
+      "Des"
+    ],
+    "chartData": [
+      400,
+      1500,
+      2500,
+      2500
+    ],
+    "chartLabel": "Peserta Gerakan",
+    "chartColor": "#1D4ED8"
+  }
+]
