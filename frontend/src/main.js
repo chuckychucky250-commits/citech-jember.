@@ -83,9 +83,42 @@ document.addEventListener('DOMContentLoaded', () => {
         style: getGeoJSONStyle(currentTheme)
       }).addTo(map);
       
-      // We could use map.fitBounds(geojsonLayer.getBounds()) but we rely on Cinematic flyTo later
     })
     .catch(err => console.log('Batas Jember GeoJSON not found, skipping.', err));
+
+
+  // --- FETCH DATA FROM BACKEND ---
+  fetch('http://localhost:8080/api/events')
+    .then(response => response.json())
+    .then(events => {
+      events.forEach(evt => {
+        // Asumsi format spasial (JTS) dirender sebagai GeoJSON Point oleh Jackson
+        // evt.mainLocation = { type: "Point", coordinates: [lng, lat] }
+        if (evt.mainLocation && evt.mainLocation.coordinates) {
+          const lng = evt.mainLocation.coordinates[0];
+          const lat = evt.mainLocation.coordinates[1];
+          
+          // Buat Marker untuk setiap data
+          const marker = L.marker([lat, lng]).addTo(map);
+          
+          // Buat Popup Estetik
+          const popupContent = `
+            <div class="p-1 min-w-[200px]">
+              <h3 class="font-bold text-base text-slate-800 mb-1 leading-tight">${evt.title}</h3>
+              <div class="text-[11px] text-amber-600 font-bold tracking-wider uppercase mb-2">
+                ${evt.category} &bull; ${evt.eventYear || 'Tahun N/A'}
+              </div>
+              <p class="text-sm text-slate-600 leading-relaxed">${evt.shortDescription || 'Tidak ada deskripsi.'}</p>
+            </div>
+          `;
+          
+          marker.bindPopup(popupContent, {
+            className: 'custom-popup rounded-xl shadow-lg border-0'
+          });
+        }
+      });
+    })
+    .catch(err => console.error('Gagal mengambil data dari backend:', err));
 
 
   // --- REALTIME DMS COORDINATES (Bottom Right) ---
