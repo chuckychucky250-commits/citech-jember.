@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     options: { position: 'bottomright' },
     onAdd: function () {
       this._container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-      this._container.className += ' px-3 py-1 text-xs font-mono font-bold text-slate-700 dark:text-slate-200 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)] dark:drop-shadow-md mb-6 mr-4 pointer-events-none';
+      this._container.className += ' hidden md:block px-3 py-1 text-xs font-mono font-bold text-slate-700 dark:text-slate-200 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)] dark:drop-shadow-md mb-6 mr-4 pointer-events-none';
       this._container.innerHTML = 'Hover on map...';
       return this._container;
     },
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
       container.style.border = 'none';
       container.style.boxShadow = 'none';
       container.innerHTML = `
-        <div class="flex flex-col space-y-2 mr-2 mb-2">
+        <div class="hidden md:flex flex-col space-y-2 mr-2 mb-2">
           <button id="mapZoomInBtn" class="w-10 h-10 bg-white/80 dark:bg-transparent backdrop-blur-md border border-slate-300 dark:border-white/30 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white/90 dark:hover:bg-slate-800/50 transition-all focus:outline-none">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
           </button>
