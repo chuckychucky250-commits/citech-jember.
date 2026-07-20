@@ -8,8 +8,8 @@
     <meta name="theme-color" content="#111827" />
     <title>Arsip Memori Sejarah Jember</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-    <script type="module" crossorigin src="/citech-jember./assets/index-DyzT9OBG.js"></script>
-    <link rel="stylesheet" crossorigin href="/citech-jember./assets/index-HPx8VEnl.css">
+    <script type="module" crossorigin src="/citech-jember./assets/index-C0SXp3Et.js"></script>
+    <link rel="stylesheet" crossorigin href="/citech-jember./assets/index-D5bBQODc.css">
   </head>
   <body class="bg-gray-100 dark:bg-gray-950 text-gray-800 dark:text-gray-200 font-sans overflow-hidden transition-colors duration-300">
 
@@ -30,6 +30,22 @@
         </pattern>
       </defs>
     </svg>
+
+    <!-- Splash Screen -->
+    <div id="splashScreen" class="fixed inset-0 z-[9999] bg-white dark:bg-gray-950 flex flex-col items-center justify-center p-6 transition-opacity duration-700">
+      <div class="text-center max-w-lg">
+        <div class="w-20 h-20 bg-blue-600 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-serif font-bold text-gray-900 dark:text-white mb-4">Arsip Memori Sejarah Jember</h1>
+        <p class="text-gray-600 dark:text-gray-400 mb-8 text-sm md:text-base leading-relaxed">
+          Platform interaktif untuk menelusuri, mempelajari, dan turut serta mencatat memori kolektif Kabupaten Jember. Temukan jejak peristiwa sejarah, bencana, dan pergerakan sosial di sekitar Anda.
+        </p>
+        <button id="startExploreBtn" class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all w-full sm:w-auto">
+          Mulai Jelajahi
+        </button>
+      </div>
+    </div>
 
     <!-- Onboarding Toast -->
     <div id="onboardingToast" class="fixed bottom-24 md:bottom-6 left-1/2 transform -translate-x-1/2 z-[2000] bg-gray-900 dark:bg-gray-800 text-white px-4 py-3 rounded-xl shadow-2xl flex items-start sm:items-center gap-3 transition-all duration-700 opacity-0 pointer-events-none translate-y-10 w-[85vw] sm:w-auto max-w-sm">
@@ -182,7 +198,7 @@
       <div class="flex border-b border-gray-200 dark:border-gray-800 text-sm shrink-0">
         <button id="tabHistory" class="flex-1 py-3 text-center border-b-2 border-gray-900 dark:border-white font-medium text-gray-900 dark:text-white transition-colors text-xs">Riwayat</button>
         <button id="tabBookmarks" class="flex-1 py-3 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 transition-colors text-xs">Disimpan</button>
-        <button id="tabLibrary" class="hidden md:block flex-1 py-3 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 transition-colors text-xs">Katalog</button>
+        <button id="tabLibrary" class="flex-1 py-3 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 transition-colors text-xs">Katalog</button>
       </div>
 
       <!-- Tab Content Area -->
@@ -207,15 +223,6 @@
         <div id="contentLibrary" class="space-y-4 hidden flex flex-col h-full">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Filter Katalog</span>
-            <!-- Map-Lock Toggle -->
-            <label class="flex items-center cursor-pointer" title="Map-Lock: Aktifkan untuk melihat data tanpa menggeser peta">
-              <div class="relative">
-                <input type="checkbox" id="mapLockToggle" class="sr-only peer">
-                <div class="block bg-gray-200 dark:bg-gray-700 peer-checked:bg-blue-600 w-8 h-5 rounded-full transition-colors"></div>
-                <div class="dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform transform peer-checked:translate-x-3"></div>
-              </div>
-              <span class="ml-2 text-xs text-gray-500"><svg class="w-3.5 h-3.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg></span>
-            </label>
           </div>
           <div class="flex flex-col space-y-2">
             <input type="text" id="librarySearch" placeholder="Cari dalam katalog..." class="w-full px-3 py-2.5 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 transition-colors">
@@ -254,6 +261,10 @@
           <!-- Report Location -->
           <button id="openReportBtn" class="w-full py-3 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-900/20 text-gray-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors flex justify-center" title="Laporkan Lokasi Baru">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          </button>
+          <!-- Tentang -->
+          <button id="aboutBtnDesktop" class="w-full py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors flex justify-center" title="Tentang">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </button>
         </div>
         <div class="flex flex-col items-center w-full px-2 space-y-1">
@@ -603,10 +614,10 @@
         <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h8m-8 6h16"></path></svg>
         <span class="text-[9px] font-medium uppercase tracking-wider">Menu</span>
       </button>
-      <!-- Katalog (Library) replacing Search -->
-      <button id="mobileLibraryBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
-        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-        <span class="text-[9px] font-medium uppercase tracking-wider">Katalog</span>
+      <!-- Filter/Legend -->
+      <button id="mobileLegendBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"></path></svg>
+        <span class="text-[9px] font-medium uppercase tracking-wider">Filter</span>
       </button>
       <!-- Report -->
       <button id="mobileReportBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-amber-500 hover:text-amber-600 transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
@@ -615,10 +626,10 @@
         </div>
         <span class="text-[9px] font-medium uppercase tracking-wider text-amber-500">Lapor</span>
       </button>
-      <!-- Filter/Legend -->
-      <button id="mobileLegendBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
-        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"></path></svg>
-        <span class="text-[9px] font-medium uppercase tracking-wider">Filter</span>
+      <!-- Tentang (About) -->
+      <button id="mobileAboutBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span class="text-[9px] font-medium uppercase tracking-wider">Tentang</span>
       </button>
       <!-- Feedback -->
       <button id="mobileFeedbackBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
@@ -833,8 +844,39 @@
       </div>
     </div>
 
+    <!-- About Modal -->
+    <div id="aboutModal" class="fixed inset-0 z-[3000] flex items-center justify-center bg-gray-900/60 dark:bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+      <div class="bg-white dark:bg-gray-900 rounded-3xl md:rounded-2xl shadow-2xl w-full max-w-lg transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col max-h-[90vh]">
+        <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="font-serif font-bold text-gray-900 dark:text-white text-xl">Tentang Web</h3>
+          </div>
+          <button id="closeAboutBtn" class="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+        <div class="p-6 text-gray-600 dark:text-gray-400 text-sm leading-relaxed overflow-y-auto">
+          <p class="mb-4">
+            <strong class="text-gray-900 dark:text-white text-base">Arsip Memori Sejarah Jember</strong> adalah sebuah platform interaktif yang didedikasikan untuk menelusuri, mempelajari, dan turut serta mencatat memori kolektif Kabupaten Jember.
+          </p>
+          <p class="mb-4">
+            Temukan jejak peristiwa sejarah, bencana alam, dan berbagai pergerakan sosial langsung di sekitar Anda. Melalui dokumentasi yang partisipatif, kita melestarikan kisah-kisah masa lalu sebagai pelajaran berharga untuk masa depan.
+          </p>
+          <p>
+            Jika Anda memiliki informasi mengenai peristiwa sejarah yang belum tercatat, silakan gunakan fitur <strong class="text-amber-500">Laporkan Lokasi Baru</strong> agar dapat diperiksa dan didokumentasikan bersama.
+          </p>
+        </div>
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800 text-center text-xs text-gray-500">
+          © 2026 Arsip Memori Sejarah Jember.
+        </div>
+      </div>
+    </div>
+
     <!-- Script imports -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   </body>
 </html>
