@@ -311,7 +311,26 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeTabId = null;
   let isMobilePanelExpanded = false;
 
+  function closeAllPanels(exceptId = null) {
+    const isDesktop = window.innerWidth >= 768;
+    if (isDesktop && exceptId === 'eventPanel') return;
+    
+    if (exceptId !== 'eventPanel' && !isDesktop) {
+      if (typeof closePanel === 'function') closePanel();
+    }
+    if (exceptId !== 'reportPanel') {
+      if (typeof closeReportPanelFn === 'function') closeReportPanelFn();
+    }
+    if (exceptId !== 'personalPanel') {
+      if (typeof closePersonalPanelFn === 'function') closePersonalPanelFn();
+    }
+    if (exceptId !== 'legendSheet') {
+      if (typeof closeLegendSheet === 'function') closeLegendSheet();
+    }
+  }
+
   function openPanel(data) {
+    closeAllPanels('eventPanel');
     if (panelContent) panelContent.classList.remove('hidden');
     const footer = document.getElementById('panelStickyFooter');
     if (footer) footer.classList.remove('hidden');
@@ -888,10 +907,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (openedTabs.length === 0) {
       activeTabId = null;
       renderTabs();
-      panelEmptyState.classList.remove('hidden');
-      panelContentArea.classList.add('hidden');
-      const footer = document.getElementById('panelStickyFooter');
-      if(footer) footer.classList.add('hidden');
+      if (typeof closePanel === 'function') closePanel();
     } else if (activeTabId === id) {
       switchTab(openedTabs[openedTabs.length - 1].id);
     } else {
@@ -1131,9 +1147,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function openReportPanelFn() {
+    closeAllPanels('reportPanel');
     if (!reportPanel) return;
     if (window.innerWidth >= 768) {
-      reportPanel.classList.remove('md:translate-x-full');
+      reportPanel.classList.remove('md:-translate-x-full');
     } else {
       reportPanel.classList.remove('translate-y-full');
       if (overlay) { overlay.classList.add('active'); overlay.onclick = () => { overlay.classList.remove('active'); closeReportPanelFn(); }; }
@@ -1145,7 +1162,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function closeReportPanelFn() {
     if (!reportPanel) return;
     if (window.innerWidth >= 768) {
-      reportPanel.classList.add('md:translate-x-full');
+      reportPanel.classList.add('md:-translate-x-full');
     } else {
       reportPanel.classList.add('translate-y-full');
     }
@@ -1161,7 +1178,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Bind all report open buttons (desktop sidebar + mobile nav)
   ['openReportBtn', 'mobileReportBtn'].forEach(id => {
     const btn = document.getElementById(id);
-    if (btn) btn.addEventListener('click', openReportPanelFn);
+    if (btn) btn.addEventListener('click', () => {
+      if (!reportPanel) return;
+      const isHidden = (window.innerWidth >= 768) 
+        ? reportPanel.classList.contains('md:-translate-x-full') 
+        : reportPanel.classList.contains('translate-y-full');
+      if (isHidden) openReportPanelFn();
+      else closeReportPanelFn();
+    });
   });
 
   const closeReportBtnEl = document.getElementById('closeReportBtn');
@@ -1325,7 +1349,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toast.textContent = message;
     
     // Position differently on mobile (bottom or mid) to avoid top nav overlap, and fix width
-    toast.className = `fixed top-24 md:top-6 left-0 right-0 mx-auto z-[4000] px-5 py-3 rounded-xl shadow-2xl transition-all duration-300 text-sm font-medium text-white w-max max-w-[90vw] sm:max-w-sm text-center leading-snug pointer-events-none`;
+    toast.className = `fixed top-24 md:top-6 left-0 right-0 mx-auto z-[9999] px-5 py-3 rounded-xl shadow-2xl transition-all duration-300 text-sm font-medium text-white w-max max-w-[90vw] sm:max-w-sm text-center leading-snug pointer-events-none`;
     
     if (type === 'success') toast.classList.add('bg-emerald-600');
     else if (type === 'warning') toast.classList.add('bg-orange-500');
@@ -1350,6 +1374,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const contentLibrary = document.getElementById('contentLibrary');
 
   function openPersonalPanelFn() {
+    closeAllPanels('personalPanel');
     if (!personalPanel) return;
     if (window.innerWidth >= 768) {
       personalPanel.classList.remove('md:-translate-x-full');
@@ -1375,7 +1400,30 @@ document.addEventListener('DOMContentLoaded', () => {
   // Bind all personal panel open buttons (desktop sidebar + mobile nav)
   ['personalMenuBtn', 'mobilePersonalBtn'].forEach(id => {
     const btn = document.getElementById(id);
-    if (btn) btn.addEventListener('click', openPersonalPanelFn);
+    if (btn) btn.addEventListener('click', () => {
+      if (!personalPanel) return;
+      const isHidden = (window.innerWidth >= 768)
+        ? personalPanel.classList.contains('md:-translate-x-full')
+        : personalPanel.classList.contains('translate-y-full');
+      if (isHidden) {
+        openPersonalPanelFn();
+        // If coming from mobile Menu button, and it was left on Library, switch back to History
+        if (window.innerWidth < 768 && contentLibrary && !contentLibrary.classList.contains('hidden')) {
+          switchPersonalTab(tabHistory, contentHistory);
+        }
+      } else {
+        // If already open on mobile and on Library tab, switch to History instead of closing
+        if (window.innerWidth < 768 && contentLibrary && !contentLibrary.classList.contains('hidden')) {
+          closePersonalPanelFn();
+          setTimeout(() => {
+            switchPersonalTab(tabHistory, contentHistory);
+            openPersonalPanelFn();
+          }, 300);
+        } else {
+          closePersonalPanelFn();
+        }
+      }
+    });
   });
 
   const closePersonalBtnEl = document.getElementById('closePersonalBtn');
@@ -1616,10 +1664,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   ['feedbackBtn', 'mobileFeedbackBtn'].forEach(id => {
     const btn = document.getElementById(id);
-    if (btn) btn.addEventListener('click', openFeedbackModalFn);
+    if (btn) btn.addEventListener('click', () => {
+      if (!feedbackModal) return;
+      if (feedbackModal.classList.contains('opacity-0')) {
+        openFeedbackModalFn();
+      } else {
+        closeFeedbackModalFn();
+      }
+    });
   });
   if (closeFeedbackBtn) closeFeedbackBtn.addEventListener('click', closeFeedbackModalFn);
-  if (submitFeedbackBtn) submitFeedbackBtn.addEventListener('click', closeFeedbackModalFn);
+  if (submitFeedbackBtn) {
+    submitFeedbackBtn.addEventListener('click', () => {
+      const input = document.getElementById('feedbackInput');
+      const err = document.getElementById('feedbackError');
+      if (input && input.value.trim() !== '') {
+        if (err) err.classList.add('hidden');
+        showToast('Terima kasih! Masukan Anda telah berhasil dikirim.', 'success');
+        input.value = '';
+        closeFeedbackModalFn();
+      } else {
+        if (err) err.classList.remove('hidden');
+      }
+    });
+  }
 
   // Contextual Contribution
   const contributeBtn = document.getElementById('contributeBtn');
@@ -1632,14 +1700,69 @@ document.addEventListener('DOMContentLoaded', () => {
   const ticketIdDisplay = document.getElementById('ticketIdDisplay');
 
   if(contributeBtn && contributeModal) {
+    const contribTypeSelect = document.getElementById('contribType');
+    const contribStoryContainer = document.getElementById('contribStoryContainer');
+    const contribFileContainer = document.getElementById('contribFileContainer');
+    const contribUrlContainer = document.getElementById('contribUrlContainer');
+    const contribFileInput = document.getElementById('contribFile');
+    const contribFileName = document.getElementById('contribFileName');
+    const contribFileDescription = document.getElementById('contribFileDescription');
+    const contribUrl = document.getElementById('contribUrl');
+    const contribUrlDescription = document.getElementById('contribUrlDescription');
+
+    if (contribTypeSelect) {
+      contribTypeSelect.addEventListener('change', (e) => {
+        const val = e.target.value;
+        contribStoryContainer.classList.add('hidden');
+        contribFileContainer.classList.add('hidden');
+        contribUrlContainer.classList.add('hidden');
+        
+        if (val === 'kesaksian') {
+          contribStoryContainer.classList.remove('hidden');
+        } else if (val === 'foto' || val === 'dokumen') {
+          contribFileContainer.classList.remove('hidden');
+        } else if (val === 'referensi') {
+          contribUrlContainer.classList.remove('hidden');
+        }
+      });
+    }
+
+    if (contribFileInput) {
+      contribFileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          contribFileName.textContent = `Berkas terpilih: ${e.target.files[0].name}`;
+          contribFileName.classList.remove('hidden');
+        } else {
+          contribFileName.classList.add('hidden');
+        }
+      });
+    }
+
     contributeBtn.addEventListener('click', () => {
+      const isHidden = contributeModal.classList.contains('opacity-0');
+      if (!isHidden) {
+          contributeModal.classList.add('opacity-0', 'pointer-events-none');
+          contributeModal.querySelector('.bg-white, .bg-gray-900').classList.add('scale-95');
+          return;
+      }
+
       contributeFormState.classList.remove('hidden');
       contributeFormState.classList.add('flex');
       contributeSuccessState.classList.add('hidden');
       contributeSuccessState.classList.remove('flex');
       
       document.getElementById('contribName').value = '';
+      if(contribTypeSelect) contribTypeSelect.value = 'kesaksian';
       document.getElementById('contribStory').value = '';
+      if(contribFileInput) contribFileInput.value = '';
+      if(contribFileName) contribFileName.classList.add('hidden');
+      if(contribFileDescription) contribFileDescription.value = '';
+      if(contribUrl) contribUrl.value = '';
+      if(contribUrlDescription) contribUrlDescription.value = '';
+
+      if (contribStoryContainer) contribStoryContainer.classList.remove('hidden');
+      if (contribFileContainer) contribFileContainer.classList.add('hidden');
+      if (contribUrlContainer) contribUrlContainer.classList.add('hidden');
 
       contributeModal.classList.remove('opacity-0', 'pointer-events-none');
       contributeModal.querySelector('.bg-white, .bg-gray-900').classList.remove('scale-95');
@@ -1652,7 +1775,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     submitContributeBtn.addEventListener('click', () => {
       const name = document.getElementById('contribName').value || 'Anonim';
-      const story = document.getElementById('contribStory').value;
+      
+      let story = '';
+      const type = contribTypeSelect ? contribTypeSelect.value : 'kesaksian';
+      if (type === 'kesaksian') {
+          story = document.getElementById('contribStory').value;
+      } else if (type === 'foto' || type === 'dokumen') {
+          const fileName = contribFileInput && contribFileInput.files.length > 0 ? contribFileInput.files[0].name : '';
+          const desc = contribFileDescription ? contribFileDescription.value : '';
+          story = `[Berkas: ${fileName}] - ${desc}`;
+      } else if (type === 'referensi') {
+          const url = contribUrl ? contribUrl.value : '';
+          const desc = contribUrlDescription ? contribUrlDescription.value : '';
+          story = `[URL: ${url}] - ${desc}`;
+      }
+
       const ticketId = 'TK-' + Math.floor(Math.random() * 90000 + 10000) + 'X';
       
       ticketIdDisplay.textContent = ticketId;
@@ -1685,6 +1822,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if(adminBtn) {
     adminBtn.addEventListener('click', () => {
+      const isHidden = adminDashboard.classList.contains('translate-y-full');
+      if (!isHidden) {
+          adminDashboard.classList.add('translate-y-full');
+          return;
+      }
+      
       adminDashboard.classList.remove('translate-y-full');
       
       // Init Map if not yet
@@ -1784,14 +1927,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileCounterEl = document.getElementById('mobileEventsCounter');
   if (mobileCounterEl) mobileCounterEl.textContent = eventsData.length;
 
-  // Mobile Search Button — focus search bar
-  const mobileSearchBtnEl = document.getElementById('mobileSearchBtn');
-  if (mobileSearchBtnEl) {
-    mobileSearchBtnEl.addEventListener('click', () => {
-      const si = document.getElementById('searchInput');
-      if (si) {
-        si.focus();
-        si.scrollIntoView({ behavior: 'smooth' });
+  // Mobile Library Button (replaces Search)
+  const mobileLibraryBtnEl = document.getElementById('mobileLibraryBtn');
+  if (mobileLibraryBtnEl) {
+    mobileLibraryBtnEl.addEventListener('click', () => {
+      if (!personalPanel) return;
+      const isHidden = personalPanel.classList.contains('translate-y-full');
+      if (isHidden) {
+        openPersonalPanelFn();
+        switchPersonalTab(tabLibrary, contentLibrary);
+      } else {
+        // If already open but not on library tab, switch to it
+        if (contentLibrary && contentLibrary.classList.contains('hidden')) {
+          closePersonalPanelFn();
+          setTimeout(() => {
+            switchPersonalTab(tabLibrary, contentLibrary);
+            openPersonalPanelFn();
+          }, 300);
+        } else {
+          closePersonalPanelFn();
+        }
       }
     });
   }
@@ -1802,6 +1957,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeLegendSheetBtnEl = document.getElementById('closeLegendSheetBtn');
 
   function openLegendSheet() {
+    closeAllPanels('legendSheet');
     if (!mobileLegendSheetEl) return;
     mobileLegendSheetEl.classList.remove('translate-y-full');
     overlay.classList.add('active');
@@ -1813,7 +1969,11 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.classList.remove('active');
   }
 
-  if (mobileLegendBtnEl) mobileLegendBtnEl.addEventListener('click', openLegendSheet);
+  if (mobileLegendBtnEl) mobileLegendBtnEl.addEventListener('click', () => {
+    if (!mobileLegendSheetEl) return;
+    if (mobileLegendSheetEl.classList.contains('translate-y-full')) openLegendSheet();
+    else closeLegendSheet();
+  });
   if (closeLegendSheetBtnEl) closeLegendSheetBtnEl.addEventListener('click', closeLegendSheet);
 
   // Mobile Theme Toggle
@@ -1944,6 +2104,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (activePolygon) {
       map.removeLayer(activePolygon);
       activePolygon = null;
+    }
+    if (activeOverlay) {
+      map.removeLayer(activeOverlay);
+      activeOverlay = null;
+    }
+    
+    // Reset map view to default
+    if (typeof jemberCenter !== 'undefined') {
+      map.flyTo(jemberCenter, 11, {
+        duration: 1.5,
+        easeLinearity: 0.25
+      });
     }
   }
 

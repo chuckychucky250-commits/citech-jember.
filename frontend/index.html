@@ -43,8 +43,8 @@
       Link berhasil disalin!
     </div>
 
-    <!-- "Laporkan Lokasi Baru" Panel — Mobile: full screen bottom sheet / Desktop: right side panel -->
-    <div id="reportPanel" class="fixed inset-x-0 bottom-0 md:inset-y-0 md:right-0 md:left-auto h-[95vh] md:h-full w-full md:w-[380px] bg-white dark:bg-gray-900 shadow-2xl z-[3500] transform translate-y-full md:translate-y-0 md:translate-x-full transition-transform duration-500 flex flex-col md:border-l border-gray-200 dark:border-gray-800 rounded-t-3xl md:rounded-none">
+    <!-- "Laporkan Lokasi Baru" Panel — Mobile: full screen bottom sheet / Desktop: left side panel -->
+    <div id="reportPanel" class="fixed inset-x-0 bottom-0 md:inset-y-0 md:left-16 md:right-auto h-[95vh] md:h-full w-full md:w-[380px] bg-white dark:bg-gray-900 shadow-2xl z-[1040] transform translate-y-full md:translate-y-0 md:-translate-x-full transition-transform duration-500 flex flex-col md:border-r border-gray-200 dark:border-gray-800 rounded-t-3xl md:rounded-none">
       <!-- Mobile Handle -->
       <div class="w-full flex justify-center py-3 md:hidden cursor-pointer" id="reportPanelHandle">
         <div class="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
@@ -89,8 +89,7 @@
       </div>
 
       <!-- Form -->
-      <div class="flex-1 overflow-y-auto no-scrollbar p-6 pb-safe">
-        <form id="reportForm" class="space-y-5">
+      <form id="reportForm" class="flex-1 overflow-y-auto p-6 space-y-5 no-scrollbar relative pb-24 md:pb-6">
           <!-- Coordinate Input Box -->
           <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700/60 bg-gray-50/30 dark:bg-gray-800/10 relative group transition-colors">
             <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1 flex items-center transition-colors group-focus-within:text-amber-500">
@@ -147,7 +146,6 @@
             <input type="text" id="reportSource" placeholder="Contoh: Koran Radar Jember 2 Jan 1999" class="w-full px-4 py-3 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none transition-all">
           </div>
         </form>
-      </div>
       
       <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-800 shrink-0 pb-safe">
         <button id="submitReportBtn" class="w-full py-3.5 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-semibold rounded-xl transition-colors focus:outline-none flex items-center justify-center space-x-2 shadow-lg">
@@ -182,11 +180,11 @@
       <div class="flex border-b border-gray-200 dark:border-gray-800 text-sm shrink-0">
         <button id="tabHistory" class="flex-1 py-3 text-center border-b-2 border-gray-900 dark:border-white font-medium text-gray-900 dark:text-white transition-colors text-xs">Riwayat</button>
         <button id="tabBookmarks" class="flex-1 py-3 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 transition-colors text-xs">Disimpan</button>
-        <button id="tabLibrary" class="flex-1 py-3 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 transition-colors text-xs">Katalog</button>
+        <button id="tabLibrary" class="hidden md:block flex-1 py-3 text-center border-b-2 border-transparent text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 transition-colors text-xs">Katalog</button>
       </div>
 
       <!-- Tab Content Area -->
-      <div class="flex-1 overflow-y-auto no-scrollbar p-4 relative pb-safe">
+      <div class="flex-1 overflow-y-auto no-scrollbar p-4 relative pb-24 md:pb-4">
         <!-- History List -->
         <div id="contentHistory" class="block">
           <div class="flex justify-between items-center mb-3">
@@ -253,7 +251,7 @@
           </button>
           <!-- Report Location -->
           <button id="openReportBtn" class="w-full py-3 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-900/20 text-gray-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors flex justify-center" title="Laporkan Lokasi Baru">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
           </button>
         </div>
         <div class="flex flex-col items-center w-full px-2 space-y-1">
@@ -316,37 +314,37 @@
         <!-- Legend & Counter HUD (desktop only, bottom-left) -->
         <div class="absolute bottom-6 left-6 z-[1000] hidden md:flex flex-col space-y-4 pointer-events-auto">
           <!-- Counter HUD -->
-          <div class="bg-transparent backdrop-blur-md rounded-xl border border-slate-300 dark:border-white/30 py-1.5 px-2 w-max transition-all duration-1000 opacity-0" id="counterHUD">
-            <p class="text-[7px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-0">Total Peristiwa Arsip</p>
-            <div class="flex items-baseline space-x-1 mt-0">
-              <span class="text-lg font-serif font-bold text-slate-800 dark:text-white leading-none" id="totalEventsCounter">0</span>
-              <span class="text-[8px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">Kejadian</span>
+          <div class="bg-transparent backdrop-blur-md rounded-xl border border-slate-300 dark:border-white/30 py-2.5 px-3.5 w-max transition-all duration-1000 opacity-0" id="counterHUD">
+            <p class="text-[9px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-0.5">Total Peristiwa Arsip</p>
+            <div class="flex items-baseline space-x-1.5 mt-0">
+              <span class="text-2xl font-serif font-bold text-slate-800 dark:text-white leading-none" id="totalEventsCounter">0</span>
+              <span class="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">Kejadian</span>
             </div>
           </div>
 
           <!-- Legend -->
-          <div class="bg-transparent backdrop-blur-md rounded-xl border border-slate-300 dark:border-white/30 p-2.5 w-28">
-            <h4 class="font-serif font-bold text-slate-800 dark:text-slate-200 mb-1.5 border-b border-slate-300 dark:border-white/30 pb-1 text-[11px]">Kategori</h4>
-            <div class="flex flex-col space-y-1.5">
-              <label class="flex items-center cursor-pointer">
+          <div class="bg-transparent backdrop-blur-md rounded-xl border border-slate-300 dark:border-white/30 p-3.5 w-36">
+            <h4 class="font-serif font-bold text-slate-800 dark:text-slate-200 mb-2 border-b border-slate-300 dark:border-white/30 pb-1.5 text-sm">Kategori</h4>
+            <div class="flex flex-col space-y-2.5">
+              <label class="flex items-center cursor-pointer group">
                 <input type="checkbox" checked class="hidden peer filter-checkbox" value="tragedi">
-                <span class="w-2 h-2 rounded-full bg-[#DC2626] mr-1.5 ring-2 ring-transparent peer-checked:ring-[#DC2626]/30 transition-all opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse"></span>
-                <span class="text-slate-500 dark:text-slate-400 peer-checked:text-slate-900 dark:peer-checked:text-slate-100 text-[10px] transition-colors">Tragedi</span>
+                <span class="w-3 h-3 rounded-full bg-[#DC2626] mr-2 ring-2 ring-transparent peer-checked:ring-[#DC2626]/30 transition-all opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse"></span>
+                <span class="text-slate-500 dark:text-slate-400 peer-checked:text-slate-900 dark:peer-checked:text-slate-100 text-xs transition-colors group-hover:text-slate-700 dark:group-hover:text-slate-200">Tragedi</span>
               </label>
-              <label class="flex items-center cursor-pointer">
+              <label class="flex items-center cursor-pointer group">
                 <input type="checkbox" checked class="hidden peer filter-checkbox" value="bencana">
-                <span class="w-2 h-2 rounded-full bg-[#9333EA] mr-1.5 ring-2 ring-transparent peer-checked:ring-[#9333EA]/30 transition-all opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse"></span>
-                <span class="text-slate-500 dark:text-slate-400 peer-checked:text-slate-900 dark:peer-checked:text-slate-100 text-[10px] transition-colors">Bencana</span>
+                <span class="w-3 h-3 rounded-full bg-[#9333EA] mr-2 ring-2 ring-transparent peer-checked:ring-[#9333EA]/30 transition-all opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse"></span>
+                <span class="text-slate-500 dark:text-slate-400 peer-checked:text-slate-900 dark:peer-checked:text-slate-100 text-xs transition-colors group-hover:text-slate-700 dark:group-hover:text-slate-200">Bencana</span>
               </label>
-              <label class="flex items-center cursor-pointer">
+              <label class="flex items-center cursor-pointer group">
                 <input type="checkbox" checked class="hidden peer filter-checkbox" value="kasus">
-                <span class="w-2 h-2 rounded-full bg-orange-500 mr-1.5 ring-2 ring-transparent peer-checked:ring-orange-500/30 transition-all opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse"></span>
-                <span class="text-slate-500 dark:text-slate-400 peer-checked:text-slate-900 dark:peer-checked:text-slate-100 text-[10px] transition-colors">Kasus</span>
+                <span class="w-3 h-3 rounded-full bg-orange-500 mr-2 ring-2 ring-transparent peer-checked:ring-orange-500/30 transition-all opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse"></span>
+                <span class="text-slate-500 dark:text-slate-400 peer-checked:text-slate-900 dark:peer-checked:text-slate-100 text-xs transition-colors group-hover:text-slate-700 dark:group-hover:text-slate-200">Kasus</span>
               </label>
-              <label class="flex items-center cursor-pointer">
+              <label class="flex items-center cursor-pointer group">
                 <input type="checkbox" checked class="hidden peer filter-checkbox" value="pergerakan">
-                <span class="w-2 h-2 rounded-full bg-blue-700 mr-1.5 ring-2 ring-transparent peer-checked:ring-blue-700/30 transition-all opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse"></span>
-                <span class="text-slate-500 dark:text-slate-400 peer-checked:text-slate-900 dark:peer-checked:text-slate-100 text-[10px] transition-colors">Pergerakan</span>
+                <span class="w-3 h-3 rounded-full bg-blue-700 mr-2 ring-2 ring-transparent peer-checked:ring-blue-700/30 transition-all opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse"></span>
+                <span class="text-slate-500 dark:text-slate-400 peer-checked:text-slate-900 dark:peer-checked:text-slate-100 text-xs transition-colors group-hover:text-slate-700 dark:group-hover:text-slate-200">Pergerakan</span>
               </label>
             </div>
           </div>
@@ -603,10 +601,10 @@
         <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h8m-8 6h16"></path></svg>
         <span class="text-[9px] font-medium uppercase tracking-wider">Menu</span>
       </button>
-      <!-- Search (triggers search bar focus) -->
-      <button id="mobileSearchBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
-        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        <span class="text-[9px] font-medium uppercase tracking-wider">Cari</span>
+      <!-- Katalog (Library) replacing Search -->
+      <button id="mobileLibraryBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
+        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+        <span class="text-[9px] font-medium uppercase tracking-wider">Katalog</span>
       </button>
       <!-- Report -->
       <button id="mobileReportBtn" class="mobile-nav-btn flex flex-col items-center py-2 px-3 text-amber-500 hover:text-amber-600 transition-colors min-w-[60px] active:scale-95 active:bg-gray-100/10 rounded-xl">
@@ -628,12 +626,17 @@
     </nav>
 
     <!-- Mobile Legend Sheet -->
-    <div id="mobileLegendSheet" class="fixed inset-x-0 bottom-0 z-[1150] md:hidden bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-400" style="padding-bottom: env(safe-area-inset-bottom, 0px);">
+    <div id="mobileLegendSheet" class="fixed inset-x-0 bottom-0 z-[1040] md:hidden bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-400 pb-24" style="padding-bottom: max(env(safe-area-inset-bottom, 0px), 6rem);">
       <div class="flex justify-center pt-3 pb-2">
         <div class="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
       </div>
       <div class="px-6 pb-6">
-        <h3 class="font-serif font-bold text-gray-800 dark:text-white mb-3 text-sm">Filter Kategori</h3>
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="font-serif font-bold text-gray-800 dark:text-white text-sm">Filter Kategori</h3>
+          <button id="closeLegendSheetBtn" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors focus:outline-none p-1 -mr-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
         <div class="grid grid-cols-2 gap-2.5">
           <label class="flex items-center p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer border-2 border-transparent peer-checked:border-red-500 transition-all">
             <input type="checkbox" checked class="hidden peer filter-checkbox-mobile filter-checkbox" value="tragedi">
@@ -656,7 +659,6 @@
             <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Pergerakan</span>
           </label>
         </div>
-        <button id="closeLegendSheetBtn" class="mt-4 w-full py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-medium text-sm">Tutup</button>
       </div>
     </div>
 
@@ -671,7 +673,8 @@
         </div>
         <div class="p-6">
           <p class="text-sm text-gray-500 mb-4">Berikan kritik atau saran teknis terkait website ini secara umum.</p>
-          <textarea rows="4" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 transition-colors mb-4 text-gray-800 dark:text-gray-200" placeholder="Ketik saran Anda di sini..."></textarea>
+          <textarea id="feedbackInput" rows="4" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 transition-colors mb-2 text-gray-800 dark:text-gray-200 resize-none" placeholder="Ketik saran Anda di sini..."></textarea>
+          <p id="feedbackError" class="text-red-500 text-xs mb-3 hidden">Harap isi masukan Anda terlebih dahulu sebelum mengirim.</p>
           <button id="submitFeedbackBtn" class="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-medium hover:bg-gray-800 transition-colors">Kirim Masukan</button>
         </div>
       </div>
@@ -711,9 +714,38 @@
                   <option value="referensi">Referensi / Tautan Artikel</option>
                 </select>
               </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">ISI KONTRIBUSI</label>
-                <textarea id="contribStory" rows="5" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 transition-colors resize-none text-gray-800 dark:text-gray-200" placeholder="Ceritakan kesaksian Anda, atau tempelkan tautan referensi..."></textarea>
+              <!-- Dynamic Fields based on Jenis Kontribusi -->
+              <div id="contribStoryContainer">
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">ISI KESAKSIAN / CERITA PRIBADI</label>
+                <textarea id="contribStory" rows="5" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 transition-colors resize-none text-gray-800 dark:text-gray-200" placeholder="Ceritakan kesaksian Anda secara detail..."></textarea>
+              </div>
+
+              <div id="contribFileContainer" class="hidden">
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">UNGGAH BERKAS (FOTO/DOKUMEN)</label>
+                <div class="relative border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl px-6 py-6 text-center hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <input type="file" id="contribFile" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*,.pdf,.doc,.docx">
+                  <svg class="mx-auto h-8 w-8 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    <span class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">Klik untuk mengunggah</span> atau seret
+                  </p>
+                  <p class="text-xs text-gray-500 mt-1">PNG, JPG, PDF maks 10MB</p>
+                  <p id="contribFileName" class="text-sm font-medium text-gray-800 dark:text-gray-200 mt-2 hidden"></p>
+                </div>
+                <div class="mt-3">
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">KETERANGAN / DESKRIPSI</label>
+                    <textarea id="contribFileDescription" rows="2" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 transition-colors resize-none text-gray-800 dark:text-gray-200" placeholder="Tambahkan keterangan untuk berkas ini..."></textarea>
+                </div>
+              </div>
+
+              <div id="contribUrlContainer" class="hidden">
+                <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">TAUTAN REFERENSI (URL)</label>
+                <input type="url" id="contribUrl" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 transition-colors text-gray-800 dark:text-gray-200" placeholder="https://contoh.com/artikel">
+                <div class="mt-3">
+                    <label class="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">KETERANGAN / DESKRIPSI</label>
+                    <textarea id="contribUrlDescription" rows="2" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 transition-colors resize-none text-gray-800 dark:text-gray-200" placeholder="Jelaskan ringkasan dari tautan ini..."></textarea>
+                </div>
               </div>
             </form>
           </div>
