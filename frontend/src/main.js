@@ -236,8 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
     marker.on('click', () => openPanel(data));
   });
 
-  // --- Cinematic Entry Transition & Counter HUD Animation ---
-  setTimeout(() => {
+  // --- Splash Screen & Cinematic Entry Transition ---
+  const startCinematicSequence = () => {
     // Reveal Cinematic Watermark
     const watermark = document.getElementById('cinematicWatermark');
     if (watermark) watermark.style.opacity = '1';
@@ -285,7 +285,20 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       window.requestAnimationFrame(step);
     }
-  }, 500);
+  };
+
+  const splashScreen = document.getElementById('splashScreen');
+  const startExploreBtn = document.getElementById('startExploreBtn');
+  
+  if (splashScreen && startExploreBtn) {
+    startExploreBtn.addEventListener('click', () => {
+      splashScreen.classList.add('opacity-0', 'pointer-events-none');
+      setTimeout(() => splashScreen.remove(), 700);
+      setTimeout(startCinematicSequence, 500);
+    });
+  } else {
+    setTimeout(startCinematicSequence, 500);
+  }
 
   // Filter Legend
   const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
@@ -891,13 +904,11 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('contributeContextTitle').textContent = `Mengajukan bukti untuk: ${activeData.title}`;
 
       // Fly to
-      if (!window.isMapLocked) {
-        map.flyTo(activeData.loc, 14, { duration: 1.5, easeLinearity: 0.2 });
-        map.once('moveend', () => {
-          if (window.innerWidth >= 768) map.panBy([200, 0], { animate: true, duration: 0.5 });
-          else map.panBy([0, 150], { animate: true, duration: 0.5 });
-        });
-      }
+      map.flyTo(activeData.loc, 14, { duration: 1.5, easeLinearity: 0.2 });
+      map.once('moveend', () => {
+        if (window.innerWidth >= 768) map.panBy([200, 0], { animate: true, duration: 0.5 });
+        else map.panBy([0, 150], { animate: true, duration: 0.5 });
+      });
     }
   }
 
@@ -1500,15 +1511,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 8. MASTER LIBRARY (Map-Lock & Quick View) ---
-  window.isMapLocked = false;
-  const mapLockToggle = document.getElementById('mapLockToggle');
-  if(mapLockToggle) {
-    mapLockToggle.addEventListener('change', (e) => {
-      window.isMapLocked = e.target.checked;
-    });
-  }
-
+  // --- 8. MASTER LIBRARY (Quick View) ---
   const librarySearch = document.getElementById('librarySearch');
   const libraryYearFilter = document.getElementById('libraryYearFilter');
   const libraryCategoryFilter = document.getElementById('libraryCategoryFilter');
@@ -1642,7 +1645,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 9. MODALS (Feedback & Contribution) ---
+  // --- 9. MODALS (About, Feedback & Contribution) ---
+
+  // About Modal
+  const aboutModal = document.getElementById('aboutModal');
+  const closeAboutBtn = document.getElementById('closeAboutBtn');
+
+  function openAboutModalFn() {
+    if (!aboutModal) return;
+    aboutModal.classList.remove('opacity-0', 'pointer-events-none');
+    const inner = aboutModal.querySelector('div');
+    if (inner) inner.classList.remove('scale-95');
+  }
+  function closeAboutModalFn() {
+    if (!aboutModal) return;
+    aboutModal.classList.add('opacity-0', 'pointer-events-none');
+    const inner = aboutModal.querySelector('div');
+    if (inner) inner.classList.add('scale-95');
+  }
+
+  ['aboutBtnDesktop', 'mobileAboutBtn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', () => {
+      if (!aboutModal) return;
+      if (aboutModal.classList.contains('opacity-0')) {
+        openAboutModalFn();
+      } else {
+        closeAboutModalFn();
+      }
+    });
+  });
+  if (closeAboutBtn) closeAboutBtn.addEventListener('click', closeAboutModalFn);
 
   // Feedback — bind both desktop and mobile buttons
   const feedbackModal = document.getElementById('feedbackModal');
@@ -1926,30 +1959,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Mobile counter HUD
   const mobileCounterEl = document.getElementById('mobileEventsCounter');
   if (mobileCounterEl) mobileCounterEl.textContent = eventsData.length;
-
-  // Mobile Library Button (replaces Search)
-  const mobileLibraryBtnEl = document.getElementById('mobileLibraryBtn');
-  if (mobileLibraryBtnEl) {
-    mobileLibraryBtnEl.addEventListener('click', () => {
-      if (!personalPanel) return;
-      const isHidden = personalPanel.classList.contains('translate-y-full');
-      if (isHidden) {
-        openPersonalPanelFn();
-        switchPersonalTab(tabLibrary, contentLibrary);
-      } else {
-        // If already open but not on library tab, switch to it
-        if (contentLibrary && contentLibrary.classList.contains('hidden')) {
-          closePersonalPanelFn();
-          setTimeout(() => {
-            switchPersonalTab(tabLibrary, contentLibrary);
-            openPersonalPanelFn();
-          }, 300);
-        } else {
-          closePersonalPanelFn();
-        }
-      }
-    });
-  }
 
   // Mobile Legend Sheet
   const mobileLegendBtnEl = document.getElementById('mobileLegendBtn');
