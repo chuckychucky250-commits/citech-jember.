@@ -8,8 +8,8 @@
     <meta name="theme-color" content="#111827" />
     <title>Arsip Memori Sejarah Jember</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-    <script type="module" crossorigin src="/citech-jember./assets/index-DVD28Jbx.js"></script>
-    <link rel="stylesheet" crossorigin href="/citech-jember./assets/index-ByCDOog8.css">
+    <script type="module" crossorigin src="/citech-jember./assets/index-B1PHCbEu.js"></script>
+    <link rel="stylesheet" crossorigin href="/citech-jember./assets/index-B5UYrTXl.css">
   </head>
   <body class="bg-gray-100 dark:bg-gray-950 text-gray-800 dark:text-gray-200 font-sans overflow-hidden transition-colors duration-300">
 
@@ -437,6 +437,23 @@
           <div class="relative group">
             <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5">Sumber / Referensi (Opsional)</label>
             <input type="text" id="reportSource" placeholder="Contoh: Koran Radar Jember 2 Jan 1999" class="w-full px-4 py-3 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none transition-all">
+          </div>
+
+          <div class="relative group">
+            <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5">Bukti Dokumentasi (Opsional)</label>
+            <input type="file" id="reportDocs" accept="image/*,video/*" multiple class="w-full px-4 py-2.5 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none transition-all file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 dark:file:bg-amber-900/30 dark:file:text-amber-400 text-gray-500 dark:text-gray-400 cursor-pointer">
+            <p class="text-[10px] text-gray-400 mt-1.5">Foto atau video kejadian</p>
+          </div>
+
+          <div class="relative group">
+            <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5">Tautan Artikel Terkait (Opsional)</label>
+            <input type="url" id="reportLinks" placeholder="Contoh: https://berita.com/..." class="w-full px-4 py-3 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none transition-all">
+          </div>
+
+          <div class="relative group">
+            <label class="block text-[11px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-1.5">Dokumen Tambahan (Opsional)</label>
+            <input type="file" id="reportFiles" accept=".pdf,.doc,.docx" multiple class="w-full px-4 py-2.5 bg-gray-50/50 hover:bg-white dark:bg-gray-800/30 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:bg-white dark:focus:bg-gray-800 focus:border-amber-400 dark:focus:border-amber-500 focus:outline-none transition-all file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/30 dark:file:text-blue-400 text-gray-500 dark:text-gray-400 cursor-pointer">
+            <p class="text-[10px] text-gray-400 mt-1.5">Laporan resmi, scan koran lama, PDF</p>
           </div>
         </form>
       
