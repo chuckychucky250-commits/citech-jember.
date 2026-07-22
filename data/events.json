@@ -396,7 +396,7 @@
     ],
     "title": "Banjir Bandang Panti",
     "category": "bencana",
-    "color": "#9333EA",
+    "color": "#9333ea",
     "year": "2006",
     "renderType": "route",
     "heroImage": "https://images.unsplash.com/photo-1548349282-358043c945b0?auto=format&fit=crop&q=80&w=800&grayscale=true",
@@ -539,7 +539,7 @@
       20
     ],
     "chartLabel": "Akumulasi Korban",
-    "chartColor": "#DC2626"
+    "chartColor": "#9333ea"
   },
   {
     "id": "evt_005",
@@ -745,7 +745,7 @@
     ],
     "title": "Tanah Longsor Jelbuk",
     "category": "bencana",
-    "color": "#9333EA",
+    "color": "#9333ea",
     "year": "2010",
     "renderType": "route",
     "heroImage": "https://images.unsplash.com/photo-1548349282-358043c945b0?auto=format&fit=crop&q=80&w=800&grayscale=true",
@@ -863,7 +863,7 @@
       0
     ],
     "chartLabel": "Jumlah Korban Jiwa / Cedera",
-    "chartColor": "#DC2626"
+    "chartColor": "#9333ea"
   },
   {
     "id": "evt_008",
@@ -991,99 +991,79 @@
   {
     "id": "evt_009",
     "loc": [
-      -8.17,
-      113.69
+      -8.261,
+      113.931
     ],
-    "title": "Banjir Luapan Kali Jompo",
-    "category": "bencana",
-    "color": "#9333EA",
-    "year": "2020",
-    "renderType": "area",
-    "patternId": "url(#hatchPatternRed)",
-    "heroImage": "https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800&grayscale=true",
-    "quote": "\"Air sungai meluap sangat cepat sampai ke jalan raya, ruko-ruko di pinggir kali langsung retak dan longsor.\"",
-    "quoteAuthor": "— Pemilik Toko",
-    "desc1": "Debit air tinggi di hulu memicu luapan Kali Jompo yang menggenangi pertokoan Jalan Sultan Agung Jember.",
-    "desc2": "Sebagian fondasi pertokoan ruko ambruk ke sungai, memaksa relokasi pedagang ke tempat yang lebih aman.",
-    "korban": 350,
-    "luasan": "15.0 Ha",
-    "gambar": "./images/banjir_jompo.jpg",
-    "ringkasan": "Bencana luapan air sungai Kali Jompo di pusat kota Jember yang merusak infrastruktur ruko jalan utama.",
+    "title": "Tragedi Jalur Maut Gumitir",
+    "category": "tragedi",
+    "color": "#DC2626",
+    "year": "2015",
+    "renderType": "point",
+    "markerAnim": "ripple",
+    "heroImage": "https://images.unsplash.com/photo-1541892079-25ea1769837f?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Truk rem blong dari arah atas menyapu habis kendaraan di jalur sempit pegunungan.\"",
+    "quoteAuthor": "— Relawan Evakuasi",
+    "desc1": "Kecelakaan fatal yang melibatkan truk bermuatan berat dan beberapa kendaraan kecil di tikungan tajam pegunungan Gumitir.",
+    "desc2": "Evakuasi berlangsung dramatis selama belasan jam karena medan curam dan jurang di sisi jalan.",
+    "korban": 12,
+    "luasan": "Area Jurang",
+    "gambar": "./images/gumitir.jpg",
+    "ringkasan": "Tragedi kecelakaan maut beruntun di jalur rawan pegunungan Gumitir yang mengakibatkan belasan korban jiwa.",
     "milestones": [
       {
-        "label": "Sungai Meluap",
+        "label": "Kejadian Awal",
         "tag": "Tanda Awal",
-        "narasi": "Hujan deras di lereng Argopuro menaikkan permukaan air Kali Jompo melewati batas aman.",
-        "stat1V": "50",
-        "stat2V": "2",
-        "polygonRadius": 150,
+        "narasi": "Truk mengalami gagal fungsi pengereman saat melintasi jalur menurun tajam.",
+        "stat1V": "0",
+        "stat2V": "1",
+        "polygonRadius": 50,
         "spatialDesc": [
           {
             "loc": [
-              -8.17,
-              113.69
+              -8.261,
+              113.931
             ],
-            "title": "Jembatan Kali Jompo (Fokus Awal)",
-            "desc": "Warga melihat air mulai meluap ke permukiman bantaran sungai di sekitar jembatan Sultan Agung."
+            "title": "Tikungan Atas Gumitir",
+            "desc": "Titik insiden bermula di tikungan tajam. Lingkaran merah sempit menandakan awal hilangnya kendali kendaraan."
           }
         ]
       },
       {
-        "label": "Ruko Ambruk",
+        "label": "Tabrakan Beruntun",
         "tag": "Puncak Peristiwa",
-        "narasi": "Arus deras mengikis fondasi tanah hingga 10 unit ruko ambles and roboh ke dalam aliran sungai.",
-        "stat1V": "350",
-        "stat2V": "15",
-        "polygonRadius": 400,
-        "spatialDesc": [
-          {
-            "loc": [
-              -8.17,
-              113.69
-            ],
-            "title": "Jalan Sultan Agung (Pertokoan Ruko)",
-            "desc": "Detik-detik robohnya ruko pertokoan yang sempat terekam kamera warga. Jalan raya ditutup total untuk menghindari longsor susulan."
-          }
-        ]
-      },
-      {
-        "label": "Pembongkaran",
-        "tag": "Resolusi",
-        "narasi": "Pemerintah merobohkan sisa ruko gantung yang rawan ambruk dan menata ulang bantaran sungai Kali Jompo.",
-        "stat1V": "120",
-        "stat2V": "5",
+        "narasi": "Truk menabrak antrean kendaraan dan sebagian jatuh ke dalam jurang.",
+        "stat1V": "12",
+        "stat2V": "6",
         "polygonRadius": 150,
         "spatialDesc": [
           {
             "loc": [
-              -8.17,
-              113.69
+              -8.261,
+              113.931
             ],
-            "title": "Area Revitalisasi Kali Jompo",
-            "desc": "Alat berat diturunkan untuk membersihkan puing-puing bangunan demi melebarkan kembali aliran sungai."
+            "title": "Area Jatuh Jurang",
+            "desc": "Radius meluas ke sisi tebing menggambarkan area di mana kendaraan-kendaraan terlempar ke bawah jurang, membutuhkan radius evakuasi yang luas."
           }
         ]
       }
     ],
     "peakMilestoneIdx": 1,
-    "stat1Label": "Warga Mengungsi",
-    "stat1Unit": "Jiwa",
-    "stat2Label": "Ruko Rusak",
-    "stat2Unit": "Ruko",
+    "stat1Label": "Korban Jiwa",
+    "stat1Unit": "Orang",
+    "stat2Label": "Kendaraan Hancur",
+    "stat2Unit": "Unit",
     "chartType": "bar",
     "chartLabels": [
-      "Hari 1",
-      "Hari 2",
-      "Hari 3",
-      "Hari 4"
+      "Meninggal",
+      "Luka Berat",
+      "Luka Ringan"
     ],
     "chartData": [
-      40,
-      350,
-      200,
-      80
+      12,
+      18,
+      5
     ],
-    "chartLabel": "Pengungsi Kali Jompo",
+    "chartLabel": "Jumlah Korban Berdasarkan Kondisi",
     "chartColor": "#DC2626"
   },
   {
@@ -1208,5 +1188,564 @@
     ],
     "chartLabel": "Peserta Gerakan",
     "chartColor": "#1D4ED8"
+  },
+  {
+    "id": "evt_011",
+    "loc": [
+      -8.157,
+      113.447
+    ],
+    "title": "Banjir Luapan Tanggul",
+    "category": "bencana",
+    "color": "#9333ea",
+    "year": "2010",
+    "renderType": "area",
+    "patternId": "url(#hatchPatternRed)",
+    "markerAnim": "ripple",
+    "heroImage": "https://images.unsplash.com/photo-1542281286-9e0a16bb7366?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Tanggul sungai jebol di tengah malam, air dengan cepat merendam seluruh kawasan pemukiman.\"",
+    "quoteAuthor": "— Kesaksian Warga Tanggul",
+    "desc1": "Hujan dengan intensitas tinggi selama dua hari menyebabkan debit air Sungai Tanggul meluap dan menghancurkan tanggul penahan.",
+    "desc2": "Ratusan rumah terendam banjir setinggi 1,5 meter, warga dievakuasi ke dataran tinggi menggunakan perahu karet.",
+    "korban": 0,
+    "luasan": "250 Ha",
+    "gambar": "./images/banjir_tanggul.jpg",
+    "ringkasan": "Banjir bandang di Kecamatan Tanggul akibat jebolnya tanggul sungai setelah hujan ekstrem.",
+    "milestones": [
+      {
+        "label": "Hujan Ekstrem",
+        "tag": "Tanda Awal",
+        "narasi": "Hujan tiada henti memicu kenaikan debit air sungai ke titik waspada.",
+        "stat1V": "0",
+        "stat2V": "100",
+        "polygonRadius": 100,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.157,
+              113.447
+            ],
+            "title": "Bantaran Sungai Tanggul",
+            "desc": "Area sepadan sungai sepanjang 100 meter mulai tergenang air karena debit sungai meningkat tajam."
+          }
+        ]
+      },
+      {
+        "label": "Tanggul Jebol",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Tanggul utama jebol, air menyebar luas menggenangi 3 desa (arsiran merah melebar).",
+        "stat1V": "850",
+        "stat2V": "250",
+        "polygonRadius": 600,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.157,
+              113.447
+            ],
+            "title": "Tiga Desa Terdampak Banjir",
+            "desc": "Area genangan meluas drastis secara memusat di sekitar titik jebolnya tanggul, menelan ratusan rumah penduduk dalam radius 600 meter."
+          }
+        ]
+      },
+      {
+        "label": "Air Surut & Evakuasi",
+        "tag": "Resolusi",
+        "narasi": "Genangan mulai surut perlahan, tim SAR memfokuskan pencarian di kantong-kantong pengungsian terdekat.",
+        "stat1V": "850",
+        "stat2V": "50",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.165,
+              113.45
+            ],
+            "title": "Posko Pengungsian Balai Desa",
+            "desc": "Genangan berkurang, penyebaran area (arsiran) kini terpusat di titik posko pengungsian di mana warga berlindung sementara."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Warga Mengungsi",
+    "stat1Unit": "Orang",
+    "stat2Label": "Area Terendam",
+    "stat2Unit": "Ha",
+    "chartType": "area",
+    "chartLabels": [
+      "Hari 1",
+      "Hari 2",
+      "Hari 3",
+      "Hari 4",
+      "Hari 7"
+    ],
+    "chartData": [
+      0,
+      850,
+      600,
+      200,
+      0
+    ],
+    "chartLabel": "Pengungsi Harian",
+    "chartColor": "#9333ea"
+  },
+  {
+    "id": "evt_012",
+    "loc": [
+      -8.272,
+      113.844
+    ],
+    "title": "Aksi Tolak Tambang Emas Silo",
+    "category": "pergerakan",
+    "color": "#1D4ED8",
+    "year": "2018",
+    "renderType": "area",
+    "patternId": "url(#hatchPatternBlue)",
+    "heroImage": "https://images.unsplash.com/photo-1536768393560-6e3e5aa5fec3?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Tanah kami adalah kehidupan kami, bukan untuk ditambang lalu ditinggalkan.\"",
+    "quoteAuthor": "— Tokoh Masyarakat Silo",
+    "desc1": "Gerakan masif warga dan santri Kecamatan Silo yang menolak rencana izin usaha pertambangan (IUP) eksplorasi emas di wilayah mereka.",
+    "desc2": "Aksi ini berhasil menyatukan berbagai elemen masyarakat hingga akhirnya pemerintah mencabut izin eksplorasi tersebut.",
+    "korban": 0,
+    "luasan": "Kecamatan Silo",
+    "gambar": "./images/tolak_tambang_silo.jpg",
+    "ringkasan": "Pergerakan rakyat secara besar-besaran menolak eksploitasi alam di Silo, menjaga kelestarian lingkungan dan pertanian setempat.",
+    "milestones": [
+      {
+        "label": "Konsolidasi Akar Rumput",
+        "tag": "Tanda Awal",
+        "narasi": "Tokoh masyarakat dan ulama mulai mengumpulkan warga untuk sosialisasi penolakan tambang.",
+        "stat1V": "500",
+        "stat2V": "1",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.272,
+              113.844
+            ],
+            "title": "Pusat Konsolidasi Desa Pace",
+            "desc": "Area arsiran biru kecil menunjukkan titik awal perkumpulan warga desa di pusat balai desa dan pesantren setempat."
+          }
+        ]
+      },
+      {
+        "label": "Aksi Turun Jalan",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Ribuan warga memblokade jalan utama dan berdemonstrasi secara damai dengan spanduk penolakan.",
+        "stat1V": "5000",
+        "stat2V": "3",
+        "polygonRadius": 500,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.272,
+              113.844
+            ],
+            "title": "Jalan Utama Silo (Blokade Massal)",
+            "desc": "Arsiran meluas secara signifikan, merepresentasikan penyebaran massa aksi damai yang menutupi akses jalan utama kecamatan."
+          }
+        ]
+      },
+      {
+        "label": "Pencabutan Izin",
+        "tag": "Resolusi",
+        "narasi": "Pemerintah secara resmi mencabut lampiran SK Menteri terkait izin eksplorasi, warga merayakan kemenangan.",
+        "stat1V": "5000",
+        "stat2V": "0",
+        "polygonRadius": 200,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.272,
+              113.844
+            ],
+            "title": "Deklarasi Kemenangan Warga",
+            "desc": "Arsiran menyusut, memusat pada titik-titik kumpul warga yang sedang mengadakan syukuran atas dicabutnya izin tambang."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Massa Aksi",
+    "stat1Unit": "Orang",
+    "stat2Label": "Desa Terlibat",
+    "stat2Unit": "Desa",
+    "chartType": "bar",
+    "chartLabels": [
+      "Bulan 1",
+      "Bulan 2",
+      "Bulan 3",
+      "Bulan 4"
+    ],
+    "chartData": [
+      500,
+      1500,
+      5000,
+      0
+    ],
+    "chartLabel": "Jumlah Partisipan Aksi",
+    "chartColor": "#1D4ED8"
+  },
+  {
+    "id": "evt_013",
+    "loc": [
+      -8.283,
+      113.623
+    ],
+    "title": "Konflik Lahan Jenggawah",
+    "category": "kasus",
+    "color": "#F97316",
+    "year": "1995",
+    "renderType": "area",
+    "patternId": "url(#hatchPatternOrange)",
+    "markerAnim": "pulse",
+    "heroImage": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Tanah ini adalah hak petani sejak lama, kami akan lawan segala bentuk pencaplokan.\"",
+    "quoteAuthor": "— Tokoh Petani Jenggawah",
+    "desc1": "Kasus bersejarah tentang sengketa kepemilikan lahan tembakau antara warga desa dengan pihak korporasi.",
+    "desc2": "Berawal dari protes kecil, eskalasi membesar hingga mencapai titik mediasi nasional.",
+    "korban": 120,
+    "luasan": "700 Ha",
+    "gambar": "./images/sengketa_jenggawah.jpg",
+    "ringkasan": "Perselisihan hak tanah berskala besar di Jenggawah yang diwarnai unjuk rasa petani secara berkelanjutan.",
+    "milestones": [
+      {
+        "label": "Pemancangan Patok",
+        "tag": "Tanda Awal",
+        "narasi": "Pihak korporasi memancangkan patok tapal batas secara sepihak di lahan garapan warga.",
+        "stat1V": "0",
+        "stat2V": "100",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.283,
+              113.623
+            ],
+            "title": "Lahan Pertanian Desa Jenggawah",
+            "desc": "Lingkaran area ini merepresentasikan lahan yang secara tiba-tiba diklaim (arsiran muncul). Patok perbatasan memicu keresahan warga."
+          }
+        ]
+      },
+      {
+        "label": "Protes Terbuka",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Ratusan petani turun ke jalan, mencabuti patok dan memperluas pendudukan lahan secara massal.",
+        "stat1V": "800",
+        "stat2V": "700",
+        "polygonRadius": 500,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.283,
+              113.623
+            ],
+            "title": "Eskalasi Konflik Lahan (Radius Meluas)",
+            "desc": "Area arsiran meluas secara signifikan, menunjukkan bagaimana perlawanan petani merembet ke desa-desa tetangga. Lahan perkebunan diduduki secara massal."
+          }
+        ]
+      },
+      {
+        "label": "Mediasi & Redistribusi",
+        "tag": "Resolusi",
+        "narasi": "Kesepakatan damai dicapai, hak atas tanah sebagian besar didistribusikan kembali kepada para petani.",
+        "stat1V": "0",
+        "stat2V": "700",
+        "polygonRadius": 200,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.283,
+              113.623
+            ],
+            "title": "Lahan Mandiri Warga",
+            "desc": "Area kembali menyusut (arsiran mereda) dan terfokus pada titik pengesahan dokumen kepemilikan tanah di Balai Kecamatan."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Petani Terlibat",
+    "stat1Unit": "Orang",
+    "stat2Label": "Lahan Sengketa",
+    "stat2Unit": "Ha",
+    "chartType": "bar",
+    "chartLabels": [
+      "Bulan 1",
+      "Bulan 3",
+      "Bulan 6",
+      "Bulan 9"
+    ],
+    "chartData": [
+      50,
+      200,
+      800,
+      0
+    ],
+    "chartLabel": "Jumlah Demonstran",
+    "chartColor": "#F97316"
+  },
+  {
+    "id": "evt_014",
+    "loc": [
+      -8.375,
+      113.473
+    ],
+    "title": "Tragedi Perahu Nelayan Puger",
+    "category": "tragedi",
+    "color": "#DC2626",
+    "year": "2018",
+    "renderType": "area",
+    "patternId": "url(#hatchPatternRed)",
+    "markerAnim": "ripple",
+    "heroImage": "https://images.unsplash.com/photo-1579762593175-20226054cad0?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Ombak setinggi tiga meter menggulung kapal saat mencoba melewati Plawangan di pagi buta.\"",
+    "quoteAuthor": "— Nelayan Selamat",
+    "desc1": "Karamnya kapal nelayan pencari ikan Joko Berek akibat hantaman ombak besar (ombak selatan) saat hendak merapat ke daratan.",
+    "desc2": "Insiden ini memicu pencarian SAR skala besar yang menyisir pesisir pantai selatan Jember selama berhari-hari.",
+    "korban": 9,
+    "luasan": "Plawangan Puger",
+    "gambar": "./images/puger.jpg",
+    "ringkasan": "Perahu nelayan tenggelam di mulut pantai Puger karena cuaca ekstrem dan ombak ganas laut selatan.",
+    "milestones": [
+      {
+        "label": "Hantaman Ombak",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Perahu terbalik tepat di celah Plawangan yang berbahaya, puluhan nelayan terlempar ke laut.",
+        "stat1V": "9",
+        "stat2V": "21",
+        "polygonRadius": 200,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.375,
+              113.473
+            ],
+            "title": "Plawangan Pantai Puger",
+            "desc": "Area arsiran merah menggambarkan radius hantaman awal di mulut pantai di mana serpihan kapal mulai tersebar."
+          }
+        ]
+      },
+      {
+        "label": "Pencarian SAR",
+        "tag": "Resolusi",
+        "narasi": "Tim gabungan melakukan penyisiran panjang menyusuri garis pantai untuk menemukan korban hilang.",
+        "stat1V": "9",
+        "stat2V": "0",
+        "polygonRadius": 600,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.375,
+              113.473
+            ],
+            "title": "Zona Penyisiran Garis Pantai",
+            "desc": "Area arsiran melebar sangat luas ke arah timur dan barat sepanjang pesisir untuk menandakan cakupan operasi pencarian tim SAR."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 0,
+    "stat1Label": "Korban Meninggal",
+    "stat1Unit": "Orang",
+    "stat2Label": "Korban Selamat",
+    "stat2Unit": "Orang",
+    "chartType": "bar",
+    "chartLabels": [
+      "Hari 1",
+      "Hari 2",
+      "Hari 3",
+      "Hari 4"
+    ],
+    "chartData": [
+      2,
+      5,
+      1,
+      1
+    ],
+    "chartLabel": "Korban Ditemukan Harian",
+    "chartColor": "#DC2626"
+  },
+  {
+    "id": "evt_015",
+    "loc": [
+      -8.182,
+      113.712
+    ],
+    "title": "Skandal Retribusi Pasar Tanjung",
+    "category": "kasus",
+    "color": "#F97316",
+    "year": "2016",
+    "renderType": "point",
+    "markerAnim": "bounce",
+    "heroImage": "https://images.unsplash.com/photo-1549492423-400259a2e574?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Pedagang merasa diperas dengan pungutan liar harian yang tak pernah masuk ke kas daerah.\"",
+    "quoteAuthor": "— Koordinator Pedagang",
+    "desc1": "Kasus korupsi yang melibatkan oknum pengelola pasar tradisional terbesar di Jember, di mana retribusi pedagang diselewengkan.",
+    "desc2": "Investigasi aparat berhasil menangkap jaringan pungli, memulihkan tatanan dan transparansi di Pasar Tanjung.",
+    "korban": 1200,
+    "luasan": "Area Pasar",
+    "gambar": "./images/pasar_tanjung.jpg",
+    "ringkasan": "Pengungkapan operasi pungutan liar (pungli) berkedok retribusi harian di Pasar Tanjung yang merugikan pedagang kecil.",
+    "milestones": [
+      {
+        "label": "Laporan Pedagang",
+        "tag": "Tanda Awal",
+        "narasi": "Keresahan memuncak, paguyuban pedagang diam-diam melaporkan praktik pungli kepada kejaksaan.",
+        "stat1V": "1200",
+        "stat2V": "0",
+        "polygonRadius": 50,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.182,
+              113.712
+            ],
+            "title": "Pasar Tanjung Jember",
+            "desc": "Pusat keresahan bermula di los-los pasar. Titik marker menggambarkan pusat sentra ekonomi yang ditekan oleh pungutan liar."
+          }
+        ]
+      },
+      {
+        "label": "Operasi Tangkap Tangan",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Tim Saber Pungli melakukan penyergapan mendadak, mengamankan barang bukti uang tunai dan buku catatan ilegal.",
+        "stat1V": "1200",
+        "stat2V": "2",
+        "polygonRadius": 150,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.182,
+              113.712
+            ],
+            "title": "Kantor Pengelola Pasar",
+            "desc": "Area fokus melebar (lingkaran merah) menunjukkan penggerebekan langsung di area administrasi pasar tempat uang dikumpulkan secara tidak sah."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Pedagang Terdampak",
+    "stat1Unit": "Orang",
+    "stat2Label": "Tersangka",
+    "stat2Unit": "Orang",
+    "chartType": "line",
+    "chartLabels": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "chartData": [
+      50,
+      100,
+      250,
+      10
+    ],
+    "chartLabel": "Kerugian Pedagang (Juta Rp)",
+    "chartColor": "#F97316"
+  },
+  {
+    "id": "evt_016",
+    "loc": [
+      -8.099,
+      113.888
+    ],
+    "title": "Kebakaran Pabrik Kayu Sempolan",
+    "category": "tragedi",
+    "color": "#DC2626",
+    "year": "2012",
+    "renderType": "area",
+    "patternId": "url(#hatchPatternRed)",
+    "heroImage": "https://images.unsplash.com/photo-1583115688837-f4bff2f4f5c3?auto=format&fit=crop&q=80&w=800&grayscale=true",
+    "quote": "\"Api menjalar sangat cepat, dalam 30 menit seluruh gudang penyimpanan kayu sudah habis.\"",
+    "quoteAuthor": "— Karyawan Selamat",
+    "desc1": "Kebakaran hebat melanda kompleks industri pengolahan kayu di Sempolan akibat percikan api pada mesin pemotong yang menyambar debu serbuk kayu.",
+    "desc2": "Asap hitam pekat menjulang tinggi menyelimuti kawasan selama berjam-jam, tim Damkar dari tiga kecamatan diterjunkan namun api baru padam setelah 8 jam.",
+    "korban": 4,
+    "luasan": "12.500 m²",
+    "gambar": "./images/kebakaran_sempolan.jpg",
+    "ringkasan": "Tragedi kebakaran hebat kompleks pabrik kayu di Sempolan yang menewaskan pekerja dan menghanguskan gudang penyimpanan senilai miliaran rupiah.",
+    "milestones": [
+      {
+        "label": "Api Muncul",
+        "tag": "Tanda Awal",
+        "narasi": "Percikan api dari mesin pemotong menyulut serbuk kayu di lantai gudang produksi.",
+        "stat1V": "0",
+        "stat2V": "500",
+        "polygonRadius": 80,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.099,
+              113.888
+            ],
+            "title": "Titik Awal Kebakaran (Ruang Produksi)",
+            "desc": "Lingkaran merah kecil menandakan titik awal sumber api yang muncul di area mesin pemotong. Api masih terlokalisir dan dapat dipadamkan secara mandiri."
+          }
+        ]
+      },
+      {
+        "label": "Api Meluas Masif",
+        "tag": "Puncak Peristiwa",
+        "narasi": "Angin kencang membawa api ke gudang penyimpanan berisi ribuan kubik kayu kering, menyebabkan perluasan cepat dan dahsyat.",
+        "stat1V": "4",
+        "stat2V": "12500",
+        "polygonRadius": 450,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.099,
+              113.888
+            ],
+            "title": "Seluruh Kompleks Pabrik Terbakar",
+            "desc": "Area arsiran melebar drastis menandakan api sudah menelan seluruh kompleks pabrik. Kepulan asap hitam setinggi ratusan meter terlihat dari berbagai kecamatan."
+          }
+        ]
+      },
+      {
+        "label": "Pemadaman & Evakuasi",
+        "tag": "Resolusi",
+        "narasi": "Delapan jam kemudian, gabungan 5 unit Damkar berhasil memadamkan sisa bara api. Tim medis mengevakuasi korban.",
+        "stat1V": "4",
+        "stat2V": "0",
+        "polygonRadius": 200,
+        "spatialDesc": [
+          {
+            "loc": [
+              -8.099,
+              113.888
+            ],
+            "title": "Sisa Abu Pabrik",
+            "desc": "Lingkaran menyusut menunjukkan area yang sudah berhasil dipadamkan. Hanya tersisa puing-puing besi dan abu kayu yang menggunung."
+          }
+        ]
+      }
+    ],
+    "peakMilestoneIdx": 1,
+    "stat1Label": "Korban Jiwa",
+    "stat1Unit": "Orang",
+    "stat2Label": "Area Terbakar",
+    "stat2Unit": "m²",
+    "chartType": "bar",
+    "chartLabels": [
+      "Jam 1",
+      "Jam 2",
+      "Jam 4",
+      "Jam 6",
+      "Jam 8"
+    ],
+    "chartData": [
+      500,
+      3000,
+      9000,
+      12500,
+      0
+    ],
+    "chartLabel": "Luas Area Terbakar (m²) per Jam",
+    "chartColor": "#DC2626"
   }
 ]
