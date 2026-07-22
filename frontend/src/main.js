@@ -209,7 +209,9 @@ document.addEventListener('DOMContentLoaded', () => {
   eventsData.forEach((data, idx) => {
     const delay = delayClasses[idx % delayClasses.length];
     const catClass = `marker-${data.category}`;
-    const markerHtml = `<div class="w-4 h-4 rounded-full border-2 border-white shadow-lg pulse-marker ${delay} ${catClass}" style="background-color:${data.color}"></div>`;
+    const animClass = 'pulse-marker';
+    
+    const markerHtml = `<div class="w-4 h-4 rounded-full border-2 border-white shadow-lg ${animClass} ${delay} ${catClass}" style="background-color:${data.color}"></div>`;
     const icon = L.divIcon({ html: markerHtml, className: 'custom-div-icon', iconSize: [16, 16], iconAnchor: [8, 8] });
     const marker = L.marker(data.loc, { icon });
     
@@ -1247,7 +1249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(reportMarker) map.removeLayer(reportMarker);
         
         const icon = L.divIcon({ 
-          html: '<div class="w-5 h-5 bg-amber-500 rounded-full border-2 border-white shadow-lg pulse-marker"></div>', 
+          html: '<div class="w-5 h-5 bg-amber-500 rounded-full border-2 border-white shadow-lg ripple-marker"></div>', 
           className: 'custom-div-icon', iconSize: [20, 20], iconAnchor: [10, 10] 
         });
         reportMarker = L.marker(selectedReportLoc, { icon }).addTo(map);
@@ -1283,7 +1285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedReportLoc = e.latlng;
     
     const icon = L.divIcon({ 
-      html: '<div class="w-5 h-5 bg-amber-500 rounded-full border-2 border-white shadow-lg pulse-marker"></div>', 
+      html: '<div class="w-5 h-5 bg-amber-500 rounded-full border-2 border-white shadow-lg ripple-marker"></div>', 
       className: 'custom-div-icon', iconSize: [20, 20], iconAnchor: [10, 10] 
     });
     reportMarker = L.marker(e.latlng, { icon }).addTo(map);
@@ -1923,7 +1925,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(adminMarker && adminMapInstance) adminMapInstance.removeLayer(adminMarker);
     const mockOffset = [currentQueue.loc[0] + 0.01, currentQueue.loc[1] + 0.01];
     
-    const icon = L.divIcon({ html: '<div class="w-4 h-4 bg-red-600 rounded-full border-2 border-white shadow-lg pulse-marker"></div>', className: 'custom-div-icon' });
+    const icon = L.divIcon({ html: '<div class="w-4 h-4 bg-red-600 rounded-full border-2 border-white shadow-lg ripple-marker"></div>', className: 'custom-div-icon' });
     adminMarker = L.marker(mockOffset, {icon}).addTo(adminMapInstance);
     adminMapInstance.flyTo(mockOffset, 14);
 

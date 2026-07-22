@@ -24,13 +24,39 @@
 .pulse-marker {
   animation: pulse-glow 2.4s ease-in-out infinite;
 }
-.pulse-marker.delay-1 { animation-delay: 0.5s; }
-.pulse-marker.delay-2 { animation-delay: 1.0s; }
-.pulse-marker.delay-3 { animation-delay: 1.5s; }
-.pulse-marker.delay-4 { animation-delay: 2.0s; }
+
+@keyframes ping-glow {
+  0% { transform: scale(0.85); box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  70% { transform: scale(1.5); box-shadow: 0 0 15px 10px currentColor; opacity: 0; }
+  100% { transform: scale(0.85); box-shadow: 0 0 0 0 currentColor; opacity: 0; }
+}
+.ping-marker { animation: ping-glow 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
+
+@keyframes bounce-glow {
+  0%, 100% { transform: translateY(-25%); animation-timing-function: cubic-bezier(0.8,0,1,1); box-shadow: 0 0 0 0 currentColor; }
+  50% { transform: none; animation-timing-function: cubic-bezier(0,0,0.2,1); box-shadow: 0 0 10px 5px currentColor; }
+}
+.bounce-marker { animation: bounce-glow 1s infinite; }
+
+@keyframes spin-glow {
+  0% { transform: rotate(0deg) scale(0.9); box-shadow: 0 0 5px 2px currentColor; }
+  50% { transform: rotate(180deg) scale(1.1); box-shadow: 0 0 12px 4px currentColor; }
+  100% { transform: rotate(360deg) scale(0.9); box-shadow: 0 0 5px 2px currentColor; }
+}
+.spin-marker { animation: spin-glow 3s linear infinite; }
+
+@keyframes ripple-glow {
+  0% { box-shadow: 0 0 0 0 currentColor, 0 0 0 0 currentColor; }
+  100% { box-shadow: 0 0 0 10px transparent, 0 0 0 20px transparent; }
+}
+.ripple-marker { animation: ripple-glow 2s linear infinite; }
+.delay-1 { animation-delay: -0.5s !important; }
+.delay-2 { animation-delay: -1.0s !important; }
+.delay-3 { animation-delay: -1.5s !important; }
+.delay-4 { animation-delay: -2.0s !important; }
 
 /* Marker glow colors by category */
-.marker-bencana  { color: rgba(220, 38, 38, 0.5); }
+.marker-bencana  { color: rgba(147, 51, 234, 0.5); }
 .marker-tragedi  { color: rgba(220, 38, 38, 0.5); }
 .marker-pergerakan { color: rgba(29, 78, 216, 0.5); }
 .marker-kasus    { color: rgba(249, 115, 22, 0.5); }
