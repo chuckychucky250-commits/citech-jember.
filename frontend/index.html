@@ -686,11 +686,11 @@
           <div class="flex-1 overflow-y-auto no-scrollbar relative pb-10 hidden" id="panelContentArea">
             <!-- Hero Image -->
             <div class="w-full h-48 md:h-52 bg-gray-100 dark:bg-gray-900/60 relative overflow-hidden group flex items-center justify-center shrink-0">
-              <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-900/40 z-0">
+              <div id="eventHeroFallback" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-900/40 z-0">
                 <svg class="w-12 h-12 mb-1.5 opacity-40 dark:opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 <span class="text-[9px] uppercase font-bold tracking-widest opacity-50 dark:opacity-40">Dokumentasi Arsip</span>
               </div>
-              <img id="eventHeroImg" src="" alt="Hero Arsip" class="w-full h-full object-cover mix-blend-multiply opacity-0 group-hover:scale-105 transition-all duration-700 z-10" onload="this.classList.remove('opacity-0'); this.classList.add('opacity-80')" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%221%22 height=%221%22 fill=%22none%22></svg>'; this.classList.add('opacity-0')">
+              <img id="eventHeroImg" src="" alt="Hero Arsip" class="w-full h-full object-cover opacity-0 group-hover:scale-105 transition-all duration-700 z-10" onload="if(this.src && !this.src.startsWith('data:image/svg')) { this.classList.remove('opacity-0'); this.classList.add('opacity-90', 'dark:opacity-70'); document.getElementById('eventHeroFallback').classList.add('hidden'); }" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%221%22 height=%221%22 fill=%22none%22></svg>'; this.classList.add('opacity-0'); document.getElementById('eventHeroFallback').classList.remove('hidden');">
               <div class="absolute inset-0 bg-gradient-to-t from-white dark:from-gray-900 via-white/20 dark:via-gray-900/10 to-transparent pointer-events-none z-20"></div>
               <div class="absolute top-4 left-4 bg-white/95 dark:bg-gray-900/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold tracking-widest shadow-sm flex items-center z-30">
                 <span id="eventCategoryDot" class="w-2 h-2 rounded-full mr-2"></span>
