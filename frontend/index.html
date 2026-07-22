@@ -564,6 +564,10 @@
             <svg id="themeIconSun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             <svg id="themeIconMoon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
           </button>
+          <!-- Map Mode Toggle (Desktop) -->
+          <button id="mapModeBtnDesktop" class="w-full py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" title="Ganti Mode Peta (Utama / Satelit)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+          </button>
           <!-- Admin (hidden) -->
           <button id="adminBtn" class="w-full py-3 rounded-xl text-gray-500 dark:text-gray-400 hover:text-white hover:bg-red-600 dark:hover:bg-red-700 transition-colors flex justify-center hidden" title="Admin">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
@@ -607,6 +611,13 @@
           </div>
         </div>
 
+        <!-- Mobile floating map mode toggle (below search) -->
+        <div class="absolute top-20 right-4 z-[1050] md:hidden">
+          <button id="mapModeBtnFloating" class="w-11 h-11 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.15)] border border-white/60 dark:border-slate-700/60 flex items-center justify-center text-gray-600 dark:text-gray-300 transition-all active:scale-95 pointer-events-auto" title="Ganti Mode Peta (Utama / Satelit)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+          </button>
+        </div>
+
         <!-- Mobile top-right: Theme toggle button -->
         <div class="absolute top-4 right-4 z-[1050] flex items-center space-x-2 md:hidden">
           <button id="mobileThemeBtn" class="w-11 h-11 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.15)] border border-white/60 dark:border-slate-700/60 flex items-center justify-center text-gray-600 dark:text-gray-300 transition-all active:scale-95 pointer-events-auto">
@@ -627,7 +638,7 @@
           </div>
 
           <!-- Legend -->
-          <div class="bg-transparent backdrop-blur-md rounded-xl border border-slate-300 dark:border-white/30 p-3.5 w-36">
+          <div class="bg-transparent backdrop-blur-md rounded-xl border border-slate-300 dark:border-white/30 p-3.5 w-36" id="legendHUD">
             <h4 class="font-serif font-bold text-slate-800 dark:text-slate-200 mb-2 border-b border-slate-300 dark:border-white/30 pb-1.5 text-sm">Kategori</h4>
             <div class="flex flex-col space-y-2.5">
               <label class="flex items-center cursor-pointer group">

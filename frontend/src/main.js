@@ -71,30 +71,115 @@ document.addEventListener('DOMContentLoaded', () => {
     minZoom: 10
   }).setView([-4.0, 113.7000], 5);
 
-  let tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  // Define Base Layers
+  const cartoLightUrl = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+  const cartoDarkUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+  
+  // Create layers
+  let defaultLayer = L.tileLayer(document.documentElement.classList.contains('dark') ? cartoDarkUrl : cartoLightUrl, {
     attribution: '&copy; OpenStreetMap & CARTO',
     subdomains: 'abcd',
     maxZoom: 20
-  }).addTo(map);
+  });
+  
+  let satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    maxZoom: 18
+  });
+
+  // Add default layer to map
+  defaultLayer.addTo(map);
+
+  // Remove Leaflet default layer control, we will use our custom sidebar/menu buttons instead
+  let currentMapModeIndex = 0;
+  const mapModes = [
+    { name: 'Peta Utama', layer: defaultLayer },
+    { name: 'Satelit', layer: satelliteLayer }
+  ];
+
+  function toggleMapMode() {
+    // Remove current layer
+    map.removeLayer(mapModes[currentMapModeIndex].layer);
+    
+    // Increment index
+    currentMapModeIndex = (currentMapModeIndex + 1) % mapModes.length;
+    
+    // Add new layer
+    mapModes[currentMapModeIndex].layer.addTo(map);
+
+    // Optional: show a quick toast/alert to the user indicating the mode
+    const modeName = mapModes[currentMapModeIndex].name;
+    const toast = document.createElement('div');
+    toast.className = 'fixed top-24 left-1/2 -translate-x-1/2 bg-gray-900/80 text-white px-4 py-2 rounded-full text-xs z-[2000] shadow-lg transition-opacity duration-300';
+    toast.innerText = 'Mode Peta: ' + modeName;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('opacity-0');
+      setTimeout(() => toast.remove(), 300);
+    }, 2000);
+
+    updateHudTheme();
+  }
+
+  // Attach event listeners to our new buttons
+  const btnDesktop = document.getElementById('mapModeBtnDesktop');
+  const btnFloating = document.getElementById('mapModeBtnFloating');
+  
+  if (btnDesktop) btnDesktop.addEventListener('click', toggleMapMode);
+  if (btnFloating) btnFloating.addEventListener('click', toggleMapMode);
+
+  function updateHudTheme() {
+    const isSatellite = mapModes[currentMapModeIndex].name === 'Satelit';
+    const isGlobalDark = document.documentElement.classList.contains('dark');
+    
+    const counterHUD = document.getElementById('counterHUD');
+    const legendHUD = document.getElementById('legendHUD');
+    const cinematicWatermark = document.getElementById('cinematicWatermark');
+    const coordsHUD = document.getElementById('coordinatesControlHUD');
+    const zoomHUD = document.getElementById('zoomControlHUD');
+    
+    // If satellite mode or global dark mode, force HUDs to dark mode for readability
+    const shouldBeDark = isSatellite || isGlobalDark;
+    
+    if (counterHUD) {
+      if (shouldBeDark) counterHUD.classList.add('dark');
+      else counterHUD.classList.remove('dark');
+    }
+    
+    if (legendHUD) {
+      if (shouldBeDark) legendHUD.classList.add('dark');
+      else legendHUD.classList.remove('dark');
+    }
+    
+    if (cinematicWatermark) {
+      if (shouldBeDark) cinematicWatermark.classList.add('dark');
+      else cinematicWatermark.classList.remove('dark');
+    }
+    
+    if (coordsHUD) {
+      if (shouldBeDark) coordsHUD.classList.add('dark');
+      else coordsHUD.classList.remove('dark');
+    }
+    
+    if (zoomHUD) {
+      if (shouldBeDark) zoomHUD.classList.add('dark');
+      else zoomHUD.classList.remove('dark');
+    }
+  }
 
   let geojsonLayer = null;
 
   function setMapTheme(theme) {
-    map.removeLayer(tileLayer);
-    const url = theme === 'dark' 
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-    
-    tileLayer = L.tileLayer(url, {
-      attribution: '&copy; OpenStreetMap & CARTO',
-      subdomains: 'abcd',
-      maxZoom: 20
-    }).addTo(map);
+    // Only update the default layer's URL based on theme
+    const url = theme === 'dark' ? cartoDarkUrl : cartoLightUrl;
+    defaultLayer.setUrl(url);
 
     // Update GeoJSON style dynamically based on theme
     if (geojsonLayer) {
       geojsonLayer.setStyle(getGeoJSONStyle(theme));
     }
+
+    updateHudTheme();
   }
 
   function getGeoJSONStyle(theme) {
@@ -139,7 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
     options: { position: 'bottomright' },
     onAdd: function () {
       this._container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-      this._container.className += ' hidden md:block px-3 py-1 text-xs font-mono font-bold text-slate-700 dark:text-slate-200 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)] dark:drop-shadow-md mb-6 mr-4 pointer-events-none';
+      this._container.id = 'coordinatesControlHUD';
+      this._container.className += ' hidden md:block px-3 py-1 text-xs font-mono font-bold text-slate-700 dark:text-slate-200 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)] dark:drop-shadow-md mb-6 mr-4 pointer-events-none transition-colors duration-300';
       this._container.innerHTML = 'Hover on map...';
       return this._container;
     },
@@ -162,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
       container.style.border = 'none';
       container.style.boxShadow = 'none';
       container.innerHTML = `
-        <div class="hidden md:flex flex-col space-y-2 mr-2 mb-2">
+        <div id="zoomControlHUD" class="hidden md:flex flex-col space-y-2 mr-2 mb-2 transition-colors duration-300">
           <button id="mapZoomInBtn" class="w-10 h-10 bg-white/80 dark:bg-transparent backdrop-blur-md border border-slate-300 dark:border-white/30 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-white/90 dark:hover:bg-slate-800/50 transition-all focus:outline-none">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
           </button>
