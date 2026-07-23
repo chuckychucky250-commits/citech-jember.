@@ -198,6 +198,74 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
+  // --- SPATIAL ANIMATION HELPERS ---
+  // Dedicated layer for timeline spatial animations (separate from activeOverlay)
+  let spatialAnimationLayer = null;
+
+  function clearSpatialAnimation() {
+    if (spatialAnimationLayer) {
+      map.removeLayer(spatialAnimationLayer);
+      spatialAnimationLayer = null;
+    }
+  }
+
+  // Render category-adaptive spatial animation when milestone changes
+  function renderSpatialMilestoneAnim(data, milestoneIdx) {
+    clearSpatialAnimation();
+    const m = data.milestones[milestoneIdx];
+    if (!m) return;
+    const loc = m.focusLoc || data.loc;
+    const layers = [];
+    const category = data.category ? data.category.toLowerCase() : '';
+
+    if (category === 'pergerakan') {
+      // Animated dashed polyline flow lines
+      const coords = (m.routeCoords && m.routeCoords.length >= 2) ? m.routeCoords : [loc, [loc[0] + 0.005, loc[1] + 0.005]];
+      layers.push(L.polyline(coords, {
+        color: data.color,
+        weight: 3,
+        opacity: 0.9,
+        dashArray: '10, 8',
+        className: 'spatial-dash-flow event-route'
+      }));
+      // Dot at start and end
+      layers.push(L.circleMarker(coords[0], { radius: 6, color: data.color, fillColor: data.color, fillOpacity: 1, weight: 2 }));
+      layers.push(L.circleMarker(coords[coords.length - 1], { radius: 5, color: data.color, fillColor: '#fff', fillOpacity: 1, weight: 2 }));
+    } else if (category === 'bencana' || category === 'tragedi') {
+      // Pulsing concentric circles (ripple radiator)
+      const radii = [m.polygonRadius || 300, (m.polygonRadius || 300) * 0.55, (m.polygonRadius || 300) * 0.25];
+      radii.forEach((r, i) => {
+        layers.push(L.circle(loc, {
+          radius: r,
+          color: data.color,
+          fillColor: data.color,
+          fillOpacity: 0.07 + (i * 0.07),
+          weight: i === 0 ? 2 : 1.5,
+          opacity: 0.7 - (i * 0.1),
+          className: 'spatial-ripple-circle event-polygon'
+        }));
+      });
+    } else {
+      // kasus / diplomasi / default: glowing highlight circle
+      layers.push(L.circle(loc, {
+        radius: m.polygonRadius || 200,
+        color: data.color,
+        fillColor: data.color,
+        fillOpacity: 0.18,
+        weight: 2.5,
+        opacity: 0.95,
+        className: 'spatial-glow-marker event-polygon'
+      }));
+    }
+
+    if (layers.length > 0) {
+      spatialAnimationLayer = L.layerGroup(layers).addTo(map);
+    }
+
+    // Smooth flyTo focus location
+    map.flyTo(loc, Math.max(map.getZoom(), 13), { duration: 1.2, easeLinearity: 0.3 });
+  }
+
   if(document.documentElement.classList.contains('dark')) setMapTheme('dark');
 
   // Load GeoJSON Boundaries
@@ -438,10 +506,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openPanel(data) {
     closeAllPanels('eventPanel');
-    if (panelContent) panelContent.classList.remove('hidden');
+    if (panelContent) {
+      panelContent.classList.remove('hidden');
+      panelContent.classList.remove('opacity-0');
+    }
     const footer = document.getElementById('panelStickyFooter');
-    if (footer) footer.classList.remove('hidden');
-    if (panelEmptyState) panelEmptyState.classList.add('hidden');
+    if (footer) {
+      footer.classList.remove('hidden');
+      footer.classList.remove('opacity-0');
+    }
+    if (panelEmptyState) {
+      panelEmptyState.classList.add('hidden');
+      panelEmptyState.classList.add('opacity-0');
+    }
 
     const onboardingToast = document.getElementById('onboardingToast');
     if(onboardingToast) onboardingToast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
@@ -702,16 +779,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const m = data.milestones[milestoneIdx];
     if (!m) return;
     
-    // Update stats
+    // Update stats with micro-flash animation
     const stat1Value = document.getElementById('panelKorban');
-    if (stat1Value) stat1Value.textContent = m.stat1V;
+    if (stat1Value) {
+      stat1Value.style.opacity = '0';
+      stat1Value.style.transform = 'translateY(-4px)';
+      setTimeout(() => {
+        stat1Value.textContent = m.stat1V;
+        stat1Value.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        stat1Value.style.opacity = '1';
+        stat1Value.style.transform = 'translateY(0)';
+      }, 120);
+    }
     
     const stat2Value = document.getElementById('panelLuasan');
-    if (stat2Value) stat2Value.textContent = m.stat2V;
+    if (stat2Value) {
+      stat2Value.style.opacity = '0';
+      stat2Value.style.transform = 'translateY(-4px)';
+      setTimeout(() => {
+        stat2Value.textContent = m.stat2V;
+        stat2Value.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        stat2Value.style.opacity = '1';
+        stat2Value.style.transform = 'translateY(0)';
+      }, 180);
+    }
     
     // Update narasi
     const tlNarasi = document.getElementById('timelineMilestoneNarasi');
-    if (tlNarasi) tlNarasi.textContent = m.narasi;
+    if (tlNarasi) {
+      tlNarasi.style.opacity = '0';
+      setTimeout(() => {
+        tlNarasi.textContent = m.narasi;
+        tlNarasi.style.transition = 'opacity 0.3s ease';
+        tlNarasi.style.opacity = '1';
+      }, 150);
+    }
     
     const tlLabel = document.getElementById('timelineMilestoneLabel');
     if (tlLabel) tlLabel.textContent = m.tag;
@@ -750,8 +852,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     
-    // Update map overlay
+    // Update map overlay (static renderType from data)
     updateMapOverlay(data, milestoneIdx);
+    // POIN 1: Category-adaptive spatial animation with flyTo
+    renderSpatialMilestoneAnim(data, milestoneIdx);
   }
 
   function renderTimeline(data, activeIdx) {
@@ -896,6 +1000,22 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const stat1Unit = document.getElementById('stat1Unit');
       if(stat1Unit) stat1Unit.textContent = activeData.stat1Unit || 'Jiwa';
+      
+      // POIN 4: Dynamic stat color semantics — no misleading red for non-casualty events
+      const stat1Wrap = document.getElementById('panelKorbanWrap');
+      if (stat1Wrap) {
+        const cat = (activeData.category || '').toLowerCase();
+        stat1Wrap.className = stat1Wrap.className
+          .replace(/text-(?:rose|red|emerald|green|slate|gray)-\d+/g, '')
+          .trim();
+        if (cat === 'tragedi' || cat === 'bencana') {
+          stat1Wrap.classList.add('text-rose-500', 'dark:text-rose-400');
+        } else if (cat === 'pergerakan') {
+          stat1Wrap.classList.add('text-emerald-600', 'dark:text-emerald-400');
+        } else {
+          stat1Wrap.classList.add('text-slate-600', 'dark:text-slate-200');
+        }
+      }
       
       const elStat2Label = document.getElementById('stat2Label');
       if(elStat2Label) elStat2Label.textContent = activeData.stat2Label || 'Area Terdampak';
@@ -1665,6 +1785,44 @@ document.addEventListener('DOMContentLoaded', () => {
     return text.replace(re, '<mark class="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 rounded px-0.5">$1</mark>');
   }
 
+  // POIN 2: fitBounds helper for multi-result search
+  function fitMapToResults(matchedEvents) {
+    if (!matchedEvents || matchedEvents.length === 0) return;
+    if (matchedEvents.length === 1) {
+      openPanel(matchedEvents[0]);
+      return;
+    }
+    const bounds = L.latLngBounds(matchedEvents.map(e => e.loc));
+    const isMobile = window.innerWidth < 768;
+    map.fitBounds(bounds, {
+      paddingTopLeft: isMobile ? [20, 60] : [60, 80],
+      paddingBottomRight: isMobile ? [20, 80] : [460, 60],
+      maxZoom: 14,
+      animate: true,
+      duration: 1.2
+    });
+  }
+
+  // POIN 3: Unified search execution function
+  function performSearch(query) {
+    if (!query || !query.trim()) return;
+    const q = query.toLowerCase();
+    const matches = eventsData.filter(e =>
+      e.title.toLowerCase().includes(q) ||
+      e.year.includes(q) ||
+      e.category.toLowerCase().includes(q)
+    );
+    if (matches.length === 0) return;
+    if (matches.length === 1) {
+      openPanel(matches[0]);
+      if (searchInput) searchInput.value = matches[0].title;
+      if (searchSuggestions) searchSuggestions.classList.add('hidden');
+    } else {
+      fitMapToResults(matches);
+      if (searchSuggestions) searchSuggestions.classList.add('hidden');
+    }
+  }
+
   function showSuggestions(query) {
     if (!query.trim()) {
       searchSuggestions.classList.add('hidden');
@@ -1684,7 +1842,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     searchSuggestions.innerHTML = matches.map(evt => `
-      <button class="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-3 transition-colors suggestion-item border-b border-gray-100 dark:border-gray-800 last:border-0" data-id="${evt.id}">
+      <button class="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center space-x-3 transition-all duration-200 suggestion-item border-b border-gray-100 dark:border-gray-800 last:border-0" data-id="${evt.id}">
         <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color:${evt.color}"></span>
         <div class="flex-1 min-w-0">
           <p class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">${highlightMatch(evt.title, query)}</p>
@@ -1718,7 +1876,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.target.value) showSuggestions(e.target.value);
     });
     searchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Enter') {
+        performSearch(searchInput.value);
+      } else if (e.key === 'Escape') {
         searchSuggestions.classList.add('hidden');
         searchInput.blur();
       }
@@ -1727,6 +1887,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!searchInput.closest('.relative').contains(e.target)) {
         searchSuggestions.classList.add('hidden');
       }
+    });
+  }
+
+  // POIN 3: Search submit button (kaca pembesar) click event
+  const searchSubmitBtn = document.getElementById('searchSubmitBtn');
+  if (searchSubmitBtn && searchInput) {
+    searchSubmitBtn.addEventListener('click', () => {
+      performSearch(searchInput.value);
     });
   }
 
@@ -2200,9 +2368,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const pEmptyState = document.getElementById('panelEmptyState');
     const pStickyFooter = document.getElementById('panelStickyFooter');
     
-    if (pContent) pContent.classList.add('hidden');
-    if (pStickyFooter) pStickyFooter.classList.add('hidden');
-    if (pEmptyState) pEmptyState.classList.remove('hidden');
+    if (pContent) {
+      pContent.classList.add('opacity-0');
+      setTimeout(() => pContent.classList.add('hidden'), 350);
+    }
+    if (pStickyFooter) {
+      pStickyFooter.classList.add('opacity-0');
+      setTimeout(() => pStickyFooter.classList.add('hidden'), 350);
+    }
+    if (pEmptyState) {
+      setTimeout(() => {
+        pEmptyState.classList.remove('hidden');
+        pEmptyState.classList.remove('opacity-0');
+      }, 350);
+    }
     
     if (activePolygon) {
       map.removeLayer(activePolygon);
@@ -2212,15 +2391,50 @@ document.addEventListener('DOMContentLoaded', () => {
       map.removeLayer(activeOverlay);
       activeOverlay = null;
     }
+    // Clear spatial animation layer too
+    clearSpatialAnimation();
     
-    // Reset map view to default
-    if (typeof jemberCenter !== 'undefined') {
+    // POIN 6: Desktop resets view; mobile STAYS on last position
+    if (window.innerWidth >= 768 && typeof jemberCenter !== 'undefined') {
       map.flyTo(jemberCenter, 11, {
         duration: 1.5,
         easeLinearity: 0.25
       });
     }
   }
+
+  // POIN 6: Mobile FAB Reset Peta
+  const resetMapFAB = document.createElement('button');
+  resetMapFAB.id = 'resetMapFAB';
+  resetMapFAB.innerHTML = `
+    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+    Lihat Semua
+  `;
+  resetMapFAB.className = 'fixed bottom-24 right-4 z-[1100] md:hidden flex items-center px-4 py-2.5 rounded-full text-xs font-bold text-white shadow-xl transition-all duration-300 opacity-0 pointer-events-none';
+  resetMapFAB.style.background = 'linear-gradient(135deg, #1e40af 0%, #0e7490 100%)';
+  resetMapFAB.style.boxShadow = '0 8px 24px rgba(14,116,144,0.45)';
+  document.body.appendChild(resetMapFAB);
+
+  function updateResetFABVisibility() {
+    const isMobile = window.innerWidth < 768;
+    const isZoomedIn = map.getZoom() > 12;
+    if (isMobile && isZoomedIn) {
+      resetMapFAB.classList.remove('opacity-0', 'pointer-events-none');
+      resetMapFAB.classList.add('opacity-100');
+    } else {
+      resetMapFAB.classList.add('opacity-0', 'pointer-events-none');
+      resetMapFAB.classList.remove('opacity-100');
+    }
+  }
+
+  map.on('zoomend', updateResetFABVisibility);
+  window.addEventListener('resize', updateResetFABVisibility);
+
+  resetMapFAB.addEventListener('click', () => {
+    map.flyTo(jemberCenter, 11, { duration: 1.5, easeLinearity: 0.25 });
+    resetMapFAB.classList.add('opacity-0', 'pointer-events-none');
+    resetMapFAB.classList.remove('opacity-100');
+  });
 
   // Close event panel — also reset mobile sheet state
   const closePanelBtnFixed = document.getElementById('closePanelBtn');
