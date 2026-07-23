@@ -10,8 +10,8 @@
   <meta name="theme-color" content="#111827" />
   <title>Arsip Memori Sejarah Jember</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <script type="module" crossorigin src="/citech-jember./assets/index-C3eg8Au0.js"></script>
-  <link rel="stylesheet" crossorigin href="/citech-jember./assets/index-DDPhtIvI.css">
+  <script type="module" crossorigin src="/citech-jember./assets/index-Cohr2EK8.js"></script>
+  <link rel="stylesheet" crossorigin href="/citech-jember./assets/index-DR2OB9DA.css">
 </head>
 
 <body
@@ -514,7 +514,7 @@
 
   <!-- "Laporkan Lokasi Baru" Panel — Mobile: full screen bottom sheet / Desktop: left side panel -->
   <div id="reportPanel"
-    class="fixed inset-x-0 bottom-0 md:inset-y-0 md:left-16 md:right-auto h-[95vh] md:h-full w-full md:w-[380px] bg-white dark:bg-gray-900 shadow-2xl z-[1200] transform translate-y-full md:translate-y-0 md:-translate-x-full transition-all duration-500 flex flex-col md:border-r border-gray-200 dark:border-gray-800 rounded-t-3xl md:rounded-none">
+    class="fixed inset-x-0 bottom-0 md:inset-y-0 md:left-16 md:right-auto h-[95vh] md:h-full w-full md:w-[380px] bg-white dark:bg-gray-900 shadow-2xl z-[1200] md:z-[1040] transform translate-y-full md:translate-y-0 md:-translate-x-full transition-all duration-500 flex flex-col md:border-r border-gray-200 dark:border-gray-800 rounded-t-3xl md:rounded-none">
     <!-- Mobile Handle -->
     <div class="w-full flex justify-center py-3 md:hidden cursor-pointer" id="reportPanelHandle">
       <div class="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
@@ -711,7 +711,7 @@
 
   <!-- Personal Panel (Mobile: bottom sheet modal, Desktop: left slide-out) -->
   <div id="personalPanel"
-    class="fixed inset-x-0 bottom-0 md:inset-auto md:left-16 md:top-0 md:h-full h-[88vh] w-full md:w-80 bg-white/98 dark:bg-gray-900/98 backdrop-blur-md shadow-2xl z-[1200] transform translate-y-full md:translate-y-0 md:-translate-x-full transition-all duration-500 flex flex-col md:border-r border-gray-200 dark:border-gray-800 rounded-t-3xl md:rounded-none">
+    class="fixed inset-x-0 bottom-0 md:inset-auto md:left-16 md:top-0 md:h-full h-[88vh] w-full md:w-80 bg-white/98 dark:bg-gray-900/98 backdrop-blur-md shadow-2xl z-[1200] md:z-[1040] transform translate-y-full md:translate-y-0 md:-translate-x-full transition-all duration-500 flex flex-col md:border-r border-gray-200 dark:border-gray-800 rounded-t-3xl md:rounded-none">
     <!-- Mobile Handle -->
     <div class="w-full flex justify-center py-3 md:hidden cursor-pointer">
       <div class="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
@@ -774,7 +774,7 @@
       </div>
 
       <!-- Master Library -->
-      <div id="contentLibrary" class="space-y-4 hidden flex flex-col h-full">
+      <div id="contentLibrary" class="space-y-3 hidden block">
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Filter Katalog</span>
         </div>
@@ -796,7 +796,7 @@
             </select>
           </div>
         </div>
-        <div id="libraryList" class="flex-1 overflow-y-auto space-y-3 pb-10">
+        <div id="libraryList" class="space-y-2">
           <!-- Injected by JS -->
         </div>
       </div>
@@ -1039,7 +1039,7 @@
 
       <!-- Event Information Panel -->
       <div id="eventPanel"
-        class="fixed bottom-0 left-0 right-0 md:right-0 md:top-0 md:left-auto md:bottom-auto h-[88vh] md:h-full w-full md:w-[440px] lg:w-[480px] bg-white dark:bg-gray-900 shadow-2xl z-[1200] transform translate-y-full md:translate-y-0 md:translate-x-full transition-transform duration-500 ease-in-out flex flex-col md:border-l border-t md:border-t-0 border-gray-200 dark:border-gray-800 rounded-t-3xl md:rounded-none">
+        class="fixed bottom-0 left-0 right-0 md:right-0 md:top-0 md:left-auto md:bottom-auto h-[50vh] md:h-full w-full md:w-[440px] lg:w-[480px] bg-white dark:bg-gray-900 shadow-2xl z-[1200] transform translate-y-full md:translate-y-0 md:translate-x-full transition-transform duration-500 ease-in-out flex flex-col md:border-l border-t md:border-t-0 border-gray-200 dark:border-gray-800 rounded-t-3xl md:rounded-none">
         <!-- Mobile Handle -->
         <div class="w-full flex justify-center py-3 md:hidden cursor-pointer shrink-0" id="mobilePanelHandle">
           <div class="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
@@ -1486,14 +1486,14 @@
 
   <!-- Mobile Legend Sheet -->
   <div id="mobileLegendSheet"
-    class="fixed inset-x-0 bottom-0 z-[1200] md:hidden bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 rounded-t-3xl shadow-2xl transform translate-y-full transition-all duration-400 pb-24"
-    style="padding-bottom: max(env(safe-area-inset-bottom, 0px), 6rem);">
+    class="fixed inset-x-0 bottom-0 z-[1200] md:hidden bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 rounded-t-3xl shadow-2xl transform translate-y-full transition-all duration-400 pb-8"
+    style="padding-bottom: max(env(safe-area-inset-bottom, 16px), 2rem);">
     <div class="flex justify-center pt-3 pb-2">
       <div class="w-10 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
     </div>
-    <div class="px-6 pb-6">
+    <div class="px-4 pb-4">
       <div class="flex justify-between items-center mb-3">
-        <h3 class="font-serif font-bold text-gray-800 dark:text-white text-sm">Filter Kategori</h3>
+        <h3 class="font-serif font-bold text-gray-800 dark:text-white text-base">Filter Kategori</h3>
         <button id="closeLegendSheetBtn"
           class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors focus:outline-none p-1 -mr-1">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1501,34 +1501,34 @@
           </svg>
         </button>
       </div>
-      <div class="grid grid-cols-2 gap-2.5">
+      <div class="grid grid-cols-2 gap-2">
         <label
-          class="flex items-center p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer border-2 border-transparent peer-checked:border-red-500 transition-all">
+          class="flex items-center justify-center gap-2 py-2 px-3 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer opacity-50 has-[:checked]:opacity-100 active:scale-95 transition-all select-none">
           <input type="checkbox" checked class="hidden peer filter-checkbox-mobile filter-checkbox" value="tragedi">
           <span
-            class="w-3 h-3 rounded-full bg-[#DC2626] mr-2 shrink-0 opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse transition-opacity"></span>
-          <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Tragedi</span>
+            class="w-3.5 h-3.5 rounded-full bg-[#DC2626] shrink-0 opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse peer-checked:scale-110 transition-all"></span>
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none mt-[1px]">Tragedi</span>
         </label>
         <label
-          class="flex items-center p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer transition-all border-2 border-transparent peer-checked:border-purple-500">
+          class="flex items-center justify-center gap-2 py-2 px-3 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer opacity-50 has-[:checked]:opacity-100 active:scale-95 transition-all select-none">
           <input type="checkbox" checked class="hidden peer filter-checkbox-mobile filter-checkbox" value="bencana">
           <span
-            class="w-3 h-3 rounded-full bg-[#9333EA] mr-2 shrink-0 opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse transition-opacity"></span>
-          <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Bencana</span>
+            class="w-3.5 h-3.5 rounded-full bg-[#9333EA] shrink-0 opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse peer-checked:scale-110 transition-all"></span>
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none mt-[1px]">Bencana</span>
         </label>
         <label
-          class="flex items-center p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer transition-all border-2 border-transparent peer-checked:border-orange-500">
+          class="flex items-center justify-center gap-2 py-2 px-3 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer opacity-50 has-[:checked]:opacity-100 active:scale-95 transition-all select-none">
           <input type="checkbox" checked class="hidden peer filter-checkbox-mobile filter-checkbox" value="kasus">
           <span
-            class="w-3 h-3 rounded-full bg-orange-500 mr-2 shrink-0 opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse transition-opacity"></span>
-          <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Kasus</span>
+            class="w-3.5 h-3.5 rounded-full bg-orange-500 shrink-0 opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse peer-checked:scale-110 transition-all"></span>
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none mt-[1px]">Kasus</span>
         </label>
         <label
-          class="flex items-center p-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer transition-all border-2 border-transparent peer-checked:border-blue-600">
+          class="flex items-center justify-center gap-2 py-2 px-3 bg-gray-50 dark:bg-gray-800 rounded-xl cursor-pointer opacity-50 has-[:checked]:opacity-100 active:scale-95 transition-all select-none">
           <input type="checkbox" checked class="hidden peer filter-checkbox-mobile filter-checkbox" value="pergerakan">
           <span
-            class="w-3 h-3 rounded-full bg-blue-700 mr-2 shrink-0 opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse transition-opacity"></span>
-          <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Pergerakan</span>
+            class="w-3.5 h-3.5 rounded-full bg-blue-700 shrink-0 opacity-40 peer-checked:opacity-100 peer-checked:animate-pulse peer-checked:scale-110 transition-all"></span>
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300 leading-none mt-[1px]">Pergerakan</span>
         </label>
       </div>
     </div>
