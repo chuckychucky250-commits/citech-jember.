@@ -2,8 +2,8 @@
   {
     "id": "evt_001",
     "loc": [
-      -8.17,
-      113.7
+      -8.276,
+      113.376
     ],
     "title": "Tragedi Kencong",
     "category": "tragedi",
@@ -540,105 +540,6 @@
     ],
     "chartLabel": "Akumulasi Korban",
     "chartColor": "#9333ea"
-  },
-  {
-    "id": "evt_005",
-    "loc": [
-      -8.18,
-      113.62
-    ],
-    "title": "Sengketa Pesisir Puger",
-    "category": "kasus",
-    "color": "#F97316",
-    "year": "2013",
-    "renderType": "point",
-    "heroImage": "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=800&grayscale=true",
-    "quote": "\"Laut adalah rumah kami. Aturan baru zonasi penangkapan membuat nelayan kecil kesulitan.\"",
-    "quoteAuthor": "— Tokoh Nelayan",
-    "desc1": "Penerapan zonasi eksploitasi pesisir memicu ketegangan antara nelayan tradisional dan armada penangkap ikan berskala industri.",
-    "desc2": "Resolusi dicapai berupa perlindungan radius tangkap khusus untuk nelayan perahu kecil.",
-    "korban": 210,
-    "luasan": "12.0 Ha",
-    "gambar": "./images/puger.jpg",
-    "ringkasan": "Ketegangan nelayan tradisional dengan kapal industri berskala besar terkait batas zonasi penangkapan di Puger.",
-    "milestones": [
-      {
-        "label": "Aturan Baru",
-        "tag": "Pemicu Konflik",
-        "narasi": "Peraturan baru zonasi penangkapan diumumkan. 210 kapal nelayan kecil terancam kehilangan wilayah tangkap tradisional.",
-        "stat1V": "210",
-        "stat2V": "12",
-        "polygonRadius": 400,
-        "spatialDesc": [
-          {
-            "loc": [
-              -8.18,
-              113.62
-            ],
-            "title": "Zona Pesisir Pantai Puger (Radius 400m)",
-            "desc": "Konflik ini dipicu oleh kebijakan yang mengizinkan kapal industri besar masuk ke wilayah laut dangkal. Area dalam radius 400 meter dari garis pantai Puger ini merupakan kawasan tangkap utama dan satu-satunya bagi ratusan nelayan perahu kecil tradisional. Kebijakan ini langsung memicu kemarahan karena mengancam mata pencaharian warga."
-          }
-        ]
-      },
-      {
-        "label": "Blokade",
-        "tag": "Puncak Peristiwa",
-        "narasi": "Nelayan memblokade dermaga selama 5 hari. Aktivitas bongkar muat terhenti total. Mediasi diminta.",
-        "stat1V": "210",
-        "stat2V": "12",
-        "polygonRadius": 700,
-        "spatialDesc": [
-          {
-            "loc": [
-              -8.18,
-              113.62
-            ],
-            "title": "Dermaga & Pusat Pelelangan Ikan (Radius 700m)",
-            "desc": "Sebagai bentuk protes keras, nelayan tradisional melakukan aksi mogok dan memperluas area pendudukan hingga radius 700 meter. Mereka menyandarkan perahu-perahu kecil mereka sedemikian rupa untuk memblokade seluruh akses masuk dan keluar Pelabuhan Puger. Aktivitas pelelangan ikan terhenti total."
-          }
-        ]
-      },
-      {
-        "label": "Kesepakatan",
-        "tag": "Resolusi",
-        "narasi": "Zona perlindungan nelayan tradisional 4 mil dari pantai ditetapkan. Blokade dicabut.",
-        "stat1V": "180",
-        "stat2V": "8",
-        "polygonRadius": 250,
-        "spatialDesc": [
-          {
-            "loc": [
-              -8.18,
-              113.62
-            ],
-            "title": "Zona Perlindungan Tradisional (Radius 4 Mil)",
-            "desc": "Melalui mediasi yang alot bersama otoritas keamanan, dicapai kesepakatan batas wilayah yang adil. Area laut sejauh 4 mil laut (divisualisasikan mengecil) ditetapkan secara hukum sebagai Zona Perlindungan khusus nelayan tradisional yang haram dimasuki oleh kapal skala industri."
-          }
-        ]
-      }
-    ],
-    "peakMilestoneIdx": 1,
-    "stat1Label": "Kapal Nelayan",
-    "stat1Unit": "Unit",
-    "stat2Label": "Panjang Garis",
-    "stat2Unit": "Km",
-    "chartType": "bar",
-    "chartLabels": [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Mei"
-    ],
-    "chartData": [
-      210,
-      210,
-      180,
-      150,
-      100
-    ],
-    "chartLabel": "Kapal Terdampak",
-    "chartColor": "#F97316"
   },
   {
     "id": "evt_006",
@@ -1553,8 +1454,8 @@
   {
     "id": "evt_016",
     "loc": [
-      -8.099,
-      113.888
+      -8.23,
+      113.84
     ],
     "title": "Kebakaran Pabrik Kayu Sempolan",
     "category": "tragedi",
