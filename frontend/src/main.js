@@ -578,7 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
         expandBtn.title = "Perbesar Panel";
       }
     }
-    eventPanel.classList.remove('translate-x-full'); // fallback for grading
+    // Removed translate-x-full here because it causes diagonal animation on mobile
 
     // Calculate offset for map center
     const targetPoint = map.project(data.loc, 15);
@@ -2374,13 +2374,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.innerWidth >= 768) {
       ep.style.height = ''; // Clear JS-enforced height to let CSS classes rule
       if (ep.classList.contains('translate-y-full')) {
-        ep.classList.add('translate-x-full');
+        ep.classList.add('md:translate-x-full');
         ep.classList.remove('translate-y-full');
       }
     } else {
-      if (ep.classList.contains('translate-x-full')) {
+      if (ep.classList.contains('md:translate-x-full')) {
         ep.classList.add('translate-y-full');
-        ep.classList.remove('translate-x-full');
+        ep.classList.remove('md:translate-x-full');
       }
     }
   });
@@ -2388,7 +2388,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function closePanel() {
     const ep = document.getElementById('eventPanel');
     if (ep) {
-      ep.classList.add('translate-x-full'); // base
+      // Removed base translate-x-full here so mobile doesn't fly diagonally
       if (window.innerWidth >= 768) {
         ep.classList.add('md:translate-x-full');
       } else {
