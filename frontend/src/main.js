@@ -209,6 +209,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // POIN 1: Peta offset agar marker tidak tertutup panel kanan di desktop
+  function flyToWithOffset(latlng, zoom) {
+    const isDesktop = window.innerWidth >= 768;
+    if (!isDesktop) {
+      map.flyTo(latlng, zoom, { duration: 1.2, easeLinearity: 0.3 });
+      return;
+    }
+    
+    // Desktop offset calculation
+    // Panel kanan lebarnya sekitar 420px. Geser target X kamera ke KANAN sebanyak 210px,
+    // yang akan mengakibatkan marker di peta bergeser ke KIRI layar (menjauhi panel).
+    const targetPoint = map.project(latlng, zoom);
+    targetPoint.x += 210; // offset +210px
+    const targetLatLng = map.unproject(targetPoint, zoom);
+    
+    map.flyTo(targetLatLng, zoom, { duration: 1.2, easeLinearity: 0.3 });
+  }
+
   // Render category-adaptive spatial animation when milestone changes
   function renderSpatialMilestoneAnim(data, milestoneIdx) {
     clearSpatialAnimation();
@@ -262,8 +280,8 @@ document.addEventListener('DOMContentLoaded', () => {
       spatialAnimationLayer = L.layerGroup(layers).addTo(map);
     }
 
-    // Smooth flyTo focus location
-    map.flyTo(loc, Math.max(map.getZoom(), 13), { duration: 1.2, easeLinearity: 0.3 });
+    // Smooth flyTo focus location dengan offset
+    flyToWithOffset(loc, Math.max(map.getZoom(), 13));
   }
 
   if(document.documentElement.classList.contains('dark')) setMapTheme('dark');
@@ -477,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- 4. MULTI-WORKSPACE TABS ---
   const eventPanel = document.getElementById('eventPanel');
-  const panelContent = document.getElementById('panelContent');
+  const panelContent = document.getElementById('panelContentArea');
   const panelEmptyState = document.getElementById('panelEmptyState');
   const approvedContributionsArea = document.getElementById('approvedContributionsArea');
   const approvedList = document.getElementById('approvedList');
@@ -1001,22 +1019,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const stat1Unit = document.getElementById('stat1Unit');
       if(stat1Unit) stat1Unit.textContent = activeData.stat1Unit || 'Jiwa';
       
-      // POIN 4: Dynamic stat color semantics — no misleading red for non-casualty events
-      const stat1Wrap = document.getElementById('panelKorbanWrap');
-      if (stat1Wrap) {
-        const cat = (activeData.category || '').toLowerCase();
-        stat1Wrap.className = stat1Wrap.className
-          .replace(/text-(?:rose|red|emerald|green|slate|gray)-\d+/g, '')
-          .trim();
-        if (cat === 'tragedi' || cat === 'bencana') {
-          stat1Wrap.classList.add('text-rose-500', 'dark:text-rose-400');
-        } else if (cat === 'pergerakan') {
-          stat1Wrap.classList.add('text-emerald-600', 'dark:text-emerald-400');
-        } else {
-          stat1Wrap.classList.add('text-slate-600', 'dark:text-slate-200');
-        }
-      }
-      
       const elStat2Label = document.getElementById('stat2Label');
       if(elStat2Label) elStat2Label.textContent = activeData.stat2Label || 'Area Terdampak';
       
@@ -1025,6 +1027,37 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const stat2Unit = document.getElementById('stat2Unit');
       if(stat2Unit) stat2Unit.textContent = activeData.stat2Unit || 'Ha';
+
+      // POIN 2: Dynamic Color Semantics & Status Badges based on label context
+      function applyDynamicStatStyle(wrapId, labelId) {
+        const wrap = document.getElementById(wrapId);
+        const labelEl = document.getElementById(labelId);
+        if (!wrap || !labelEl) return;
+        
+        const text = (labelEl.textContent || '').toLowerCase();
+        // Remove all previous color/bg/border classes
+        wrap.className = wrap.className.replace(/(?:text|bg|border)-(?:red|blue|emerald|amber|orange|slate|gray)-(?:\d+|transparent)(?:\/\d+)?/g, '').trim();
+        wrap.classList.remove('px-3', 'py-1', 'rounded-lg', 'border');
+
+        if (text.match(/korban|luka|pengungsi|jiwa/)) {
+          wrap.classList.add('text-red-500', 'dark:text-red-400');
+        } else if (text.match(/partisipan|demo|peserta|massa/)) {
+          wrap.classList.add('text-blue-500', 'dark:text-blue-400');
+        } else if (text.match(/kerugian|uang|dana|rp/)) {
+          wrap.classList.add('text-emerald-500', 'dark:text-emerald-400');
+        } else if (text.match(/tersangka|berkas|bukti|sita|hukum/)) {
+          wrap.classList.add('text-orange-500', 'dark:text-orange-400');
+        } else {
+          // Default Netral
+          wrap.classList.add('text-slate-600', 'dark:text-slate-200');
+        }
+      }
+      
+      applyDynamicStatStyle('panelKorbanWrap', 'stat1Label');
+      applyDynamicStatStyle('panelLuasanWrap', 'stat2Label');
+      
+      // Highlight selected tab visually
+      document.querySelectorAll('.archive-tab-btn').forEach(btn => {});
       
       const elEventQuote = document.getElementById('eventQuote');
       if(elEventQuote) elEventQuote.textContent = activeData.quote || '"Data historis Jember"';
@@ -2364,7 +2397,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Hide panel content/footer explicitly when closed
-    const pContent = document.getElementById('panelContent');
+    const pContent = document.getElementById('panelContentArea');
     const pEmptyState = document.getElementById('panelEmptyState');
     const pStickyFooter = document.getElementById('panelStickyFooter');
     
@@ -2383,6 +2416,31 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 350);
     }
     
+
+    
+    // Layer animasi JANGAN dihapus di sini (dipertahankan saat panel dilipat)
+    
+    // POIN 6: Desktop resets view; mobile RE-CENTERS to active event
+    if (window.innerWidth >= 768 && typeof jemberCenter !== 'undefined') {
+      map.flyTo(jemberCenter, 11, {
+        duration: 1.5,
+        easeLinearity: 0.25
+      });
+    } else {
+      // Mobile: Re-center to active event if exists
+      if (activeTabId) {
+        const activeData = eventsData.find(e => e.id === activeTabId);
+        if (activeData && activeData.loc) {
+          map.flyTo(activeData.loc, Math.max(map.getZoom(), 12), {
+            duration: 1.0,
+            easeLinearity: 0.25
+          });
+        }
+      }
+    }
+  }
+
+  function clearActiveState() {
     if (activePolygon) {
       map.removeLayer(activePolygon);
       activePolygon = null;
@@ -2391,17 +2449,16 @@ document.addEventListener('DOMContentLoaded', () => {
       map.removeLayer(activeOverlay);
       activeOverlay = null;
     }
-    // Clear spatial animation layer too
     clearSpatialAnimation();
-    
-    // POIN 6: Desktop resets view; mobile STAYS on last position
-    if (window.innerWidth >= 768 && typeof jemberCenter !== 'undefined') {
-      map.flyTo(jemberCenter, 11, {
-        duration: 1.5,
-        easeLinearity: 0.25
-      });
-    }
+    activeTabId = null;
   }
+  
+  // Reset state when clicking empty map area
+  map.on('click', (e) => {
+    if (reportMode) return;
+    clearActiveState();
+    closePanel();
+  });
 
   // POIN 6: Mobile FAB Reset Peta
   const resetMapFAB = document.createElement('button');
@@ -2431,6 +2488,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', updateResetFABVisibility);
 
   resetMapFAB.addEventListener('click', () => {
+    clearActiveState();
+    closePanel();
     map.flyTo(jemberCenter, 11, { duration: 1.5, easeLinearity: 0.25 });
     resetMapFAB.classList.add('opacity-0', 'pointer-events-none');
     resetMapFAB.classList.remove('opacity-100');

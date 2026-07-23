@@ -479,6 +479,7 @@ svg.leaflet-zoom-animated:focus {
   transition: opacity 0.3s ease;
 }
 
+
 /* ===========================
    UI MICRO-INTERACTIONS & TRANSITIONS (Refined)
    =========================== */
@@ -488,29 +489,30 @@ button,
 .archive-tab-btn, 
 .suggestion-item,
 a {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Subtle scale effect on active press for all interactive elements except tabs */
+/* Subtle scale effect on active press for interactive elements */
 button:active:not(.archive-tab-btn):not(#tabHistory):not(#tabBookmarks):not(#tabLibrary):not(#mapModeBtn):not(#mapModeBtnFloating) {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
 
-/* Sidebar and Menu smooth transitions */
-#mainMenu, #personalMenu, #eventPanel, #reportPanel {
-  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
-              opacity 0.35s ease;
+/* Sidebar and Menu smooth slide + fade transitions */
+#personalPanel, #reportPanel, #eventPanel {
+  transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1) !important;
 }
+
+
 
 /* Modals & Tooltips fading smoothly */
 #aboutModal, #feedbackModal, #searchSuggestions {
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 #aboutModal > div, #feedbackModal > div {
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Panel content fading to avoid abrupt hidden */
-#panelContent, #panelStickyFooter, #panelEmptyState {
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* Panel inner content smooth fade */
+#panelContentArea, #panelStickyFooter, #panelEmptyState {
+  transition: opacity 0.3s ease-in-out;
 }
