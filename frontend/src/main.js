@@ -212,18 +212,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // POIN 1: Peta offset agar marker tidak tertutup panel kanan di desktop
   function flyToWithOffset(latlng, zoom) {
     const isDesktop = window.innerWidth >= 768;
-    if (!isDesktop) {
-      map.flyTo(latlng, zoom, { duration: 1.2, easeLinearity: 0.3 });
-      return;
+    const targetPoint = map.project(latlng, zoom);
+    
+    if (isDesktop) {
+      // Desktop offset calculation
+      // Panel kanan lebarnya sekitar 420px. Geser target X kamera ke KANAN sebanyak 210px,
+      // yang akan mengakibatkan marker di peta bergeser ke KIRI layar (menjauhi panel).
+      targetPoint.x += 210; // offset +210px
+    } else {
+      // Mobile offset
+      // Prevent abrupt jumps by applying offset for the bottom panel
+      if (typeof isMobilePanelExpanded !== 'undefined' && isMobilePanelExpanded) {
+        targetPoint.y += (window.innerHeight * 0.4);
+      } else {
+        targetPoint.y += (window.innerHeight * 0.25);
+      }
     }
     
-    // Desktop offset calculation
-    // Panel kanan lebarnya sekitar 420px. Geser target X kamera ke KANAN sebanyak 210px,
-    // yang akan mengakibatkan marker di peta bergeser ke KIRI layar (menjauhi panel).
-    const targetPoint = map.project(latlng, zoom);
-    targetPoint.x += 210; // offset +210px
     const targetLatLng = map.unproject(targetPoint, zoom);
-    
     map.flyTo(targetLatLng, zoom, { duration: 1.2, easeLinearity: 0.3 });
   }
 
@@ -2503,6 +2509,76 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => map.invalidateSize(), 300);
     }, { once: false });
   }
+
+  // --- Mobile Gestures ---
+  function setupMobileSwipeGestures() {
+    // 1. Swipe down to close Ruang Personal
+    const personalPanel = document.getElementById('personalPanel');
+    const personalPanelHandle = document.getElementById('personalPanelHandle');
+    if (personalPanel && personalPanelHandle) {
+      let startY = 0;
+      personalPanelHandle.addEventListener('touchstart', (e) => startY = e.touches[0].clientY, {passive:true});
+      personalPanelHandle.addEventListener('touchend', (e) => {
+        if (!startY) return;
+        const endY = e.changedTouches[0].clientY;
+        if (endY - startY > 40) {
+          if (typeof closePersonalPanelFn === 'function') closePersonalPanelFn();
+        }
+      }, {passive:true});
+    }
+
+    // 2. Swipe left/right on Ruang Personal to change tabs
+    if (personalPanel) {
+      let startX = 0;
+      let startY = 0;
+      personalPanel.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }, {passive:true});
+      personalPanel.addEventListener('touchend', (e) => {
+        if (!startX) return;
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+        const dx = endX - startX;
+        const dy = endY - startY;
+        // Only trigger tab switch if swipe is primarily horizontal
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+          const tabHistory = document.getElementById('tabHistory');
+          const tabBookmarks = document.getElementById('tabBookmarks');
+          const tabLibrary = document.getElementById('tabLibrary');
+          if (tabHistory && tabBookmarks && tabLibrary) {
+            const tabs = [tabHistory, tabBookmarks, tabLibrary];
+            const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
+            if (activeIdx !== -1) {
+              if (dx < 0 && activeIdx < tabs.length - 1) {
+                tabs[activeIdx + 1].click(); // Swipe left -> next tab
+              } else if (dx > 0 && activeIdx > 0) {
+                tabs[activeIdx - 1].click(); // Swipe right -> prev tab
+              }
+            }
+          }
+        }
+      }, {passive:true});
+    }
+
+    // 3. Swipe down to close Filter Kategori (Legend Sheet)
+    const legendSheet = document.getElementById('mobileLegendSheet');
+    const legendHandle = document.getElementById('legendPanelHandle');
+    if (legendSheet && legendHandle) {
+      let lStartY = 0;
+      legendHandle.addEventListener('touchstart', (e) => lStartY = e.touches[0].clientY, {passive:true});
+      legendHandle.addEventListener('touchend', (e) => {
+        if (!lStartY) return;
+        const endY = e.changedTouches[0].clientY;
+        if (endY - lStartY > 40) {
+          const closeBtn = document.getElementById('closeLegendSheetBtn');
+          if (closeBtn) closeBtn.click();
+        }
+      }, {passive:true});
+    }
+  }
+
+  setupMobileSwipeGestures();
 
 }).catch(err => console.error('Failed to load events data:', err));
 
