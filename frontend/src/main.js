@@ -1695,11 +1695,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function switchPersonalTab(activeBtn, activeContent) {
     [tabHistory, tabBookmarks, tabLibrary].forEach(btn => {
-      btn.classList.remove('border-gray-900', 'dark:border-white', 'text-gray-900', 'dark:text-white');
-      btn.classList.add('border-transparent', 'text-gray-500');
+      btn.classList.remove('border-slate-900', 'dark:border-white', 'text-slate-900', 'dark:text-white');
+      btn.classList.add('border-transparent', 'text-slate-500');
     });
-    activeBtn.classList.remove('border-transparent', 'text-gray-500');
-    activeBtn.classList.add('border-gray-900', 'dark:border-white', 'text-gray-900', 'dark:text-white');
+    activeBtn.classList.remove('border-transparent', 'text-slate-500');
+    activeBtn.classList.add('border-slate-900', 'dark:border-white', 'text-slate-900', 'dark:text-white');
 
     [contentHistory, contentBookmarks, contentLibrary].forEach(cnt => cnt.classList.add('hidden'));
     activeContent.classList.remove('hidden');
@@ -2512,68 +2512,112 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Mobile Gestures ---
   function setupMobileSwipeGestures() {
-    // 1. Swipe down to close Ruang Personal
-    const personalPanel = document.getElementById('personalPanel');
-    const personalPanelHandle = document.getElementById('personalPanelHandle');
-    if (personalPanel && personalPanelHandle) {
+    // Helper to add interactive swipe down to close
+    function addSwipeDownToClose(handleId, panelId, closeCallback) {
+      const handle = document.getElementById(handleId);
+      const panel = document.getElementById(panelId);
+      if (!handle || !panel) return;
+      
       let startY = 0;
-      personalPanelHandle.addEventListener('touchstart', (e) => startY = e.touches[0].clientY, {passive:true});
-      personalPanelHandle.addEventListener('touchend', (e) => {
-        if (!startY) return;
-        const endY = e.changedTouches[0].clientY;
-        if (endY - startY > 40) {
-          if (typeof closePersonalPanelFn === 'function') closePersonalPanelFn();
+      let currentY = 0;
+      let isDragging = false;
+      
+      handle.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+        panel.style.transition = 'none'; // Disable transition for instant drag
+      }, {passive:true});
+      
+      document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentY = e.touches[0].clientY;
+        const dy = currentY - startY;
+        if (dy > 0) {
+          panel.style.transform = `translateY(${dy}px)`;
         }
+      }, {passive:true});
+      
+      document.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        panel.style.transition = 'transform 0.4s ease';
+        
+        const dy = currentY - startY;
+        if (dy > 80) { // Threshold to close
+          if (typeof closeCallback === 'function') closeCallback();
+        } else {
+          // Snap back
+          panel.style.transform = 'translateY(0)';
+        }
+        
+        // Clean up inline style so CSS classes take over after animation
+        setTimeout(() => {
+          if(!panel.classList.contains('translate-y-full')) {
+             panel.style.transform = '';
+          }
+        }, 400);
+        
+        startY = 0; currentY = 0;
       }, {passive:true});
     }
 
-    // 2. Swipe left/right on Ruang Personal to change tabs
+    // 1. Swipe down to close Ruang Personal
+    addSwipeDownToClose('personalPanelHandle', 'personalPanel', () => {
+      if (typeof closePersonalPanelFn === 'function') closePersonalPanelFn();
+    });
+
+    // 2. Swipe down to close Filter Kategori (Legend Sheet)
+    addSwipeDownToClose('legendPanelHandle', 'mobileLegendSheet', () => {
+      const closeBtn = document.getElementById('closeLegendSheetBtn');
+      if (closeBtn) closeBtn.click();
+    });
+
+    // 3. Swipe left/right on Ruang Personal to change tabs
+    const personalPanel = document.getElementById('personalPanel');
     if (personalPanel) {
       let startX = 0;
       let startY = 0;
+      let hasSwiped = false;
+      
       personalPanel.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
+        hasSwiped = false;
       }, {passive:true});
-      personalPanel.addEventListener('touchend', (e) => {
-        if (!startX) return;
-        const endX = e.changedTouches[0].clientX;
-        const endY = e.changedTouches[0].clientY;
-        const dx = endX - startX;
-        const dy = endY - startY;
-        // Only trigger tab switch if swipe is primarily horizontal
-        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      
+      personalPanel.addEventListener('touchmove', (e) => {
+        if (!startX || hasSwiped) return;
+        const currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        const dx = currentX - startX;
+        const dy = currentY - startY;
+        
+        // Trigger if horizontal movement is significant and greater than vertical movement
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+          hasSwiped = true; // Prevent multiple triggers in one swipe
+          
           const tabHistory = document.getElementById('tabHistory');
           const tabBookmarks = document.getElementById('tabBookmarks');
           const tabLibrary = document.getElementById('tabLibrary');
           if (tabHistory && tabBookmarks && tabLibrary) {
             const tabs = [tabHistory, tabBookmarks, tabLibrary];
-            const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
-            if (activeIdx !== -1) {
-              if (dx < 0 && activeIdx < tabs.length - 1) {
-                tabs[activeIdx + 1].click(); // Swipe left -> next tab
-              } else if (dx > 0 && activeIdx > 0) {
-                tabs[activeIdx - 1].click(); // Swipe right -> prev tab
+            const realActiveIdx = tabs.findIndex(t => t.classList.contains('text-slate-900') || t.classList.contains('dark:text-white'));
+            
+            if (realActiveIdx !== -1) {
+              if (dx < 0 && realActiveIdx < tabs.length - 1) {
+                tabs[realActiveIdx + 1].click(); // Swipe left -> next tab
+              } else if (dx > 0 && realActiveIdx > 0) {
+                tabs[realActiveIdx - 1].click(); // Swipe right -> prev tab
               }
             }
           }
         }
       }, {passive:true});
-    }
-
-    // 3. Swipe down to close Filter Kategori (Legend Sheet)
-    const legendSheet = document.getElementById('mobileLegendSheet');
-    const legendHandle = document.getElementById('legendPanelHandle');
-    if (legendSheet && legendHandle) {
-      let lStartY = 0;
-      legendHandle.addEventListener('touchstart', (e) => lStartY = e.touches[0].clientY, {passive:true});
-      legendHandle.addEventListener('touchend', (e) => {
-        if (!lStartY) return;
-        const endY = e.changedTouches[0].clientY;
-        if (endY - lStartY > 40) {
-          const closeBtn = document.getElementById('closeLegendSheetBtn');
-          if (closeBtn) closeBtn.click();
-        }
+      
+      personalPanel.addEventListener('touchend', () => {
+        startX = 0;
+        startY = 0;
+        hasSwiped = false;
       }, {passive:true});
     }
   }
